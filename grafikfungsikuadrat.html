@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Latihan Grafik Fungsi Kuadrat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root{
+  --bg:#0a0e27;--bg2:#131a3d;--card:rgba(25,33,72,0.65);--card-solid:#192148;
+  --purple:#7c4dff;--purple-light:#b388ff;--cyan:#00e5ff;--mint:#69f0ae;
+  --coral:#ff5252;--gold:#ffd740;--pink:#ff80ab;--text:#e8ecf5;--muted:#8b95b5;
+  --border:rgba(124,77,255,0.25);--success:#4ade80;--error:#f87171;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;line-height:1.6}
+
+.bg-decor{position:fixed;inset:0;z-index:-2;background:
+  radial-gradient(ellipse at 15% 0%,rgba(124,77,255,0.18) 0%,transparent 50%),
+  radial-gradient(ellipse at 85% 100%,rgba(0,229,255,0.12) 0%,transparent 50%),
+  linear-gradient(180deg,#0a0e27 0%,#131a3d 100%);}
+.bg-grid{position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background-image:linear-gradient(rgba(124,77,255,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(124,77,255,0.05) 1px,transparent 1px);
+  background-size:50px 50px;mask-image:radial-gradient(ellipse at center,black 30%,transparent 70%);}
+
+.presentation{position:relative;min-height:100vh;padding:2rem 1.5rem 7rem;max-width:1300px;margin:0 auto}
+.slide{display:none;animation:slideIn 0.6s cubic-bezier(0.22,1,0.36,1)}
+.slide.active{display:block}
+@keyframes slideIn{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+
+.nav-bar{position:fixed;bottom:0;left:0;right:0;background:rgba(10,14,39,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--border);padding:1rem 2rem;z-index:100;display:flex;justify-content:space-between;align-items:center;gap:1rem}
+.nav-btn{background:linear-gradient(135deg,var(--purple),var(--purple-light));color:#fff;border:none;padding:0.7rem 1.4rem;border-radius:50px;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.9rem;cursor:pointer;transition:all 0.3s;display:flex;align-items:center;gap:0.5rem;white-space:nowrap}
+.nav-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 10px 30px rgba(124,77,255,0.4)}
+.nav-btn:disabled{opacity:0.35;cursor:not-allowed}
+.nav-btn.secondary{background:rgba(0,229,255,0.1);color:var(--cyan);border:1px solid rgba(0,229,255,0.4)}
+.nav-btn.secondary:hover:not(:disabled){background:var(--cyan);color:var(--bg)}
+.progress{display:flex;gap:0.4rem;flex:1;justify-content:center}
+.dot{width:10px;height:10px;border-radius:50%;background:rgba(124,77,255,0.3);cursor:pointer;transition:all 0.3s;border:none;padding:0}
+.dot.active{background:var(--cyan);width:32px;border-radius:5px}
+
+.tag{display:inline-flex;align-items:center;gap:0.5rem;background:rgba(0,229,255,0.1);color:var(--cyan);padding:0.4rem 1rem;border-radius:50px;font-size:0.8rem;font-weight:600;letter-spacing:0.05em;border:1px solid rgba(0,229,255,0.3);text-transform:uppercase}
+.slide-header{text-align:center;margin-bottom:2rem}
+.slide-header h2{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.8rem,4vw,2.6rem);font-weight:700;color:var(--text);margin:0.75rem 0 0.5rem;line-height:1.15}
+.slide-header p{color:var(--muted);font-size:1rem}
+
+.cover{min-height:78vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative}
+.cover-decor{position:absolute;font-size:5rem;opacity:0.06;pointer-events:none;color:var(--purple)}
+.cover-decor.tl{top:5%;left:8%}.cover-decor.tr{top:8%;right:10%;color:var(--cyan)}
+.cover-decor.bl{bottom:10%;left:12%;font-size:4rem;color:var(--gold)}.cover-decor.br{bottom:8%;right:8%;font-size:4.5rem}
+.cover-title{font-family:'Space Grotesk',sans-serif;font-size:clamp(2.2rem,6vw,4.5rem);font-weight:700;line-height:1.1;margin:1rem 0}
+.cover-title .l1{display:block;background:linear-gradient(135deg,var(--cyan),var(--purple-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.cover-title .l2{display:block;background:linear-gradient(135deg,var(--gold),var(--coral));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-size:0.7em;margin-top:0.3rem}
+.cover .subtitle{font-size:1.05rem;color:var(--muted);margin-bottom:1.75rem;max-width:550px}
+.name-card{background:var(--card);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:24px;padding:2rem;width:100%;max-width:460px;position:relative}
+.name-card::before{content:'';position:absolute;top:-2px;left:25%;right:25%;height:4px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);border-radius:4px}
+.name-card label{display:flex;align-items:center;gap:0.5rem;font-size:0.95rem;color:var(--cyan);margin-bottom:0.75rem;font-weight:500}
+.name-card input{width:100%;padding:1rem 1.25rem;border-radius:14px;border:2px solid rgba(124,77,255,0.3);background:rgba(10,14,39,0.6);color:var(--text);font-size:1.1rem;font-family:inherit;outline:none;transition:all 0.3s}
+.name-card input:focus{border-color:var(--cyan);box-shadow:0 0 0 4px rgba(0,229,255,0.15)}
+.start-btn{background:linear-gradient(135deg,var(--purple),var(--purple-light));color:#fff;border:none;padding:1rem 2rem;border-radius:50px;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:1.05rem;cursor:pointer;transition:all 0.3s;margin-top:1.25rem;width:100%;display:flex;align-items:center;justify-content:center;gap:0.6rem}
+.start-btn:disabled{opacity:0.4;cursor:not-allowed}
+.start-btn:not(:disabled):hover{transform:translateY(-2px);box-shadow:0 15px 40px rgba(124,77,255,0.5)}
+.welcome-msg{margin-top:1rem;color:var(--cyan);font-weight:600;display:none}
+.welcome-msg.show{display:block;animation:pulse 1.5s ease infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
+
+.materi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.25rem;margin-bottom:1.5rem}
+.materi-card{background:var(--card);backdrop-filter:blur(15px);border:1px solid var(--border);border-radius:18px;padding:1.5rem;position:relative;overflow:hidden;transition:all 0.3s}
+.materi-card:hover{transform:translateY(-4px);border-color:var(--cyan);box-shadow:0 15px 35px rgba(0,229,255,0.15)}
+.materi-card .icon{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,var(--purple),var(--purple-light));display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.1rem;margin-bottom:0.75rem;flex-shrink:0}
+.materi-card h3{font-family:'Space Grotesk',sans-serif;font-size:1.15rem;color:var(--cyan);margin-bottom:0.5rem}
+.materi-card p,.materi-card li{color:var(--text);opacity:0.88;font-size:0.92rem;line-height:1.55}
+.materi-card ul{padding-left:1.1rem;margin-top:0.4rem}
+.materi-card li{margin-bottom:0.25rem}
+.materi-card .formula{font-family:'Space Grotesk',sans-serif;background:rgba(0,229,255,0.1);border:1px solid rgba(0,229,255,0.3);border-radius:10px;padding:0.6rem 1rem;margin:0.5rem 0;color:var(--cyan);font-size:1rem;font-weight:600;text-align:center}
+.materi-card.coef-a{border-left:4px solid var(--coral)}
+.materi-card.coef-b{border-left:4px solid var(--gold)}
+.materi-card.coef-c{border-left:4px solid var(--mint)}
+.materi-card.disc{border-left:4px solid var(--pink)}
+.materi-card.coef-a .icon{background:linear-gradient(135deg,var(--coral),#ff8a80)}
+.materi-card.coef-b .icon{background:linear-gradient(135deg,var(--gold),#ffab40)}
+.materi-card.coef-c .icon{background:linear-gradient(135deg,var(--mint),#69f0ae)}
+.materi-card.disc .icon{background:linear-gradient(135deg,var(--pink),#ff80ab)}
+
+.steps-section{background:var(--card);backdrop-filter:blur(15px);border:1px solid var(--border);border-radius:20px;padding:1.75rem}
+.steps-section h3{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;color:var(--gold);margin-bottom:1rem;display:flex;align-items:center;gap:0.6rem}
+.steps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem}
+.step-item{background:rgba(10,14,39,0.5);border-radius:14px;padding:1.1rem;border-left:3px solid var(--purple);position:relative}
+.step-item .step-num{position:absolute;top:0.5rem;right:0.75rem;font-family:'Space Grotesk',sans-serif;font-size:1.8rem;font-weight:700;color:rgba(124,77,255,0.3)}
+.step-item h4{font-family:'Space Grotesk',sans-serif;font-size:0.95rem;color:var(--cyan);margin-bottom:0.4rem}
+.step-item p{font-size:0.85rem;color:var(--text);opacity:0.85;line-height:1.5}
+.step-item .formula-sm{font-family:'Space Grotesk',sans-serif;background:rgba(124,77,255,0.12);border-radius:6px;padding:0.3rem 0.6rem;margin-top:0.4rem;display:inline-block;color:var(--purple-light);font-size:0.85rem;font-weight:600}
+
+.latihan-container{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+@media (max-width:900px){.latihan-container{grid-template-columns:1fr}}
+.canvas-box{background:var(--card);backdrop-filter:blur(15px);border:1px solid var(--border);border-radius:20px;padding:1.25rem;display:flex;flex-direction:column;align-items:center}
+.canvas-box canvas{background:#0f1535;border-radius:12px;max-width:100%;height:auto}
+.func-display{background:linear-gradient(135deg,rgba(124,77,255,0.15),rgba(0,229,255,0.1));border:1px solid var(--purple);border-radius:14px;padding:1rem 1.5rem;margin-bottom:1rem;text-align:center;width:100%}
+.func-display .label{font-size:0.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.25rem}
+.func-display .eq{font-family:'Space Grotesk',sans-serif;font-size:1.4rem;font-weight:700;color:var(--cyan)}
+.form-box{background:var(--card);backdrop-filter:blur(15px);border:1px solid var(--border);border-radius:20px;padding:1.5rem;display:flex;flex-direction:column;gap:1rem}
+.step-block{background:rgba(10,14,39,0.5);border-radius:14px;padding:1.1rem;border:1px solid rgba(124,77,255,0.15);transition:all 0.3s}
+.step-block.active{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,229,255,0.1)}
+.step-block.done{opacity:0.6;border-color:rgba(74,222,128,0.3)}
+.step-block h4{font-family:'Space Grotesk',sans-serif;font-size:1rem;color:var(--gold);margin-bottom:0.6rem;display:flex;align-items:center;gap:0.5rem}
+.step-block h4 .badge{background:var(--purple);color:#fff;font-size:0.7rem;padding:0.15rem 0.5rem;border-radius:50px;font-weight:600}
+.step-block.done h4 .badge{background:var(--success)}
+.choice-row{display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:0.5rem}
+.choice-btn{background:rgba(124,77,255,0.1);color:var(--purple-light);border:1.5px solid rgba(124,77,255,0.4);padding:0.5rem 1rem;border-radius:50px;font-family:'Space Grotesk',sans-serif;cursor:pointer;transition:all 0.25s;font-size:0.88rem;font-weight:500}
+.choice-btn:hover:not(:disabled){background:rgba(124,77,255,0.25)}
+.choice-btn.selected{background:linear-gradient(135deg,var(--purple),var(--purple-light));color:#fff;border-color:transparent}
+.choice-btn.correct{background:linear-gradient(135deg,var(--success),#22c55e);color:#06280f;border-color:transparent}
+.choice-btn.wrong{background:linear-gradient(135deg,var(--error),#dc2626);color:#fff;border-color:transparent;animation:shake 0.4s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.input-row{display:flex;flex-wrap:wrap;gap:0.6rem;align-items:center;margin-top:0.5rem}
+.input-row label{font-size:0.85rem;color:var(--muted);min-width:30px}
+.num-input{width:70px;padding:0.5rem 0.6rem;text-align:center;border-radius:10px;border:2px solid rgba(124,77,255,0.3);background:rgba(10,14,39,0.6);color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:1rem;outline:none;transition:all 0.3s}
+.num-input:focus{border-color:var(--cyan)}
+.num-input.correct{border-color:var(--success);color:var(--success);background:rgba(74,222,128,0.1)}
+.num-input.wrong{border-color:var(--error);color:var(--error);background:rgba(248,113,113,0.1)}
+.btn{background:rgba(0,229,255,0.1);color:var(--cyan);border:1.5px solid rgba(0,229,255,0.4);padding:0.55rem 1.1rem;border-radius:50px;font-family:'Space Grotesk',sans-serif;font-size:0.88rem;cursor:pointer;transition:all 0.25s;display:inline-flex;align-items:center;gap:0.4rem;font-weight:500}
+.btn:hover:not(:disabled){background:var(--cyan);color:var(--bg)}
+.btn.primary{background:linear-gradient(135deg,var(--purple),var(--purple-light));color:#fff;border:none}
+.btn.primary:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 8px 20px rgba(124,77,255,0.4)}
+.btn:disabled{opacity:0.4;cursor:not-allowed}
+.feedback{padding:0.7rem 1rem;border-radius:10px;font-size:0.88rem;display:none;line-height:1.5}
+.feedback.show{display:block;animation:slideIn 0.3s}
+.feedback.success{background:rgba(74,222,128,0.12);color:var(--success);border:1px solid rgba(74,222,128,0.4)}
+.feedback.error{background:rgba(248,113,113,0.12);color:var(--error);border:1px solid rgba(248,113,113,0.4)}
+.feedback.info{background:rgba(0,229,255,0.1);color:var(--cyan);border:1px solid rgba(0,229,255,0.4)}
+.controls-row{display:flex;flex-wrap:wrap;gap:0.6rem;margin-top:0.5rem;align-items:center;justify-content:center}
+
+.graph-problem{background:var(--card);backdrop-filter:blur(15px);border:1px solid var(--border);border-radius:20px;padding:1.5rem;margin-bottom:1.25rem}
+.graph-problem-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;margin-bottom:1rem}
+.graph-problem-header h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;color:var(--cyan);display:flex;align-items:center;gap:0.5rem}
+.graph-problem-header .prob-num{background:linear-gradient(135deg,var(--purple),var(--purple-light));color:#fff;width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.9rem}
+.graph-problem-content{display:grid;grid-template-columns:auto 1fr;gap:1.5rem;align-items:start}
+@media (max-width:700px){.graph-problem-content{grid-template-columns:1fr}}
+.graph-problem-content canvas{background:#0f1535;border-radius:12px;max-width:100%;height:auto}
+.choices-section{display:flex;flex-direction:column;gap:0.9rem}
+.choice-group{background:rgba(10,14,39,0.4);border-radius:12px;padding:0.85rem}
+.choice-group .group-label{font-family:'Space Grotesk',sans-serif;font-size:0.9rem;color:var(--gold);margin-bottom:0.5rem;font-weight:600;display:flex;align-items:center;gap:0.4rem}
+.choice-group .group-label .status{margin-left:auto;font-size:0.75rem;padding:0.15rem 0.6rem;border-radius:50px;background:rgba(124,77,255,0.15);color:var(--purple-light)}
+.choice-group .group-label .status.correct{background:rgba(74,222,128,0.15);color:var(--success)}
+.eq-options{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:0.6rem;margin-top:0.5rem}
+.eq-option{background:rgba(10,14,39,0.5);border:1.5px solid rgba(124,77,255,0.25);border-radius:10px;padding:0.7rem 1rem;cursor:pointer;transition:all 0.25s;font-family:'Space Grotesk',sans-serif;font-size:0.92rem;color:var(--text);display:flex;align-items:center;gap:0.6rem}
+.eq-option:hover{background:rgba(124,77,255,0.15);border-color:var(--purple-light)}
+.eq-option.selected{background:rgba(124,77,255,0.25);border-color:var(--cyan);color:var(--cyan)}
+.eq-option.correct{background:rgba(74,222,128,0.2);border-color:var(--success);color:var(--success)}
+.eq-option.wrong{background:rgba(248,113,113,0.2);border-color:var(--error);color:var(--error)}
+.eq-option .letter{background:var(--purple);color:#fff;width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.8rem;flex-shrink:0}
+.eq-option.selected .letter{background:var(--cyan);color:var(--bg)}
+.eq-option.correct .letter{background:var(--success);color:#06280f}
+
+.conclusion-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.5rem}
+@media (max-width:768px){.conclusion-grid{grid-template-columns:1fr}}
+.summary-card{background:var(--card);backdrop-filter:blur(15px);border-radius:18px;padding:1.5rem;border-top:4px solid var(--purple)}
+.summary-card.cyan{border-top-color:var(--cyan)}
+.summary-card h3{font-family:'Space Grotesk',sans-serif;color:var(--cyan);margin-bottom:0.75rem;font-size:1.15rem}
+.summary-card ul{list-style:none;padding:0}
+.summary-card li{padding:0.4rem 0 0.4rem 1.4rem;position:relative;color:var(--text);opacity:0.9;font-size:0.92rem;line-height:1.5}
+.summary-card li::before{content:'\25B8';position:absolute;left:0;color:var(--purple)}
+.summary-card.cyan li::before{color:var(--cyan)}
+
+.reflection-box{background:linear-gradient(135deg,rgba(124,77,255,0.12),rgba(0,229,255,0.1));border:1px solid var(--purple);border-radius:20px;padding:1.5rem;margin-bottom:1.5rem}
+.reflection-box h3{font-family:'Space Grotesk',sans-serif;color:var(--gold);margin-bottom:0.85rem;font-size:1.2rem;display:flex;align-items:center;gap:0.5rem}
+.reflection-q{background:rgba(10,14,39,0.5);border-radius:12px;padding:0.9rem;margin-bottom:0.6rem}
+.reflection-q p{color:var(--cyan);margin-bottom:0.4rem;font-size:0.9rem}
+.reflection-q textarea{width:100%;padding:0.7rem 0.9rem;border-radius:10px;border:2px solid rgba(124,77,255,0.3);background:rgba(10,14,39,0.6);color:var(--text);font-family:inherit;font-size:0.9rem;outline:none;resize:vertical;min-height:50px}
+.reflection-q textarea:focus{border-color:var(--cyan)}
+
+.thank-you{text-align:center;padding:2.5rem 1rem;background:var(--card);border-radius:24px;border:1px solid var(--border);position:relative;overflow:hidden}
+.thank-you::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle,rgba(124,77,255,0.1) 0%,transparent 50%);animation:rotate 25s linear infinite}
+@keyframes rotate{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.thank-you>*{position:relative;z-index:1}
+.thank-you h2{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.8rem,4.5vw,3rem);background:linear-gradient(135deg,var(--cyan),var(--purple-light),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:1rem}
+.thank-you p{color:var(--text);opacity:0.85;font-size:1.05rem;max-width:520px;margin:0 auto}
+.thank-you .student-name{color:var(--cyan);font-weight:700;font-family:'Space Grotesk',sans-serif}
+.heart{font-size:2.5rem;color:var(--coral);margin:0.75rem 0;animation:heartbeat 1.5s ease infinite;display:inline-block}
+@keyframes heartbeat{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+
+.toast{position:fixed;top:20px;right:20px;background:rgba(10,14,39,0.95);backdrop-filter:blur(15px);border:1px solid var(--purple);border-radius:12px;padding:0.9rem 1.3rem;color:var(--text);z-index:200;display:flex;align-items:center;gap:0.7rem;transform:translateX(120%);transition:transform 0.4s cubic-bezier(0.22,1,0.36,1);max-width:340px;box-shadow:0 10px 30px rgba(0,0,0,0.4)}
+.toast.show{transform:translateX(0)}
+.toast.success{border-color:var(--success)}
+.toast.error{border-color:var(--error)}
+.toast i{font-size:1.2rem}
+.toast.success i{color:var(--success)}
+.toast.error i{color:var(--error)}
+.toast.info i{color:var(--cyan)}
+
+@media (max-width:768px){
+  .presentation{padding:1.5rem 1rem 6rem}
+  .nav-bar{padding:0.75rem 1rem}
+  .nav-btn{padding:0.55rem 1rem;font-size:0.82rem}
+  .dot{width:8px;height:8px}
+  .dot.active{width:22px}
+  .cover-decor{display:none}
+}
+</style>
+</head>
+<body>
+<div class="bg-decor"></div>
+<div class="bg-grid"></div>
+
+<main class="presentation">
+  <section class="slide active" data-slide="1">
+    <div class="cover">
+      <i class="fas fa-chart-line cover-decor tl"></i>
+      <i class="fas fa-square-root-variable cover-decor tr"></i>
+      <i class="fas fa-parabola cover-decor bl"></i>
+      <i class="fas fa-calculator cover-decor br"></i>
+      <span class="tag"><i class="fas fa-function"></i> Matematika Interaktif</span>
+      <h1 class="cover-title">
+        <span class="l1">Latihan Grafik</span>
+        <span class="l2">Fungsi Kuadrat</span>
+      </h1>
+      <p class="subtitle">Belajar menggambar dan menganalisis parabola melalui latihan interaktif yang menyenangkan!</p>
+      <div class="name-card">
+        <label for="studentName"><i class="fas fa-user-circle"></i> Siapa nama kamu?</label>
+        <input type="text" id="studentName" placeholder="Tulis namamu di sini..." maxlength="30">
+        <button class="start-btn" id="startBtn" disabled>
+          <i class="fas fa-rocket"></i> Mulai Belajar
+        </button>
+        <div class="welcome-msg" id="welcomeMsg"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-slide="2">
+    <div class="slide-header">
+      <span class="tag"><i class="fas fa-book-open"></i> Materi Pengantar</span>
+      <h2>Ingat Kembali Konsep Fungsi Kuadrat</h2>
+      <p>Bentuk umum, koefisien, diskriminan, dan langkah menggambar grafik</p>
+    </div>
+
+    <div class="materi-grid">
+      <div class="materi-card">
+        <div class="icon"><i class="fas fa-square-root-variable"></i></div>
+        <h3>Bentuk Umum</h3>
+        <div class="formula">y = ax² + bx + c</div>
+        <p>di mana <strong>a ≠ 0</strong>, a, b, c ∈ ℝ. Grafiknya berbentuk <strong>parabola</strong>.</p>
+      </div>
+
+      <div class="materi-card coef-a">
+        <div class="icon"><i class="fas fa-arrow-up"></i></div>
+        <h3>Pengaruh Nilai a</h3>
+        <ul>
+          <li><strong>a &gt; 0</strong>: parabola terbuka ke atas (minimum)</li>
+          <li><strong>a &lt; 0</strong>: parabola terbuka ke bawah (maksimum)</li>
+          <li>Semakin besar |a|, parabola semakin sempit</li>
+        </ul>
+      </div>
+
+      <div class="materi-card coef-b">
+        <div class="icon"><i class="fas fa-arrows-left-right"></i></div>
+        <h3>Pengaruh Nilai b</h3>
+        <ul>
+          <li><strong>b = 0</strong>: sumbu simetri adalah sumbu y</li>
+          <li><strong>b &gt; 0</strong>: puncak bergeser ke kiri</li>
+          <li><strong>b &lt; 0</strong>: puncak bergeser ke kanan</li>
+        </ul>
+      </div>
+
+      <div class="materi-card coef-c">
+        <div class="icon"><i class="fas fa-anchor"></i></div>
+        <h3>Pengaruh Nilai c</h3>
+        <ul>
+          <li><strong>c &gt; 0</strong>: memotong sumbu y di atas</li>
+          <li><strong>c = 0</strong>: melalui titik (0,0)</li>
+          <li><strong>c &lt; 0</strong>: memotong sumbu y di bawah</li>
+        </ul>
+      </div>
+
+      <div class="materi-card disc">
+        <div class="icon"><i class="fas fa-calculator"></i></div>
+        <h3>Diskriminan (D)</h3>
+        <div class="formula">D = b² − 4ac</div>
+        <ul>
+          <li><strong>D &gt; 0</strong>: akar real berbeda (2 titik potong sumbu x)</li>
+          <li><strong>D = 0</strong>: akar real kembar (1 titik potong)</li>
+          <li><strong>D &lt; 0</strong>: akar imajiner (tidak memotong)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="steps-section">
+      <h3><i class="fas fa-list-ol"></i> Langkah-Langkah Menggambar Grafik Fungsi Kuadrat</h3>
+      <div class="steps-grid">
+        <div class="step-item">
+          <span class="step-num">1</span>
+          <h4>Titik Potong Sumbu x</h4>
+          <p>Selesaikan persamaan ax² + bx + c = 0</p>
+          <div class="formula-sm">x = (−b ± √D) / 2a</div>
+        </div>
+        <div class="step-item">
+          <span class="step-num">2</span>
+          <h4>Titik Potong Sumbu y</h4>
+          <p>Substitusi x = 0 ke persamaan</p>
+          <div class="formula-sm">y = c</div>
+        </div>
+        <div class="step-item">
+          <span class="step-num">3</span>
+          <h4>Titik Puncak</h4>
+          <p>Absis dan ordinat titik puncak:</p>
+          <div class="formula-sm">xp = −b/2a, yp = −D/4a</div>
+        </div>
+        <div class="step-item">
+          <span class="step-num">4</span>
+          <h4>Hubungkan Titik</h4>
+          <p>Hubungkan semua titik dengan kurva mulus membentuk parabola. Gunakan titik cermin bila perlu.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-slide="3">
+    <div class="slide-header">
+      <span class="tag"><i class="fas fa-pencil-ruler"></i> Latihan Menggambar</span>
+      <h2>Mari Menggambar Grafik Fungsi Kuadrat!</h2>
+      <p>Tentukan titik-titik penting, lalu hubungkan menjadi parabola</p>
+    </div>
+
+    <div class="latihan-container">
+      <div class="canvas-box">
+        <div class="func-display">
+          <div class="label">Fungsi Kuadrat</div>
+          <div class="eq" id="funcEq">y = ?</div>
+        </div>
+        <canvas id="mainCanvas" width="480" height="440"></canvas>
+        <div class="controls-row">
+          <button class="btn" id="zoomInBtn"><i class="fas fa-search-plus"></i> Zoom In</button>
+          <button class="btn" id="zoomOutBtn"><i class="fas fa-search-minus"></i> Zoom Out</button>
+        </div>
+        <div class="controls-row" style="margin-top:0.75rem">
+          <button class="btn primary" id="nextFuncBtn"><i class="fas fa-forward"></i> Fungsi Berikutnya</button>
+          <span style="color:var(--muted);font-size:0.85rem">Soal <span id="funcIdx">1</span> dari 10</span>
+        </div>
+      </div>
+
+      <div class="form-box">
+        <div class="step-block active" id="block1">
+          <h4><span class="badge">1</span> Jenis Akar Persamaan</h4>
+          <p style="font-size:0.85rem;color:var(--muted);margin-bottom:0.4rem">Hitung D = b² − 4ac. Akar-akarnya...</p>
+          <div class="choice-row" id="akarChoices">
+            <button class="choice-btn" data-val="real_berbeda">Real Berbeda</button>
+            <button class="choice-btn" data-val="real_kembar">Real Kembar</button>
+            <button class="choice-btn" data-val="imajiner">Imajiner</button>
+          </div>
+          <div class="feedback" id="fb1"></div>
+        </div>
+
+        <div class="step-block" id="block2" style="display:none">
+          <h4><span class="badge">2</span> Titik Potong Sumbu x</h4>
+          <p style="font-size:0.85rem;color:var(--muted);margin-bottom:0.4rem" id="xPrompt">Selesaikan persamaan kuadratnya!</p>
+          <div class="input-row" id="xInputs">
+            <label>x₁ =</label>
+            <input type="number" class="num-input" id="x1Input" placeholder="?">
+            <label>x₂ =</label>
+            <input type="number" class="num-input" id="x2Input" placeholder="?">
+          </div>
+          <div class="controls-row" style="justify-content:flex-start">
+            <button class="btn primary" id="checkXBtn"><i class="fas fa-check"></i> Cek Jawaban</button>
+          </div>
+          <div class="feedback" id="fb2"></div>
+        </div>
+
+        <div class="step-block" id="block3" style="display:none">
+          <h4><span class="badge">3</span> Posisi Potongan Sumbu y</h4>
+          <p style="font-size:0.85rem;color:var(--muted);margin-bottom:0.4rem">Grafik memotong sumbu y di...</p>
+          <div class="choice-row" id="yChoices">
+            <button class="choice-btn" data-val="positif">y &gt; 0 (positif)</button>
+            <button class="choice-btn" data-val="nol">y = 0</button>
+            <button class="choice-btn" data-val="negatif">y &lt; 0 (negatif)</button>
+          </div>
+          <div class="feedback" id="fb3"></div>
+        </div>
+
+        <div class="step-block" id="block4" style="display:none">
+          <h4><span class="badge">4</span> Titik Potong Sumbu y</h4>
+          <p style="font-size:0.85rem;color:var(--muted);margin-bottom:0.4rem">Substitusi x = 0 ke persamaan!</p>
+          <div class="input-row">
+            <label>y =</label>
+            <input type="number" class="num-input" id="yInput" placeholder="?">
+          </div>
+          <div class="controls-row" style="justify-content:flex-start">
+            <button class="btn primary" id="checkYBtn"><i class="fas fa-check"></i> Cek Jawaban</button>
+          </div>
+          <div class="feedback" id="fb4"></div>
+        </div>
+
+        <div class="step-block" id="block5" style="display:none">
+          <h4><span class="badge">5</span> Titik Puncak</h4>
+          <p style="font-size:0.85rem;color:var(--muted);margin-bottom:0.4rem">Gunakan rumus xp = −b/2a dan yp = −D/4a</p>
+          <div class="input-row">
+            <label>xp =</label>
+            <input type="number" class="num-input" id="xpInput" placeholder="?">
+            <label>yp =</label>
+            <input type="number" class="num-input" id="ypInput" placeholder="?">
+          </div>
+          <div class="controls-row" style="justify-content:flex-start">
+            <button class="btn primary" id="checkVertexBtn"><i class="fas fa-check"></i> Cek & Gambar Grafik</button>
+          </div>
+          <div class="feedback" id="fb5"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-slide="4">
+    <div class="slide-header">
+      <span class="tag"><i class="fas fa-search"></i> Analisis Grafik</span>
+      <h2>Menentukan Persamaan dari Grafik</h2>
+      <p>Perhatikan grafik, tentukan karakteristik a, b, c, dan D. Lalu pilih persamaan yang tepat!</p>
+    </div>
+    <div style="text-align:center;margin-bottom:1.25rem">
+      <button class="btn primary" id="nextGraphBtn"><i class="fas fa-forward"></i> Soal Berikutnya</button>
+      <span style="color:var(--muted);font-size:0.85rem;margin-left:0.5rem">Soal <span id="graphIdx">1</span> dari 10</span>
+    </div>
+    <div id="graphProblemsContainer"></div>
+  </section>
+
+  <section class="slide" data-slide="5">
+    <div class="slide-header">
+      <span class="tag"><i class="fas fa-flag-checkered"></i> Penutup</span>
+      <h2>Kesimpulan & Refleksi</h2>
+      <p>Mari ringkas apa yang telah kita pelajari hari ini</p>
+    </div>
+
+    <div class="conclusion-grid">
+      <div class="summary-card">
+        <h3><i class="fas fa-lightbulb"></i> Yang Telah Kita Pelajari</h3>
+        <ul>
+          <li>Bentuk umum fungsi kuadrat: y = ax² + bx + c</li>
+          <li>Pengaruh nilai a, b, c terhadap grafik parabola</li>
+          <li>Rumus diskriminan D = b² − 4ac</li>
+          <li>Langkah menggambar: titik potong x, y, dan puncak</li>
+          <li>Menentukan persamaan dari karakteristik grafik</li>
+        </ul>
+      </div>
+      <div class="summary-card cyan">
+        <h3><i class="fas fa-circle-info"></i> Tips Penting</h3>
+        <ul>
+          <li>Cek tanda a: menentukan arah parabola</li>
+          <li>Nilai c = titik potong sumbu y</li>
+          <li>Tanda b bergeser berlawanan arah puncak</li>
+          <li>D &gt; 0: 2 titik potong; D = 0: 1 titik; D &lt; 0: tidak ada</li>
+          <li>Selalu hitung D terlebih dahulu sebelum mencari akar</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="reflection-box">
+      <h3><i class="fas fa-heart"></i> Refleksi Pembelajaran</h3>
+      <div class="reflection-q">
+        <p>1. Bagian mana yang paling kamu pahami hari ini?</p>
+        <textarea id="reflection1" placeholder="Tulis jawabanmu..."></textarea>
+      </div>
+      <div class="reflection-q">
+        <p>2. Bagian mana yang masih sulit untukmu?</p>
+        <textarea id="reflection2" placeholder="Tulis jawabanmu..."></textarea>
+      </div>
+      <div class="reflection-q">
+        <p>3. Apa yang akan kamu lakukan untuk lebih menguasai materi ini?</p>
+        <textarea id="reflection3" placeholder="Tulis jawabanmu..."></textarea>
+      </div>
+      <div style="text-align:center;margin-top:0.75rem">
+        <button class="btn primary" id="saveReflectionBtn"><i class="fas fa-save"></i> Simpan Refleksi</button>
+      </div>
+    </div>
+
+    <div class="thank-you">
+      <div class="heart"><i class="fas fa-heart"></i></div>
+      <h2>Terima Kasih!</h2>
+      <p>Hebat sekali, <span class="student-name" id="finalName">Siswa</span>! Kamu telah menyelesaikan latihan grafik fungsi kuadrat. Teruslah berlatih, dan sampai jumpa di pertemuan berikutnya!</p>
+    </div>
+  </section>
+</main>
+
+<nav class="nav-bar">
+  <button class="nav-btn secondary" id="prevBtn"><i class="fas fa-chevron-left"></i> Sebelumnya</button>
+  <div class="progress" id="progress"></div>
+  <button class="nav-btn" id="nextBtn">Selanjutnya <i class="fas fa-chevron-right"></i></button>
+</nav>
+
+<div class="toast" id="toast">
+  <i class="fas fa-info-circle"></i>
+  <div>
+    <div style="font-weight:600" id="toastTitle"></div>
+    <div style="font-size:0.85rem;opacity:0.85" id="toastMsg"></div>
+  </div>
+</div>
+
+<script>
+var state = {
+  currentSlide: 1,
+  studentName: '',
+  funcIdx: 0,
+  graphIdx: 0,
+  slide3: { step: 1, x1: null, x2: null, y: null, xp: null, yp: null, drawn: false, scale: 38 }
+};
+
+var quadraticFunctions = [
+  { a: 1, b: -6, c: 8,    roots: [2, 4], type: 'real_berbeda', yInt: 8, yType: 'positif', vertex: { x: 3, y: -1 } },
+  { a: 1, b: -4, c: 4,    roots: [2, 2], type: 'real_kembar', yInt: 4, yType: 'positif', vertex: { x: 2, y: 0 } },
+  { a: 1, b: 2, c: 5,     roots: null, type: 'imajiner', yInt: 5, yType: 'positif', vertex: { x: -1, y: 4 } },
+  { a: 1, b: -8, c: 15,   roots: [3, 5], type: 'real_berbeda', yInt: 15, yType: 'positif', vertex: { x: 4, y: -1 } },
+  { a: 1, b: 4, c: 4,     roots: [-2, -2], type: 'real_kembar', yInt: 4, yType: 'positif', vertex: { x: -2, y: 0 } },
+  { a: 1, b: -6, c: 9,    roots: [3, 3], type: 'real_kembar', yInt: 9, yType: 'positif', vertex: { x: 3, y: 0 } },
+  { a: 1, b: 6, c: 8,     roots: [-2, -4], type: 'real_berbeda', yInt: 8, yType: 'positif', vertex: { x: -3, y: -1 } },
+  { a: 1, b: -2, c: 3,    roots: null, type: 'imajiner', yInt: 3, yType: 'positif', vertex: { x: 1, y: 2 } },
+  { a: 1, b: 4, c: 3,     roots: [-1, -3], type: 'real_berbeda', yInt: 3, yType: 'positif', vertex: { x: -2, y: -1 } },
+  { a: 1, b: -8, c: 16,   roots: [4, 4], type: 'real_kembar', yInt: 16, yType: 'positif', vertex: { x: 4, y: 0 } }
+];
+
+var graphProblems = [
+  { a: 1, b: -3, c: 2, aType: 'a>0', bType: 'b<0', cType: 'c>0', dType: 'D>0',
+    options: [
+      { eq: 'y = x² - 3x + 2', correct: true },
+      { eq: 'y = x² + 3x - 2', correct: false },
+      { eq: 'y = -x² - 3x + 2', correct: false },
+      { eq: 'y = x² - 3x - 2', correct: false },
+      { eq: 'y = -x² + 3x + 2', correct: false }
+    ]
+  },
+  { a: -1, b: 4, c: -3, aType: 'a<0', bType: 'b>0', cType: 'c<0', dType: 'D>0',
+    options: [
+      { eq: 'y = -x² + 4x - 3', correct: true },
+      { eq: 'y = x² + 4x - 3', correct: false },
+      { eq: 'y = -x² - 4x + 3', correct: false },
+      { eq: 'y = -x² + 4x + 3', correct: false },
+      { eq: 'y = x² - 4x + 3', correct: false }
+    ]
+  },
+  { a: 1, b: 2, c: 1, aType: 'a>0', bType: 'b>0', cType: 'c>0', dType: 'D=0',
+    options: [
+      { eq: 'y = x² + 2x + 1', correct: true },
+      { eq: 'y = x² - 2x + 1', correct: false },
+      { eq: 'y = x² + 2x - 1', correct: false },
+      { eq: 'y = -x² + 2x + 1', correct: false },
+      { eq: 'y = x² + 4x + 1', correct: false }
+    ]
+  },
+  { a: -1, b: -4, c: -4, aType: 'a<0', bType: 'b<0', cType: 'c<0', dType: 'D=0',
+    options: [
+      { eq: 'y = -x² - 4x - 4', correct: true },
+      { eq: 'y = x² - 4x - 4', correct: false },
+      { eq: 'y = -x² + 4x - 4', correct: false },
+      { eq: 'y = -x² - 4x + 4', correct: false },
+      { eq: 'y = -x² + 4x + 4', correct: false }
+    ]
+  },
+  { a: 1, b: 0, c: 1, aType: 'a>0', bType: 'b=0', cType: 'c>0', dType: 'D<0',
+    options: [
+      { eq: 'y = x² + 1', correct: true },
+      { eq: 'y = x² - 1', correct: false },
+      { eq: 'y = -x² + 1', correct: false },
+      { eq: 'y = x² + x + 1', correct: false },
+      { eq: 'y = x² - x - 1', correct: false }
+    ]
+  },
+  { a: -1, b: 2, c: -2, aType: 'a<0', bType: 'b>0', cType: 'c<0', dType: 'D<0',
+    options: [
+      { eq: 'y = -x² + 2x - 2', correct: true },
+      { eq: 'y = x² + 2x - 2', correct: false },
+      { eq: 'y = -x² - 2x + 2', correct: false },
+      { eq: 'y = -x² + 2x + 2', correct: false },
+      { eq: 'y = x² - 2x - 2', correct: false }
+    ]
+  },
+  { a: 1, b: 0, c: -4, aType: 'a>0', bType: 'b=0', cType: 'c<0', dType: 'D>0',
+    options: [
+      { eq: 'y = x² - 4', correct: true },
+      { eq: 'y = x² + 4', correct: false },
+      { eq: 'y = -x² - 4', correct: false },
+      { eq: 'y = x² - 4x', correct: false },
+      { eq: 'y = x² + 4x', correct: false }
+    ]
+  },
+  { a: -1, b: 0, c: 1, aType: 'a<0', bType: 'b=0', cType: 'c>0', dType: 'D>0',
+    options: [
+      { eq: 'y = -x² + 1', correct: true },
+      { eq: 'y = x² + 1', correct: false },
+      { eq: 'y = -x² - 1', correct: false },
+      { eq: 'y = -x² + x + 1', correct: false },
+      { eq: 'y = -x² - x + 1', correct: false }
+    ]
+  },
+  { a: 1, b: -4, c: 4, aType: 'a>0', bType: 'b<0', cType: 'c>0', dType: 'D=0',
+    options: [
+      { eq: 'y = x² - 4x + 4', correct: true },
+      { eq: 'y = x² + 4x + 4', correct: false },
+      { eq: 'y = x² - 4x - 4', correct: false },
+      { eq: 'y = -x² - 4x + 4', correct: false },
+      { eq: 'y = x² - 2x + 4', correct: false }
+    ]
+  },
+  { a: -1, b: 6, c: -9, aType: 'a<0', bType: 'b>0', cType: 'c<0', dType: 'D=0',
+    options: [
+      { eq: 'y = -x² + 6x - 9', correct: true },
+      { eq: 'y = x² + 6x - 9', correct: false },
+      { eq: 'y = -x² - 6x + 9', correct: false },
+      { eq: 'y = -x² + 6x + 9', correct: false },
+      { eq: 'y = -x² - 6x - 9', correct: false }
+    ]
+  }
+];
+
+function showToast(type, title, msg) {
+  var toast = document.getElementById('toast');
+  toast.className = 'toast show ' + type;
+  var icon = type === 'success' ? 'fa-check-circle' : (type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle');
+  toast.querySelector('i').className = 'fas ' + icon;
+  document.getElementById('toastTitle').textContent = title;
+  document.getElementById('toastMsg').textContent = msg;
+  setTimeout(function() { toast.classList.remove('show'); }, 3500);
+}
+
+function formatEq(f) {
+  var s = 'y = ';
+  if (f.a === 1) s += 'x²';
+  else if (f.a === -1) s += '-x²';
+  else s += f.a + 'x²';
+  if (f.b > 0) s += ' + ' + (f.b === 1 ? '' : f.b) + 'x';
+  else if (f.b < 0) s += ' - ' + (f.b === -1 ? '' : Math.abs(f.b)) + 'x';
+  if (f.c > 0) s += ' + ' + f.c;
+  else if (f.c < 0) s += ' - ' + Math.abs(f.c);
+  return s;
+}
+
+function initNav() {
+  var progress = document.getElementById('progress');
+  for (var i = 1; i <= 5; i++) {
+    var d = document.createElement('button');
+    d.className = 'dot' + (i === 1 ? ' active' : '');
+    d.setAttribute('data-slide', i);
+    d.title = 'Slide ' + i;
+    (function(n) { d.addEventListener('click', function() { goToSlide(n); }); })(i);
+    progress.appendChild(d);
+  }
+  document.getElementById('prevBtn').addEventListener('click', function() {
+    if (state.currentSlide > 1) goToSlide(state.currentSlide - 1);
+  });
+  document.getElementById('nextBtn').addEventListener('click', function() {
+    if (state.currentSlide < 5) goToSlide(state.currentSlide + 1);
+  });
+  updateNavButtons();
+}
+
+function goToSlide(n) {
+  if (state.currentSlide === 1 && n > 1 && !state.studentName) {
+    showToast('error', 'Hei!', 'Masukkan namamu dulu ya!');
+    return;
+  }
+  var slides = document.querySelectorAll('.slide');
+  for (var i = 0; i < slides.length; i++) slides[i].classList.remove('active');
+  document.querySelector('.slide[data-slide="' + n + '"]').classList.add('active');
+  var dots = document.querySelectorAll('.dot');
+  for (var j = 0; j < dots.length; j++) dots[j].classList.remove('active');
+  document.querySelector('.dot[data-slide="' + n + '"]').classList.add('active');
+  state.currentSlide = n;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  updateNavButtons();
+  if (n === 5) {
+    document.getElementById('finalName').textContent = state.studentName || 'Siswa';
+  }
+  if (n === 3) {
+    setTimeout(function() { drawSlide3Canvas(); }, 100);
+  }
+  if (n === 4) {
+    setTimeout(function() { renderGraphProblem(); }, 100);
+  }
+}
+
+function updateNavButtons() {
+  document.getElementById('prevBtn').disabled = state.currentSlide === 1;
+  document.getElementById('nextBtn').disabled = state.currentSlide === 5;
+}
+
+function initSlide1() {
+  var input = document.getElementById('studentName');
+  var btn = document.getElementById('startBtn');
+  var welcome = document.getElementById('welcomeMsg');
+  input.addEventListener('input', function() {
+    btn.disabled = input.value.trim().length < 2;
+  });
+  input.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter' && !btn.disabled) btn.click();
+  });
+  btn.addEventListener('click', function() {
+    state.studentName = input.value.trim();
+    welcome.textContent = 'Selamat datang, ' + state.studentName + '! Selamat belajar!';
+    welcome.classList.add('show');
+    setTimeout(function() { goToSlide(2); }, 1200);
+  });
+}
+
+function drawCartesian(ctx, w, h, scale, opts) {
+  opts = opts || {};
+  var cx = w / 2;
+  var cy = h / 2;
+  ctx.fillStyle = '#0f1535';
+  ctx.fillRect(0, 0, w, h);
+  ctx.strokeStyle = 'rgba(124, 77, 255, 0.08)';
+  ctx.lineWidth = 1;
+  for (var x = cx % scale; x < w; x += scale) {
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+  }
+  for (var y = cy % scale; y < h; y += scale) {
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+  }
+  ctx.strokeStyle = 'rgba(0, 229, 255, 0.5)';
+  ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(0, cy); ctx.lineTo(w, cy); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx, 0); ctx.lineTo(cx, h); ctx.stroke();
+  ctx.fillStyle = 'rgba(0, 229, 255, 0.6)';
+  ctx.beginPath(); ctx.moveTo(w - 8, cy); ctx.lineTo(w - 14, cy - 5); ctx.lineTo(w - 14, cy + 5); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(cx, 8); ctx.lineTo(cx - 5, 14); ctx.lineTo(cx + 5, 14); ctx.fill();
+  ctx.fillStyle = 'rgba(0, 229, 255, 0.7)';
+  ctx.font = 'bold 12px Space Grotesk';
+  ctx.fillText('x', w - 16, cy - 8);
+  ctx.fillText('y', cx + 8, 16);
+  ctx.font = '10px Plus Jakarta Sans';
+  ctx.fillStyle = 'rgba(232, 236, 245, 0.6)';
+  var maxX = Math.floor((w / 2 - 10) / scale);
+  var maxY = Math.floor((h / 2 - 10) / scale);
+  for (var i = -maxX; i <= maxX; i++) {
+    if (i === 0) continue;
+    ctx.fillText(i, cx + i * scale - 6, cy + 14);
+  }
+  for (var j = -maxY; j <= maxY; j++) {
+    if (j === 0) continue;
+    ctx.fillText(j, cx + 5, cy - j * scale + 4);
+  }
+  ctx.fillText('0', cx + 4, cy + 13);
+}
+
+function toCanvasCoord(x, y, cx, cy, scale) {
+  return { x: cx + x * scale, y: cy - y * scale };
+}
+
+function drawPoint(ctx, x, y, cx, cy, scale, color, label) {
+  var p = toCanvasCoord(x, y, cx, cy, scale);
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.arc(p.x, p.y, 6, 0, 2 * Math.PI);
+  ctx.fill();
+  ctx.strokeStyle = '#fff';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  if (label) {
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 11px Space Grotesk';
+    ctx.fillText(label, p.x + 9, p.y - 9);
+  }
+}
+
+function drawParabola(ctx, a, b, c, cx, cy, scale, w, color) {
+  color = color || '#00e5ff';
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  var first = true;
+  for (var px = 0; px < w; px++) {
+    var xVal = (px - cx) / scale;
+    var yVal = a * xVal * xVal + b * xVal + c;
+    var py = cy - yVal * scale;
+    if (py > -50 && py < w + 50) {
+      if (first) { ctx.moveTo(px, py); first = false; }
+      else ctx.lineTo(px, py);
+    } else {
+      first = true;
+    }
+  }
+  ctx.stroke();
+}
+
+function initSlide3() {
+  document.getElementById('nextFuncBtn').addEventListener('click', nextFunction);
+  
+  // Zoom controls
+  document.getElementById('zoomInBtn').addEventListener('click', function() {
+    state.slide3.scale = Math.min(state.slide3.scale + 6, 80);
+    drawSlide3Canvas();
+  });
+  document.getElementById('zoomOutBtn').addEventListener('click', function() {
+    state.slide3.scale = Math.max(state.slide3.scale - 6, 15);
+    drawSlide3Canvas();
+  });
+
+  var akarBtns = document.querySelectorAll('#akarChoices .choice-btn');
+  for (var i = 0; i < akarBtns.length; i++) {
+    (function(btn) {
+      btn.addEventListener('click', function() {
+        handleAkarChoice(btn.getAttribute('data-val'));
+      });
+    })(akarBtns[i]);
+  }
+  document.getElementById('checkXBtn').addEventListener('click', checkXAnswer);
+  var yBtns = document.querySelectorAll('#yChoices .choice-btn');
+  for (var j = 0; j < yBtns.length; j++) {
+    (function(btn) {
+      btn.addEventListener('click', function() {
+        handleYChoice(btn.getAttribute('data-val'));
+      });
+    })(yBtns[j]);
+  }
+  document.getElementById('checkYBtn').addEventListener('click', checkYAnswer);
+  document.getElementById('checkVertexBtn').addEventListener('click', checkVertexAnswer);
+  loadFunction();
+}
+
+function loadFunction() {
+  var f = quadraticFunctions[state.funcIdx];
+  document.getElementById('funcEq').textContent = formatEq(f);
+  document.getElementById('funcIdx').textContent = state.funcIdx + 1;
+  state.slide3 = { step: 1, x1: null, x2: null, y: null, xp: null, yp: null, drawn: false, scale: 38 };
+  
+  document.getElementById('block1').style.display = '';
+  document.getElementById('block1').classList.add('active');
+  document.getElementById('block1').classList.remove('done');
+  document.getElementById('block2').style.display = 'none';
+  document.getElementById('block2').classList.remove('active', 'done');
+  document.getElementById('block3').style.display = 'none';
+  document.getElementById('block3').classList.remove('active', 'done');
+  document.getElementById('block4').style.display = 'none';
+  document.getElementById('block4').classList.remove('active', 'done');
+  document.getElementById('block5').style.display = 'none';
+  document.getElementById('block5').classList.remove('active', 'done');
+  
+  document.getElementById('x1Input').value = '';
+  document.getElementById('x2Input').value = '';
+  document.getElementById('yInput').value = '';
+  document.getElementById('xpInput').value = '';
+  document.getElementById('ypInput').value = '';
+  
+  var allBtns = document.querySelectorAll('.choice-btn');
+  for (var i = 0; i < allBtns.length; i++) allBtns[i].classList.remove('selected', 'correct', 'wrong');
+  
+  // Perbaikan bug Slide 4: allInputs adalah NodeList, harus diakses dengan indeks
+  var allInputs = document.querySelectorAll('.num-input');
+  for (var j = 0; j < allInputs.length; j++) {
+    allInputs[j].classList.remove('correct', 'wrong');
+  }
+  
+  for (var k = 1; k <= 5; k++) {
+    var fb = document.getElementById('fb' + k);
+    fb.classList.remove('show', 'success', 'error', 'info');
+  }
+  drawSlide3Canvas();
+}
+
+function handleAkarChoice(val) {
+  var f = quadraticFunctions[state.funcIdx];
+  var btns = document.querySelectorAll('#akarChoices .choice-btn');
+  for (var i = 0; i < btns.length; i++) btns[i].classList.remove('selected', 'correct', 'wrong');
+  var selected = document.querySelector('#akarChoices [data-val="' + val + '"]');
+  selected.classList.add('selected');
+  var fb = document.getElementById('fb1');
+  fb.classList.remove('success', 'error', 'info');
+  if (val === f.type) {
+    selected.classList.add('correct');
+    fb.classList.add('show', 'success');
+    if (f.type === 'real_berbeda') {
+      fb.innerHTML = '<i class="fas fa-check-circle"></i> Benar! D > 0, akar real berbeda. Sekarang cari titik potong sumbu x.';
+    } else if (f.type === 'real_kembar') {
+      fb.innerHTML = '<i class="fas fa-check-circle"></i> Benar! D = 0, akar real kembar. Sekarang cari titik potong sumbu x.';
+    } else {
+      fb.innerHTML = '<i class="fas fa-check-circle"></i> Benar! D < 0, akar imajiner. Tidak ada titik potong sumbu x. Lanjut ke sumbu y!';
+    }
+    document.getElementById('block1').classList.remove('active');
+    document.getElementById('block1').classList.add('done');
+    state.slide3.step = 2;
+    if (f.type === 'imajiner') {
+      document.getElementById('block3').style.display = '';
+      document.getElementById('block3').classList.add('active');
+      document.getElementById('xPrompt').textContent = 'Akar imajiner, tidak ada titik potong sumbu x. Lanjut ke sumbu y!';
+    } else {
+      document.getElementById('block2').style.display = '';
+      document.getElementById('block2').classList.add('active');
+      if (f.type === 'real_kembar') {
+        document.getElementById('xPrompt').textContent = 'Akar kembar! Isi x₁ dan x₂ dengan nilai yang sama.';
+      } else {
+        document.getElementById('xPrompt').textContent = 'Isi kedua akar persamaan kuadrat!';
+      }
+    }
+    drawSlide3Canvas();
+  } else {
+    selected.classList.add('wrong');
+    fb.classList.add('show', 'error');
+    var D = f.b * f.b - 4 * f.a * f.c;
+    fb.innerHTML = '<i class="fas fa-times-circle"></i> Belum tepat. D = ' + f.b + '² - 4(' + f.a + ')(' + f.c + ') = ' + D + '. Coba lagi!';
+  }
+}
+
+function checkXAnswer() {
+  var f = quadraticFunctions[state.funcIdx];
+  var x1Input = document.getElementById('x1Input');
+  var x2Input = document.getElementById('x2Input');
+  var v1 = parseInt(x1Input.value);
+  var v2 = parseInt(x2Input.value);
+  x1Input.classList.remove('correct', 'wrong');
+  x2Input.classList.remove('correct', 'wrong');
+  var fb = document.getElementById('fb2');
+  fb.classList.remove('success', 'error', 'info');
+  if (isNaN(v1) || isNaN(v2)) {
+    fb.classList.add('show', 'error');
+    fb.innerHTML = '<i class="fas fa-exclamation-circle"></i> Isi kedua nilai akar terlebih dahulu!';
+    return;
+  }
+  var correct1 = (v1 === f.roots[0] && v2 === f.roots[1]) || (v1 === f.roots[1] && v2 === f.roots[0]);
+  if (correct1) {
+    x1Input.classList.add('correct');
+    x2Input.classList.add('correct');
+    fb.classList.add('show', 'success');
+    fb.innerHTML = '<i class="fas fa-check-circle"></i> Benar! Titik potong: (' + f.roots[0] + ', 0) dan (' + f.roots[1] + ', 0).';
+    state.slide3.x1 = v1;
+    state.slide3.x2 = v2;
+    document.getElementById('block2').classList.remove('active');
+    document.getElementById('block2').classList.add('done');
+    state.slide3.step = 3;
+    document.getElementById('block3').style.display = '';
+    document.getElementById('block3').classList.add('active');
+    drawSlide3Canvas();
+  } else {
+    x1Input.classList.add('wrong');
+    x2Input.classList.add('wrong');
+    fb.classList.add('show', 'error');
+    fb.innerHTML = '<i class="fas fa-times-circle"></i> Belum tepat. Coba hitung ulang: x = (-b ± √D) / 2a';
+  }
+}
+
+function handleYChoice(val) {
+  var f = quadraticFunctions[state.funcIdx];
+  var btns = document.querySelectorAll('#yChoices .choice-btn');
+  for (var i = 0; i < btns.length; i++) btns[i].classList.remove('selected', 'correct', 'wrong');
+  var selected = document.querySelector('#yChoices [data-val="' + val + '"]');
+  selected.classList.add('selected');
+  var fb = document.getElementById('fb3');
+  fb.classList.remove('success', 'error', 'info');
+  if (val === f.yType) {
+    selected.classList.add('correct');
+    fb.classList.add('show', 'success');
+    fb.innerHTML = '<i class="fas fa-check-circle"></i> Benar! c = ' + f.c + ', jadi grafik memotong sumbu y di ' + (f.yType === 'positif' ? 'atas' : (f.yType === 'negatif' ? 'bawah' : 'origin')) + '. Sekarang cari nilainya!';
+    document.getElementById('block3').classList.remove('active');
+    document.getElementById('block3').classList.add('done');
+    state.slide3.step = 4;
+    document.getElementById('block4').style.display = '';
+    document.getElementById('block4').classList.add('active');
+  } else {
+    selected.classList.add('wrong');
+    fb.classList.add('show', 'error');
+    fb.innerHTML = '<i class="fas fa-times-circle"></i> Belum tepat. c = ' + f.c + '. Apakah c positif, nol, atau negatif?';
+  }
+}
+
+function checkYAnswer() {
+  var f = quadraticFunctions[state.funcIdx];
+  var yInput = document.getElementById('yInput');
+  var v = parseInt(yInput.value);
+  yInput.classList.remove('correct', 'wrong');
+  var fb = document.getElementById('fb4');
+  fb.classList.remove('success', 'error', 'info');
+  if (isNaN(v)) {
+    fb.classList.add('show', 'error');
+    fb.innerHTML = '<i class="fas fa-exclamation-circle"></i> Isi nilai y terlebih dahulu!';
+    return;
+  }
+  if (v === f.yInt) {
+    yInput.classList.add('correct');
+    fb.classList.add('show', 'success');
+    fb.innerHTML = '<i class="fas fa-check-circle"></i> Benar! Titik potong sumbu y: (0, ' + f.yInt + ').';
+    state.slide3.y = v;
+    document.getElementById('block4').classList.remove('active');
+    document.getElementById('block4').classList.add('done');
+    state.slide3.step = 5;
+    document.getElementById('block5').style.display = '';
+    document.getElementById('block5').classList.add('active');
+    drawSlide3Canvas();
+  } else {
+    yInput.classList.add('wrong');
+    fb.classList.add('show', 'error');
+    fb.innerHTML = '<i class="fas fa-times-circle"></i> Belum tepat. Substitusi x = 0: y = c = ' + f.c;
+  }
+}
+
+function checkVertexAnswer() {
+  var f = quadraticFunctions[state.funcIdx];
+  var xpInput = document.getElementById('xpInput');
+  var ypInput = document.getElementById('ypInput');
+  var vxp = parseInt(xpInput.value);
+  var vyp = parseInt(ypInput.value);
+  xpInput.classList.remove('correct', 'wrong');
+  ypInput.classList.remove('correct', 'wrong');
+  var fb = document.getElementById('fb5');
+  fb.classList.remove('success', 'error', 'info');
+  if (isNaN(vxp) || isNaN(vyp)) {
+    fb.classList.add('show', 'error');
+    fb.innerHTML = '<i class="fas fa-exclamation-circle"></i> Isi kedua nilai titik puncak!';
+    return;
+  }
+  if (vxp === f.vertex.x && vyp === f.vertex.y) {
+    xpInput.classList.add('correct');
+    ypInput.classList.add('correct');
+    fb.classList.add('show', 'success');
+    fb.innerHTML = '<i class="fas fa-check-circle"></i> Hebat! Titik puncak: (' + f.vertex.x + ', ' + f.vertex.y + '). Grafik akan digambar!';
+    state.slide3.xp = vxp;
+    state.slide3.yp = vyp;
+    state.slide3.drawn = true;
+    document.getElementById('block5').classList.remove('active');
+    document.getElementById('block5').classList.add('done');
+    drawSlide3Canvas();
+    showToast('success', 'Luar Biasa!', 'Grafik fungsi kuadrat telah selesai digambar!');
+  } else {
+    xpInput.classList.add('wrong');
+    ypInput.classList.add('wrong');
+    fb.classList.add('show', 'error');
+    fb.innerHTML = '<i class="fas fa-times-circle"></i> Belum tepat. xp = -b/2a = -(' + f.b + ')/(2×' + f.a + ') = ' + f.vertex.x + ', yp = -D/4a = ' + f.vertex.y;
+  }
+}
+
+function nextFunction() {
+  state.funcIdx = (state.funcIdx + 1) % quadraticFunctions.length;
+  loadFunction();
+}
+
+function drawSlide3Canvas() {
+  var canvas = document.getElementById('mainCanvas');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var w = canvas.width, h = canvas.height;
+  var scale = state.slide3.scale;
+  var cx = w / 2, cy = h / 2;
+  var f = quadraticFunctions[state.funcIdx];
+  drawCartesian(ctx, w, h, scale);
+  if (state.slide3.x1 !== null && f.roots) {
+    drawPoint(ctx, f.roots[0], 0, cx, cy, scale, '#ff5252', '(' + f.roots[0] + ',0)');
+    if (f.roots[0] !== f.roots[1]) {
+      drawPoint(ctx, f.roots[1], 0, cx, cy, scale, '#ff5252', '(' + f.roots[1] + ',0)');
+    }
+  }
+  if (state.slide3.y !== null) {
+    drawPoint(ctx, 0, f.yInt, cx, cy, scale, '#69f0ae', '(0,' + f.yInt + ')');
+  }
+  if (state.slide3.xp !== null) {
+    drawPoint(ctx, f.vertex.x, f.vertex.y, cx, cy, scale, '#ffd740', '(' + f.vertex.x + ',' + f.vertex.y + ')');
+  }
+  if (state.slide3.drawn) {
+    drawParabola(ctx, f.a, f.b, f.c, cx, cy, scale, w, '#00e5ff');
+  }
+}
+
+function initSlide4() {
+  document.getElementById('nextGraphBtn').addEventListener('click', nextGraph);
+  renderGraphProblem();
+}
+
+var currentProblemState = { a: null, b: null, c: null, d: null, eq: null };
+
+function renderGraphProblem() {
+  var p = graphProblems[state.graphIdx];
+  document.getElementById('graphIdx').textContent = state.graphIdx + 1;
+  currentProblemState = { a: null, b: null, c: null, d: null, eq: null };
+  var container = document.getElementById('graphProblemsContainer');
+  var html = '<div class="graph-problem">' +
+    '<div class="graph-problem-header">' +
+      '<h3><span class="prob-num">' + (state.graphIdx + 1) + '</span> Tentukan persamaan grafik berikut</h3>' +
+    '</div>' +
+    '<div class="graph-problem-content">' +
+      '<canvas id="graphCanvas' + state.graphIdx + '" width="340" height="300"></canvas>' +
+      '<div class="choices-section">' +
+        '<div class="choice-group" id="grp-a">' +
+          '<div class="group-label"><i class="fas fa-arrow-up"></i> Nilai a <span class="status" id="stat-a">?</span></div>' +
+          '<div class="choice-row">' +
+            '<button class="choice-btn gchoice" data-type="a" data-val="a>0">a &gt; 0</button>' +
+            '<button class="choice-btn gchoice" data-type="a" data-val="a<0">a &lt; 0</button>' +
+          '</div>' +
+        '</div>' +
+        '<div class="choice-group" id="grp-b">' +
+          '<div class="group-label"><i class="fas fa-arrows-left-right"></i> Nilai b <span class="status" id="stat-b">?</span></div>' +
+          '<div class="choice-row">' +
+            '<button class="choice-btn gchoice" data-type="b" data-val="b>0">b &gt; 0</button>' +
+            '<button class="choice-btn gchoice" data-type="b" data-val="b=0">b = 0</button>' +
+            '<button class="choice-btn gchoice" data-type="b" data-val="b<0">b &lt; 0</button>' +
+          '</div>' +
+        '</div>' +
+        '<div class="choice-group" id="grp-c">' +
+          '<div class="group-label"><i class="fas fa-anchor"></i> Nilai c <span class="status" id="stat-c">?</span></div>' +
+          '<div class="choice-row">' +
+            '<button class="choice-btn gchoice" data-type="c" data-val="c>0">c &gt; 0</button>' +
+            '<button class="choice-btn gchoice" data-type="c" data-val="c=0">c = 0</button>' +
+            '<button class="choice-btn gchoice" data-type="c" data-val="c<0">c &lt; 0</button>' +
+          '</div>' +
+        '</div>' +
+        '<div class="choice-group" id="grp-d">' +
+          '<div class="group-label"><i class="fas fa-calculator"></i> Diskriminan D <span class="status" id="stat-d">?</span></div>' +
+          '<div class="choice-row">' +
+            '<button class="choice-btn gchoice" data-type="d" data-val="D>0">D &gt; 0</button>' +
+            '<button class="choice-btn gchoice" data-type="d" data-val="D=0">D = 0</button>' +
+            '<button class="choice-btn gchoice" data-type="d" data-val="D<0">D &lt; 0</button>' +
+          '</div>' +
+        '</div>' +
+        '<div class="choice-group" id="grp-eq" style="display:none">' +
+          '<div class="group-label"><i class="fas fa-check-circle"></i> Pilih persamaan yang tepat</div>' +
+          '<div class="eq-options" id="eqOptions">';
+  for (var i = 0; i < p.options.length; i++) {
+    var letter = String.fromCharCode(65 + i);
+    html += '<div class="eq-option" data-idx="' + i + '"><span class="letter">' + letter + '</span><span>' + p.options[i].eq + '</span></div>';
+  }
+  html += '</div><div class="feedback" id="fbGraph" style="margin-top:0.6rem"></div></div>' +
+    '</div></div></div>';
+  container.innerHTML = html;
+
+  var gchoices = container.querySelectorAll('.gchoice');
+  for (var k = 0; k < gchoices.length; k++) {
+    (function(btn) {
+      btn.addEventListener('click', function() {
+        handleGraphChoice(btn.getAttribute('data-type'), btn.getAttribute('data-val'), btn);
+      });
+    })(gchoices[k]);
+  }
+  var eqOptions = container.querySelectorAll('.eq-option');
+  for (var m = 0; m < eqOptions.length; m++) {
+    (function(opt) {
+      opt.addEventListener('click', function() {
+        handleEqChoice(parseInt(opt.getAttribute('data-idx')), opt);
+      });
+    })(eqOptions[m]);
+  }
+
+  setTimeout(function() { drawGraphCanvas(p); }, 50);
+}
+
+function drawGraphCanvas(p) {
+  var canvas = document.getElementById('graphCanvas' + state.graphIdx);
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var w = canvas.width, h = canvas.height;
+  var scale = 28;
+  var cx = w / 2, cy = h / 2;
+  drawCartesian(ctx, w, h, scale);
+  drawParabola(ctx, p.a, p.b, p.c, cx, cy, scale, w, '#7c4dff');
+}
+
+function handleGraphChoice(type, val, btn) {
+  var p = graphProblems[state.graphIdx];
+  var group = btn.closest('.choice-group');
+  var allBtns = group.querySelectorAll('.choice-btn');
+  for (var i = 0; i < allBtns.length; i++) allBtns[i].classList.remove('selected', 'correct', 'wrong');
+  btn.classList.add('selected');
+  var correctVal = type === 'a' ? p.aType : (type === 'b' ? p.bType : (type === 'c' ? p.cType : p.dType));
+  var stat = document.getElementById('stat-' + type);
+  stat.classList.remove('correct');
+  if (val === correctVal) {
+    btn.classList.add('correct');
+    stat.textContent = '✓ Benar';
+    stat.classList.add('correct');
+    currentProblemState[type] = val;
+    checkAllGraphChoices();
+  } else {
+    btn.classList.add('wrong');
+    stat.textContent = '✗ Salah';
+    currentProblemState[type] = null;
+  }
+}
+
+function checkAllGraphChoices() {
+  if (currentProblemState.a && currentProblemState.b && currentProblemState.c && currentProblemState.d) {
+    document.getElementById('grp-eq').style.display = '';
+    showToast('success', 'Kerja Bagus!', 'Sekarang pilih persamaan yang sesuai dengan grafik!');
+  }
+}
+
+function handleEqChoice(idx, opt) {
+  var p = graphProblems[state.graphIdx];
+  var allOpts = document.querySelectorAll('.eq-option');
+  for (var i = 0; i < allOpts.length; i++) allOpts[i].classList.remove('selected', 'correct', 'wrong');
+  opt.classList.add('selected');
+  var fb = document.getElementById('fbGraph');
+  fb.classList.remove('success', 'error', 'info');
+  if (p.options[idx].correct) {
+    opt.classList.add('correct');
+    fb.classList.add('show', 'success');
+    fb.innerHTML = '<i class="fas fa-check-circle"></i> Benar sekali! Persamaan yang tepat adalah: <strong>' + p.options[idx].eq + '</strong>';
+    showToast('success', 'Hebat!', 'Jawabanmu tepat!');
+  } else {
+    opt.classList.add('wrong');
+    var correctIdx = -1;
+    for (var j = 0; j < p.options.length; j++) {
+      if (p.options[j].correct) { correctIdx = j; break; }
+    }
+    var allOpts2 = document.querySelectorAll('.eq-option');
+    allOpts2[correctIdx].classList.add('correct');
+    fb.classList.add('show', 'error');
+    fb.innerHTML = '<i class="fas fa-times-circle"></i> Belum tepat. Jawaban yang benar: <strong>' + p.options[correctIdx].eq + '</strong>';
+  }
+}
+
+function nextGraph() {
+  state.graphIdx = (state.graphIdx + 1) % graphProblems.length;
+  renderGraphProblem();
+}
+
+function initSlide5() {
+  document.getElementById('saveReflectionBtn').addEventListener('click', function() {
+    var r1 = document.getElementById('reflection1').value.trim();
+    var r2 = document.getElementById('reflection2').value.trim();
+    var r3 = document.getElementById('reflection3').value.trim();
+    if (r1.length < 3 && r2.length < 3 && r3.length < 3) {
+      showToast('error', 'Hmm...', 'Isi minimal satu refleksi dulu ya!');
+      return;
+    }
+    showToast('success', 'Tersimpan!', 'Refleksi kamu telah tersimpan. Terima kasih sudah belajar!');
+  });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  initNav();
+  initSlide1();
+  initSlide3();
+  initSlide4();
+  initSlide5();
+});
+</script>
+</body>
+</html>
