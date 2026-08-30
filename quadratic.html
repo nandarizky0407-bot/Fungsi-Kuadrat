@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Expansion & Factorisation | Cambridge Stage 8</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;0,9..144,900;1,9..144,400&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0e1116;
+  --bg-2: #161b22;
+  --bg-3: #1f2530;
+  --fg: #f5efe0;
+  --fg-dim: #c9c2b0;
+  --muted: #8b8478;
+  --accent: #f4a747;
+  --accent-2: #e85d4a;
+  --accent-3: #7dc4a8;
+  --accent-4: #d4b896;
+  --border: rgba(245,239,224,0.08);
+  --border-strong: rgba(245,239,224,0.18);
+  --card: rgba(255,255,255,0.025);
+}
+
+html, body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: 'DM Sans', sans-serif;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+}
+
+.bg-grid { position: fixed; inset: 0; background-image: linear-gradient(rgba(245,239,224,0.022) 1px, transparent 1px), linear-gradient(90deg, rgba(245,239,224,0.022) 1px, transparent 1px); background-size: 60px 60px; pointer-events: none; z-index: 0; }
+.bg-glow { position: fixed; width: 900px; height: 900px; border-radius: 50%; background: radial-gradient(circle, rgba(244,167,71,0.10), transparent 70%); top: -350px; right: -250px; filter: blur(90px); pointer-events: none; z-index: 0; }
+.bg-glow-2 { position: fixed; width: 700px; height: 700px; border-radius: 50%; background: radial-gradient(circle, rgba(232,93,74,0.08), transparent 70%); bottom: -250px; left: -200px; filter: blur(90px); pointer-events: none; z-index: 0; }
+
+.progress-bar { position: fixed; top: 0; left: 0; right: 0; height: 3px; background: rgba(245,239,224,0.05); z-index: 100; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); width: 6.25%; transition: width 0.5s ease; }
+.slide-counter { position: fixed; top: 22px; right: 30px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--muted); letter-spacing: 0.15em; z-index: 100; }
+.slide-counter span:first-child { color: var(--accent); font-weight: 600; }
+
+.slides { position: relative; width: 100vw; height: 100vh; z-index: 1; }
+.slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; padding: 70px 80px 90px; overflow-y: auto; opacity: 0; pointer-events: none; transform: translateX(60px); transition: opacity 0.5s ease, transform 0.5s ease; }
+.slide.active { opacity: 1; pointer-events: auto; transform: translateX(0); }
+.slide.prev { transform: translateX(-60px); }
+.slide::-webkit-scrollbar { width: 8px; }
+.slide::-webkit-scrollbar-track { background: transparent; }
+.slide::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; }
+
+h1, h2, h3 { font-family: 'Fraunces', serif; font-weight: 800; letter-spacing: -0.02em; }
+.label-tag { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.22em; color: var(--accent); text-transform: uppercase; padding: 7px 14px; border: 1px solid rgba(244,167,71,0.4); border-radius: 100px; }
+
+.nav-controls { position: fixed; bottom: 28px; right: 30px; display: flex; gap: 12px; z-index: 100; }
+.nav-btn { width: 52px; height: 52px; border-radius: 50%; background: var(--bg-2); border: 1px solid var(--border-strong); color: var(--fg); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; transition: all 0.25s; }
+.nav-btn:hover:not(:disabled) { background: var(--accent); color: var(--bg); border-color: var(--accent); transform: scale(1.05); }
+.nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+.cover { display: flex; flex-direction: column; justify-content: center; height: 100%; max-width: 1100px; margin: 0 auto; position: relative; }
+.cover h1 { font-size: clamp(48px, 7.5vw, 104px); line-height: 0.93; margin: 28px 0; font-weight: 900; }
+.cover h1 .accent { color: var(--accent); font-style: italic; font-weight: 400; }
+.cover .subtitle { font-size: 18px; color: var(--fg-dim); max-width: 640px; line-height: 1.6; margin-bottom: 44px; }
+.cover-meta { display: flex; gap: 32px; margin-bottom: 36px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--muted); letter-spacing: 0.1em; flex-wrap: wrap; }
+.cover-meta span strong { color: var(--fg); }
+.name-input-group { display: flex; gap: 14px; align-items: stretch; max-width: 560px; }
+.name-input { flex: 1; padding: 18px 22px; background: var(--bg-2); border: 1px solid var(--border-strong); border-radius: 14px; color: var(--fg); font-family: 'DM Sans', sans-serif; font-size: 16px; outline: none; transition: all 0.25s; }
+.name-input:focus { border-color: var(--accent); background: var(--bg-3); }
+.name-input::placeholder { color: var(--muted); }
+.start-btn { padding: 0 36px; background: var(--accent); color: var(--bg); border: none; border-radius: 14px; font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 15px; cursor: pointer; transition: all 0.25s; display: flex; align-items: center; gap: 10px; }
+.start-btn:hover { background: var(--fg); transform: translateY(-2px); }
+
+.floating-symbols { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.math-float { position: absolute; font-family: 'Fraunces', serif; font-style: italic; color: rgba(244,167,71,0.07); user-select: none; }
+
+.slide-header { margin-bottom: 32px; }
+.slide-header h2 { font-size: clamp(34px, 4.5vw, 56px); line-height: 1.02; margin-top: 14px; }
+.slide-header h2 .accent { color: var(--accent); font-style: italic; font-weight: 400; }
+
+.trigger-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 28px; }
+.trigger-card { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 28px; transition: all 0.35s; }
+.trigger-card:hover { border-color: rgba(244,167,71,0.3); transform: translateY(-4px); }
+.trigger-card .scenario-num { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--accent); letter-spacing: 0.2em; margin-bottom: 14px; }
+.trigger-card h3 { font-size: 22px; margin-bottom: 12px; font-family: 'Fraunces', serif; font-weight: 600; }
+.trigger-card p { color: var(--fg-dim); line-height: 1.6; font-size: 15px; }
+.trigger-card .math-link { display: inline-block; margin-top: 14px; padding: 6px 12px; background: rgba(244,167,71,0.1); border-radius: 6px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent); }
+
+.objectives-list { display: grid; gap: 14px; margin-top: 28px; }
+.objective-item { display: flex; gap: 22px; align-items: flex-start; padding: 20px 26px; background: var(--card); border: 1px solid var(--border); border-radius: 14px; transition: all 0.3s; }
+.objective-item:hover { border-color: rgba(244,167,71,0.3); transform: translateX(4px); }
+.objective-num { font-family: 'Fraunces', serif; font-size: 38px; font-weight: 800; color: var(--accent); line-height: 1; min-width: 56px; font-style: italic; }
+.objective-text { font-size: 16px; line-height: 1.5; color: var(--fg-dim); padding-top: 8px; }
+.objective-text strong { color: var(--fg); font-weight: 600; }
+
+.material-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 24px; }
+.material-section h3 { font-size: 13px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); font-family: 'JetBrains Mono', monospace; margin-bottom: 18px; font-weight: 600; }
+.def-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin-bottom: 18px; }
+.def-card .formula { font-family: 'JetBrains Mono', monospace; font-size: 20px; color: var(--fg); padding: 16px 20px; background: var(--bg-2); border-left: 3px solid var(--accent); border-radius: 8px; margin: 14px 0; text-align: center; }
+.def-card p { color: var(--fg-dim); line-height: 1.6; font-size: 15px; }
+.example-step { background: var(--bg-2); border-radius: 10px; padding: 14px 20px; margin-bottom: 10px; border-left: 3px solid var(--accent-3); }
+.example-step .step-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--accent); text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.15em; }
+.example-step .step-content { font-family: 'JetBrains Mono', monospace; font-size: 15px; color: var(--fg); }
+.example-step .step-explanation { font-size: 13px; color: var(--fg-dim); margin-top: 8px; line-height: 1.5; }
+.tip-box { margin-top: 18px; padding: 16px 20px; background: rgba(244,167,71,0.06); border: 1px solid rgba(244,167,71,0.2); border-radius: 12px; }
+.tip-box .tip-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 6px; }
+.tip-box p { font-size: 14px; color: var(--fg-dim); line-height: 1.5; }
+
+.material-practice-section { margin-top: 40px; }
+.section-divider { display: flex; align-items: center; gap: 16px; margin: 0 0 24px; }
+.section-divider h3 { font-family: 'Fraunces', serif; font-size: 22px; color: var(--fg); font-weight: 600; font-style: italic; white-space: nowrap; }
+.section-divider .line { flex: 1; height: 1px; background: var(--border-strong); }
+.section-divider .num { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--accent); letter-spacing: 0.2em; }
+
+.question-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 22px 24px; margin-bottom: 14px; transition: all 0.3s; }
+.question-card:hover { border-color: var(--border-strong); }
+.question-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; gap: 16px; }
+.question-number { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--accent); letter-spacing: 0.15em; padding: 4px 10px; background: rgba(244,167,71,0.08); border-radius: 100px; }
+.question-topic { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.15em; padding: 4px 10px; border: 1px solid var(--border-strong); border-radius: 100px; }
+.question-text { font-size: 16px; line-height: 1.6; margin-bottom: 14px; color: var(--fg); }
+.math-inline { font-family: 'JetBrains Mono', monospace; background: var(--bg-2); padding: 2px 8px; border-radius: 4px; font-size: 14px; color: var(--accent-4); }
+
+.options { display: grid; gap: 8px; margin-bottom: 14px; }
+.option { padding: 12px 16px; background: var(--bg-2); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; transition: all 0.2s; font-family: 'JetBrains Mono', monospace; font-size: 14px; display: flex; align-items: center; gap: 12px; color: var(--fg); }
+.option:hover { border-color: var(--accent); background: var(--bg-3); }
+.option.selected { border-color: var(--accent); background: rgba(244,167,71,0.1); }
+.option.correct { border-color: var(--accent-3); background: rgba(125,196,168,0.12); }
+.option.correct .option-letter { background: var(--accent-3); color: var(--bg); }
+.option.wrong { border-color: var(--accent-2); background: rgba(232,93,74,0.1); }
+.option.wrong .option-letter { background: var(--accent-2); color: var(--bg); }
+.option-letter { width: 26px; height: 26px; border-radius: 50%; background: var(--bg-3); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; transition: all 0.2s; }
+
+.show-answer-btn { background: transparent; border: 1px solid var(--border-strong); color: var(--fg-dim); padding: 8px 16px; border-radius: 100px; cursor: pointer; font-size: 11px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.15em; transition: all 0.2s; }
+.show-answer-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+.explanation { margin-top: 14px; padding: 16px 18px; background: rgba(125,196,168,0.05); border-left: 3px solid var(--accent-3); border-radius: 8px; font-size: 14px; line-height: 1.6; color: var(--fg-dim); display: none; }
+.explanation.show { display: block; animation: slideDown 0.35s ease; }
+@keyframes slideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+.explanation-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--accent-3); text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 6px; }
+.explanation .answer-reveal { display: inline-block; padding: 3px 10px; background: rgba(125,196,168,0.15); color: var(--accent-3); border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 13px; margin: 4px 0; }
+
+.memory-container { max-width: 760px; margin: 0 auto; }
+.memory-info { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 28px; }
+.memory-stat { padding: 18px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; text-align: center; }
+.memory-stat-value { font-family: 'Fraunces', serif; font-size: 30px; font-weight: 800; color: var(--accent); line-height: 1; }
+.memory-stat-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.15em; margin-top: 6px; }
+
+.memory-game { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; perspective: 1000px; }
+.memory-card { width: 100%; height: 130px; position: relative; cursor: pointer; transform-style: preserve-3d; transition: transform 0.6s; }
+.memory-card.flipped, .memory-card.matched, .memory-card.preview { transform: rotateY(180deg); }
+.card-face { position: absolute; top: 0; left: 0; width: 100%; height: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 14px; text-align: center; padding: 10px; border: 1px solid var(--border-strong); }
+.card-front { background: linear-gradient(135deg, var(--bg-2), var(--bg-3)); color: var(--accent); font-size: 36px; font-family: 'Fraunces', serif; font-style: italic; }
+.memory-card:hover:not(.flipped):not(.matched):not(.preview) .card-front { background: linear-gradient(135deg, var(--bg-3), #2a323e); border-color: rgba(244,167,71,0.3); }
+.card-back { background: var(--bg-2); color: var(--fg); transform: rotateY(180deg); }
+.memory-card.matched .card-back { background: rgba(125,196,168,0.15); border-color: var(--accent-3); color: var(--accent-3); }
+.memory-instructions { text-align: center; margin-top: 24px; color: var(--fg-dim); font-size: 14px; font-family: 'JetBrains Mono', monospace; line-height: 1.6; }
+.memory-reset { display: block; margin: 20px auto 0; padding: 12px 28px; background: transparent; border: 1px solid var(--accent); color: var(--accent); border-radius: 100px; cursor: pointer; font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; transition: all 0.2s; }
+.memory-reset:hover { background: var(--accent); color: var(--bg); }
+
+.quiz-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding: 20px 28px; background: var(--card); border: 1px solid var(--border); border-radius: 16px; flex-wrap: wrap; gap: 16px; }
+.quiz-stats { display: flex; gap: 28px; }
+.quiz-stat { display: flex; flex-direction: column; gap: 2px; }
+.quiz-stat-value { font-family: 'Fraunces', serif; font-size: 28px; font-weight: 800; color: var(--accent); line-height: 1; }
+.quiz-stat-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.15em; }
+.check-all-btn { padding: 14px 32px; background: var(--accent); color: var(--bg); border: none; border-radius: 100px; font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 14px; cursor: pointer; transition: all 0.25s; white-space: nowrap; }
+.check-all-btn:hover { background: var(--fg); transform: translateY(-2px); }
+.quiz-legend { display: flex; gap: 16px; margin-bottom: 20px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); flex-wrap: wrap; }
+.legend-item { display: flex; align-items: center; gap: 8px; }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+.conclusion { display: flex; flex-direction: column; justify-content: center; height: 100%; }
+.conclusion h2 { font-size: clamp(44px, 6vw, 80px); margin: 24px 0; line-height: 1; }
+.conclusion h2 .accent { color: var(--accent); font-style: italic; font-weight: 400; }
+.conclusion-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 36px 0; }
+.conclusion-card { padding: 28px 26px; background: var(--card); border: 1px solid var(--border); border-radius: 18px; transition: all 0.3s; }
+.conclusion-card:hover { border-color: rgba(244,167,71,0.3); transform: translateY(-4px); }
+.conclusion-card .card-num { font-family: 'Fraunces', serif; font-size: 14px; color: var(--accent); letter-spacing: 0.2em; margin-bottom: 14px; font-style: italic; }
+.conclusion-card h3 { font-size: 22px; color: var(--fg); margin-bottom: 16px; font-weight: 600; }
+.conclusion-card ul { list-style: none; }
+.conclusion-card li { padding: 7px 0 7px 22px; color: var(--fg-dim); font-size: 14px; line-height: 1.5; position: relative; }
+.conclusion-card li::before { content: '→'; position: absolute; left: 0; color: var(--accent); font-weight: 700; }
+.thank-you { text-align: center; margin-top: 28px; }
+.thank-you h3 { font-family: 'Fraunces', serif; font-size: clamp(40px, 5vw, 64px); font-weight: 400; font-style: italic; color: var(--accent); margin-bottom: 12px; }
+.thank-you p { color: var(--fg-dim); font-size: 16px; font-family: 'JetBrains Mono', monospace; }
+
+.toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(120px); padding: 14px 26px; background: var(--bg-2); border: 1px solid var(--border-strong); border-radius: 100px; font-size: 14px; z-index: 200; transition: transform 0.35s ease; max-width: 90vw; }
+.toast.show { transform: translateX(-50%) translateY(0); }
+.toast.success { border-color: var(--accent-3); }
+.toast.error { border-color: var(--accent-2); }
+
+@media (max-width: 900px) {
+  .slide { padding: 60px 24px 90px; }
+  .material-layout { grid-template-columns: 1fr; gap: 24px; }
+  .trigger-grid { grid-template-columns: 1fr; }
+  .conclusion-grid { grid-template-columns: 1fr; }
+  .memory-game { grid-template-columns: repeat(3, 1fr); }
+  .memory-card { height: 100px; }
+  .memory-info { grid-template-columns: repeat(2, 1fr); }
+  .quiz-header { flex-direction: column; align-items: stretch; }
+  .quiz-stats { justify-content: center; }
+  .cover-meta { flex-direction: column; gap: 8px; }
+  .name-input-group { flex-direction: column; }
+  .start-btn { padding: 16px 32px; justify-content: center; }
+}
+
+@keyframes float { 0%, 100% { transform: translate(0, 0) rotate(0deg); } 50% { transform: translate(20px, -30px) rotate(5deg); } }
+.math-float:nth-child(1) { top: 8%; right: 5%; font-size: 180px; animation: float 12s ease-in-out infinite; }
+.math-float:nth-child(2) { top: 60%; right: 12%; font-size: 140px; animation: float 15s ease-in-out infinite reverse; }
+.math-float:nth-child(3) { top: 25%; left: 8%; font-size: 100px; animation: float 18s ease-in-out infinite; }
+.math-float:nth-child(4) { bottom: 15%; left: 15%; font-size: 120px; animation: float 14s ease-in-out infinite reverse; }
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-glow"></div>
+<div class="bg-glow-2"></div>
+
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+<div class="slide-counter"><span id="currentSlide">01</span> / <span id="totalSlides">16</span></div>
+
+<div class="slides">
+
+  <!-- SLIDE 1: COVER -->
+  <section class="slide active" data-slide="0">
+    <div class="cover">
+      <div class="floating-symbols">
+        <div class="math-float">x&#178;</div>
+        <div class="math-float">(a+b)</div>
+        <div class="math-float">&#8721;</div>
+        <div class="math-float">a&#178;&#8722;b&#178;</div>
+      </div>
+      <span class="label-tag">Cambridge Lower Secondary &#183; Stage 8 Mathematics</span>
+      <h1>Expansion &amp;<br><span class="accent">Factorisation</span> of<br>Algebraic Expressions</h1>
+      <p class="subtitle">An interactive journey through quadratic expressions &#8212; from the foundations of expanding brackets to the elegance of factorisation patterns. Built for curious minds ready to think in symbols.</p>
+      <div class="cover-meta">
+        <span><strong>Curriculum:</strong> Cambridge Stage 8</span>
+        <span><strong>Unit:</strong> Algebra</span>
+        <span><strong>Duration:</strong> 60 minutes</span>
+      </div>
+      <div class="name-input-group">
+        <input type="text" class="name-input" id="studentName" placeholder="Type your full name to begin...">
+        <button class="start-btn" id="startBtn">Begin Lesson &#8594;</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 2: TRIGGER -->
+  <section class="slide" data-slide="1">
+    <div class="slide-header">
+      <span class="label-tag">Trigger Questions &#183; Apersepsi</span>
+      <h2>Why does this <span class="accent">matter</span> in real life?</h2>
+    </div>
+    <p style="color: var(--fg-dim); font-size: 16px; line-height: 1.6; max-width: 800px;">Before we dive into symbols and formulas, let's explore where expansion and factorisation quietly shape the world around us.</p>
+    <div class="trigger-grid">
+      <div class="trigger-card"><div class="scenario-num">SCENARIO 01</div><h3>Designing a Garden Bed</h3><p>A rectangular garden is <span class="math-inline">x + 3</span> metres long and <span class="math-inline">x + 2</span> metres wide. To order soil, you need the total area in expanded form.</p><div class="math-link">&#8594; (x+3)(x+2) = x&#178; + 5x + 6</div></div>
+      <div class="trigger-card"><div class="scenario-num">SCENARIO 02</div><h3>Architecture &amp; Window Panels</h3><p>An architect designs a square window with side <span class="math-inline">a</span>, then enlarges it by <span class="math-inline">b</span> on each side. The new area follows a perfect pattern.</p><div class="math-link">&#8594; (a+b)&#178; = a&#178; + 2ab + b&#178;</div></div>
+      <div class="trigger-card"><div class="scenario-num">SCENARIO 03</div><h3>Photography &amp; Print Sizes</h3><p>A photo of size <span class="math-inline">x&#178; &#8722; 25</span> needs resizing. Recognising it as a difference of squares lets you instantly find compatible frames.</p><div class="math-link">&#8594; Factorising saves time &amp; money</div></div>
+      <div class="trigger-card"><div class="scenario-num">SCENARIO 04</div><h3>Engineering &amp; Material Stress</h3><p>Engineers simplify expressions like <span class="math-inline">3x&#178;y + 6x&#178;y &#8722; 2xy&#178;</span> to model material stress. Combining like terms reveals the true load.</p><div class="math-link">&#8594; Simplification = safety</div></div>
+    </div>
+    <div class="tip-box" style="margin-top: 28px;"><div class="tip-label">Reflection Prompt</div><p>Think of one object in your room &#8212; could its dimensions be written as an algebraic expression?</p></div>
+  </section>
+
+  <!-- SLIDE 3: OBJECTIVES -->
+  <section class="slide" data-slide="2">
+    <div class="slide-header">
+      <span class="label-tag">Learning Objectives</span>
+      <h2>By the end, you will <span class="accent">master</span>...</h2>
+    </div>
+    <div class="objectives-list" id="objectivesList"></div>
+  </section>
+
+  <!-- SLIDE 4: MATERIAL 1 -->
+  <section class="slide" data-slide="3">
+    <div class="slide-header"><span class="label-tag">Material 01 of 10</span><h2>What are <span class="accent">quadratic</span> expressions?</h2></div>
+    <div class="material-layout">
+      <div class="material-section">
+        <h3>Definition</h3>
+        <div class="def-card"><p>A <strong style="color: var(--accent);">quadratic expression</strong> is a polynomial of degree 2 &#8212; the highest power of the variable is 2.</p><div class="formula">ax&#178; + bx + c</div><p>where <span class="math-inline">a &#8800; 0</span>, and <span class="math-inline">a, b, c</span> are constants.</p></div>
+        <h3>Examples vs Non-Examples</h3>
+        <div class="example-step"><div class="step-label">Quadratic</div><div class="step-content">3x&#178; + 5x &#8722; 2</div><div class="step-explanation">Has x&#178; term; a=3, b=5, c=&#8722;2</div></div>
+        <div class="example-step"><div class="step-label">Quadratic</div><div class="step-content">x&#178; &#8722; 9</div><div class="step-explanation">b=0, c=&#8722;9 (still quadratic)</div></div>
+        <div class="example-step"><div class="step-label">Not Quadratic</div><div class="step-content">5x + 3</div><div class="step-explanation">Linear &#8212; highest power is 1</div></div>
+      </div>
+      <div class="material-section">
+        <h3>Key Insight</h3>
+        <div class="def-card"><p>The word "quadratic" comes from <em>quadratus</em> (Latin for "square") &#8212; because x&#178; represents the area of a square with side x.</p></div>
+        <h3>Identifying a, b, c</h3>
+        <div class="example-step"><div class="step-label">Example 1</div><div class="step-content">2x&#178; + 7x &#8722; 3</div><div class="step-explanation">a = 2, b = 7, c = &#8722;3</div></div>
+        <div class="example-step"><div class="step-label">Example 2</div><div class="step-content">4x&#178;</div><div class="step-explanation">a = 4, b = 0, c = 0</div></div>
+        <div class="example-step"><div class="step-label">Example 3</div><div class="step-content">x&#178; &#8722; 9</div><div class="step-explanation">a = 1, b = 0, c = &#8722;9</div></div>
+        <div class="tip-box"><div class="tip-label">Check</div><p>If there's no x&#178; term (or a=0), it's NOT quadratic. The degree must be exactly 2.</p></div>
+      </div>
+    </div>
+    <div class="material-practice-section"><div class="section-divider"><span class="num">PRACTICE</span><h3>20 Questions</h3><div class="line"></div></div><div id="practice-M1"></div></div>
+  </section>
+
+  <!-- SLIDE 5: MATERIAL 2 -->
+  <section class="slide" data-slide="4">
+    <div class="slide-header"><span class="label-tag">Material 02 of 10</span><h2>How to <span class="accent">add</span> quadratic expressions</h2></div>
+    <div class="material-layout">
+      <div class="material-section">
+        <h3>The Principle</h3>
+        <div class="def-card"><p>To add quadratic expressions, <strong style="color: var(--accent);">combine like terms</strong> &#8212; terms that share the same variable raised to the same power.</p><div class="formula">(ax&#178; + bx + c) + (dx&#178; + ex + f)<br>= (a+d)x&#178; + (b+e)x + (c+f)</div></div>
+        <h3>Like Terms Reminder</h3>
+        <div class="example-step"><div class="step-label">Same Power</div><div class="step-content">3x&#178; and 5x&#178;</div><div class="step-explanation">Both have x&#178; &#8212; they can be combined</div></div>
+        <div class="example-step"><div class="step-label">Different Power</div><div class="step-content">3x&#178; and 5x</div><div class="step-explanation">x&#178; &#8800; x &#8212; they cannot combine</div></div>
+      </div>
+      <div class="material-section">
+        <h3>Worked Example</h3>
+        <div class="def-card"><p style="margin-bottom: 14px;">Add: <span class="math-inline">(2x&#178; + 3x + 1) + (x&#178; + 4x + 5)</span></p>
+          <div class="example-step"><div class="step-label">Step 1 &#8212; Group like terms</div><div class="step-content">(2x&#178; + x&#178;) + (3x + 4x) + (1 + 5)</div></div>
+          <div class="example-step"><div class="step-label">Step 2 &#8212; Combine</div><div class="step-content">3x&#178; + 7x + 6</div></div>
+          <div class="example-step"><div class="step-label">Final Answer</div><div class="step-content" style="color: var(--accent-3);">3x&#178; + 7x + 6</div></div>
+        </div>
+        <div class="tip-box"><div class="tip-label">Pro Tip</div><p>Stack the expressions vertically &#8212; like ordinary addition &#8212; to keep like terms aligned.</p></div>
+      </div>
+    </div>
+    <div class="material-practice-section"><div class="section-divider"><span class="num">PRACTICE</span><h3>20 Questions</h3><div class="line"></div></div><div id="practice-M2"></div></div>
+  </section>
+
+  <!-- SLIDE 6: MATERIAL 3 -->
+  <section class="slide" data-slide="5">
+    <div class="slide-header"><span class="label-tag">Material 03 of 10</span><h2>How to <span class="accent">subtract</span> quadratic expressions</h2></div>
+    <div class="material-layout">
+      <div class="material-section">
+        <h3>The Principle</h3>
+        <div class="def-card"><p>The most common mistake is forgetting to <strong style="color: var(--accent-2);">distribute the negative sign</strong> to every term inside the second bracket.</p><div class="formula">(ax&#178; + bx + c) &#8722; (dx&#178; + ex + f)<br>= (a&#8722;d)x&#178; + (b&#8722;e)x + (c&#8722;f)</div></div>
+        <h3>Common Trap</h3>
+        <div class="example-step" style="border-left-color: var(--accent-2);"><div class="step-label" style="color: var(--accent-2);">Wrong</div><div class="step-content">5x&#178; &#8722; (2x&#178; + 3x) &#8800; 5x&#178; &#8722; 2x&#178; + 3x</div><div class="step-explanation">Forgot to negate 3x!</div></div>
+        <div class="example-step"><div class="step-label">Right</div><div class="step-content">5x&#178; &#8722; (2x&#178; + 3x) = 5x&#178; &#8722; 2x&#178; &#8722; 3x = 3x&#178; &#8722; 3x</div></div>
+      </div>
+      <div class="material-section">
+        <h3>Worked Example</h3>
+        <div class="def-card"><p style="margin-bottom: 14px;">Subtract: <span class="math-inline">(5x&#178; + 3x &#8722; 2) &#8722; (2x&#178; + x + 4)</span></p>
+          <div class="example-step"><div class="step-label">Step 1 &#8212; Distribute the negative</div><div class="step-content">5x&#178; + 3x &#8722; 2 &#8722; 2x&#178; &#8722; x &#8722; 4</div></div>
+          <div class="example-step"><div class="step-label">Step 2 &#8212; Group like terms</div><div class="step-content">(5x&#178; &#8722; 2x&#178;) + (3x &#8722; x) + (&#8722;2 &#8722; 4)</div></div>
+          <div class="example-step"><div class="step-label">Step 3 &#8212; Combine</div><div class="step-content" style="color: var(--accent-3);">3x&#178; + 2x &#8722; 6</div></div>
+        </div>
+        <div class="tip-box"><div class="tip-label">Memory Hook</div><p>The minus sign is like a "wave" &#8212; it must touch every term in the bracket.</p></div>
+      </div>
+    </div>
+    <div class="material-practice-section"><div class="section-divider"><span class="num">PRACTICE</span><h3>20 Questions</h3><div class="line"></div></div><div id="practice-M3"></div></div>
+  </section>
+
+  <!-- SLIDE 7: MATERIAL 4 -->
+  <section class="slide" data-slide="6">
+    <div class="slide-header"><span class="label-tag">Material 04 of 10</span><h2>How to <span class="accent">expand</span> quadratic expressions</h2></div>
+    <div class="material-layout">
+      <div class="material-section">
+        <h3>The Distributive Law</h3>
+        <div class="def-card"><p>Expanding means removing brackets by multiplying each term inside by the term outside.</p><div class="formula">a(b + c) = ab + ac<br>a(b + c + d) = ab + ac + ad</div></div>
+        <h3>Expanding with a Variable Outside</h3>
+        <div class="example-step"><div class="step-label">Example</div><div class="step-content">3(x&#178; + 2x + 4)</div></div>
+        <div class="example-step"><div class="step-label">Multiply each term</div><div class="step-content">= 3&#183;x&#178; + 3&#183;2x + 3&#183;4</div></div>
+        <div class="example-step"><div class="step-label">Simplify</div><div class="step-content" style="color: var(--accent-3);">= 3x&#178; + 6x + 12</div></div>
+      </div>
+      <div class="material-section">
+        <h3>Worked Example</h3>
+        <div class="def-card"><p style="margin-bottom: 14px;">Expand: <span class="math-inline">2x(x + 5)</span></p>
+          <div class="example-step"><div class="step-label">Step 1 &#8212; Identify</div><div class="step-content">2x is outside; x and 5 are inside</div></div>
+          <div class="example-step"><div class="step-label">Step 2 &#8212; Distribute</div><div class="step-content">2x &#183; x + 2x &#183; 5</div></div>
+          <div class="example-step"><div class="step-label">Step 3 &#8212; Multiply</div><div class="step-content" style="color: var(--accent-3);">2x&#178; + 10x</div></div>
+        </div>
+        <div class="tip-box"><div class="tip-label">Laws of Indices</div><p>When multiplying like bases: <span class="math-inline">x&#7503; &#215; x&#8319; = x&#7503;&#8314;&#8319;</span></p></div>
+      </div>
+    </div>
+    <div class="material-practice-section"><div class="section-divider"><span class="num">PRACTICE</span><h3>20 Questions</h3><div class="line"></div></div><div id="practice-M4"></div></div>
+  </section>
+
+  <!-- SLIDE 8: MATERIAL 5 -->
+  <section class="slide" data-slide="7">
+    <div class="slide-header"><span class="label-tag">Material 05 of 10</span><h2>How to <span class="accent">factorise</span> quadratic expressions</h2></div>
+    <div class="material-layout">
+      <div class="material-section">
+        <h3>The Inverse of Expanding</h3>
+        <div class="def-card"><p>Factorising rewrites a sum as a product. We look for the <strong style="color: var(--accent);">highest common factor (HCF)</strong>.</p><div class="formula">ab + ac = a(b + c)</div></div>
+        <h3>Step-by-Step Method</h3>
+        <div class="example-step"><div class="step-label">Step 1</div><div class="step-content">Find HCF of coefficients</div></div>
+        <div class="example-step"><div class="step-label">Step 2</div><div class="step-content">Find HCF of variables (lowest power)</div></div>
+        <div class="example-step"><div class="step-label">Step 3</div><div class="step-content">Write HCF outside; divide each term</div></div>
+      </div>
+      <div class="material-section">
+        <h3>Worked Example</h3>
+        <div class="def-card"><p style="margin-bottom: 14px;">Factorise: <span class="math-inline">4x&#178; + 8x</span></p>
+          <div class="example-step"><div class="step-label">HCF of 4 and 8</div><div class="step-content">&#8594; 4</div></div>
+          <div class="example-step"><div class="step-label">HCF of x&#178; and x</div><div class="step-content">&#8594; x (lowest power)</div></div>
+          <div class="example-step"><div class="step-label">Combined HCF</div><div class="step-content" style="color: var(--accent);">&#8594; 4x</div></div>
+          <div class="example-step"><div class="step-label">Factorise</div><div class="step-content" style="color: var(--accent-3);">4x&#178; + 8x = 4x(x + 2)</div></div>
+        </div>
+        <div class="tip-box"><div class="tip-label">Check Your Answer</div><p>Always expand your factorised answer back &#8212; if you get the original, you're correct!</p></div>
+      </div>
+    </div>
+    <div class="material-practice-section"><div class="section-divider"><span class="num">PRACTICE</span><h3>20 Questions</h3><div class="line"></div></div><div id="practice-M5"></div></div>
+  </section>
+
+  <!-- SLIDE 9: MATERIAL 6 -->
+  <section class="slide" data-slide="8">
+    <div class="slide-header"><span class="label-tag">Material 06 of 10</span><h2>How to <span class="accent">simplify</span> quadratic expressions</h2></div>
+    <div class="material-layout">
+      <div class="material-section">
+        <h3>What "Simplify" Means</h3>
+        <div class="def-card"><p>Simplifying reduces an expression to its cleanest form. Strategies include:</p>
+          <ul style="margin-top: 12px; padding-left: 20px; color: var(--fg-dim); line-height: 1.8;"><li>Combining like terms</li><li>Removing brackets (expanding)</li><li>Cancelling common factors</li><li>Factorising when useful</li></ul></div>
+        <h3>Strategy Examples</h3>
+        <div class="example-step"><div class="step-label">Combine like terms</div><div class="step-content">3x&#178; + 5x&#178; &#8722; 2x = 8x&#178; &#8722; 2x</div></div>
+        <div class="example-step"><div class="step-label">Cancel common factors</div><div class="step-content">(6x&#178; + 9x) &#247; 3 = 2x&#178; + 3x</div></div>
+      </div>
+      <div class="material-section">
+        <h3>Worked Example</h3>
+        <div class="def-card"><p style="margin-bottom: 14px;">Simplify: <span class="math-inline">3(x + 2) + 2(x + 2)</span></p>
+          <div class="example-step"><div class="step-label">Method A &#8212; Expand first</div><div class="step-content">3x + 6 + 2x + 4</div></div>
+          <div class="example-step"><div class="step-label">Combine</div><div class="step-content" style="color: var(--accent-3);">5x + 10</div></div>
+          <div class="example-step" style="border-left-color: var(--accent);"><div class="step-label" style="color: var(--accent);">Method B &#8212; Factorise (faster!)</div><div class="step-content">(3 + 2)(x + 2) = 5(x + 2)</div></div>
+        </div>
+        <div class="tip-box"><div class="tip-label">Smart Simplification</div><p>Always look for shared brackets first &#8212; it can save you several steps.</p></div>
+      </div>
+    </div>
+    <div class="material-practice-section"><div class="section-divider"><span class="num">PRACTICE</span><h3>20 Questions</h3><div class="line"></div></div><div id="practice-M6"></div></div>
+  </section>
+
+  <!-- SLIDE 10: MATERIAL 7 -->
+  <section class="slide" data-slide="9">
+    <div class="slide-header"><span class="label-tag">Material 07 of 10</span><h2>Simplifying in <span class="accent">two or more</span> variables</h2></div>
+    <div class="material-layout">
+      <div class="material-section">
+        <h3>Like Terms in Multiple Variables</h3>
+        <div class="def-card"><p>Terms are "like" only when <strong>all variables and their powers match exactly</strong>.</p><div class="formula">3x&#178;y ~ 5x&#178;y &#10003;<br>3x&#178;y ~ 3xy&#178; &#10007;</div></div>
+        <h3>Multiplying Variables</h3>
+        <div class="example-step"><div class="step-label">Add exponents of same base</div><div class="step-content">x&#178; &#183; x&#179; = x&#8309;</div></div>
+        <div class="example-step"><div class="step-label">Different bases stay separate</div><div class="step-content">a&#178; &#183; b&#179; = a&#178;b&#179;</div></div>
+        <div class="example-step"><div class="step-label">Power of a power</div><div class="step-content">(x&#178;)&#179; = x&#8310;</div></div>
+      </div>
+      <div class="material-section">
+        <h3>Worked Example</h3>
+        <div class="def-card"><p style="margin-bottom: 14px;">Simplify: <span class="math-inline">(2a&#178;b&#179;)(3ab&#178;)</span></p>
+          <div class="example-step"><div class="step-label">Multiply coefficients</div><div class="step-content">2 &#215; 3 = 6</div></div>
+          <div class="example-step"><div class="step-label">Multiply a's (add powers)</div><div class="step-content">a&#178; &#183; a = a&#179;</div></div>
+          <div class="example-step"><div class="step-label">Multiply b's (add powers)</div><div class="step-content">b&#179; &#183; b&#178; = b&#8305;</div></div>
+          <div class="example-step"><div class="step-label">Final Answer</div><div class="step-content" style="color: var(--accent-3);">6a&#179;b&#8305;</div></div>
+        </div>
+        <div class="tip-box"><div class="tip-label">Visual Memory Hook</div><p>Think of a&#178;b&#179; as "a-a-b-b-b". Multiplying by ab&#178; adds one more a and two more b's.</p></div>
+      </div>
+    </div>
+    <div class="material-practice-section"><div class="section-divider"><span class="num">PRACTICE</span><h3>20 Questions</h3><div class="line"></div></div><div id="practice-M7"></div></div>
+  </section>
+
+  <!-- SLIDE 11: MATERIAL 8 -->
+  <section class="slide" data-slide="10">
+    <div class="slide-header"><span class="label-tag">Material 08 of 10</span><h2>Expanding <span class="accent">(a+b)(c+d)</span></h2></div>
+    <div class="material-layout">
+      <div class="material-section">
+        <h3>The FOIL Method</h3>
+        <div class="def-card"><p>When multiplying two binomials, multiply each term of the first by each term of the second.</p><div class="formula">(a+b)(c+d) = ac + ad + bc + bd</div><p style="margin-top: 14px; font-size: 14px;"><strong>F</strong>irst &#183; <strong>O</strong>utside &#183; <strong>I</strong>nside &#183; <strong>L</strong>ast</p></div>
+        <h3>Visual: The Area Model</h3>
+        <div class="example-step" style="text-align: center;"><div class="step-label">Imagine a rectangle split into 4 parts</div><div class="step-content" style="font-size: 14px;">(a+b)(c+d) = area of 4 smaller rectangles<br>= ac + ad + bc + bd</div></div>
+      </div>
+      <div class="material-section">
+        <h3>Worked Example</h3>
+        <div class="def-card"><p style="margin-bottom: 14px;">Expand: <span class="math-inline">(x + 3)(x + 5)</span></p>
+          <div class="example-step"><div class="step-label">F &#8212; First</div><div class="step-content">x &#183; x = x&#178;</div></div>
+          <div class="example-step"><div class="step-label">O &#8212; Outside</div><div class="step-content">x &#183; 5 = 5x</div></div>
+          <div class="example-step"><div class="step-label">I &#8212; Inside</div><div class="step-content">3 &#183; x = 3x</div></div>
+          <div class="example-step"><div class="step-label">L &#8212; Last</div><div class="step-content">3 &#183; 5 = 15</div></div>
+          <div class="example-step"><div class="step-label">Combine like terms</div><div class="step-content" style="color: var(--accent-3);">x&#178; + 8x + 15</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="material-practice-section"><div class="section-divider"><span class="num">PRACTICE</span><h3>20 Questions</h3><div class="line"></div></div><div id="practice-M8"></div></div>
+  </section>
+
+  <!-- SLIDE 12: MATERIAL 9 -->
+  <section class="slide" data-slide="11">
+    <div class="slide-header"><span class="label-tag">Material 09 of 10</span><h2>Factorising by <span class="accent">grouping</span></h2></div>
+    <div class="material-layout">
+      <div class="material-section">
+        <h3>The Method</h3>
+        <div class="def-card"><p>When an expression has <strong>four terms with no common factor across all of them</strong>, we group them in pairs.</p><div class="formula">ac + ad + bc + bd<br>= a(c+d) + b(c+d)<br>= (a+b)(c+d)</div></div>
+        <h3>Three Steps</h3>
+        <div class="example-step"><div class="step-label">Step 1</div><div class="step-content">Group into two pairs</div></div>
+        <div class="example-step"><div class="step-label">Step 2</div><div class="step-content">Factorise each pair separately</div></div>
+        <div class="example-step"><div class="step-label">Step 3</div><div class="step-content">Factor out the common bracket</div></div>
+      </div>
+      <div class="material-section">
+        <h3>Worked Example</h3>
+        <div class="def-card"><p style="margin-bottom: 14px;">Factorise: <span class="math-inline">2x&#178; + 6x + 3x + 9</span></p>
+          <div class="example-step"><div class="step-label">Step 1 &#8212; Group pairs</div><div class="step-content">(2x&#178; + 6x) + (3x + 9)</div></div>
+          <div class="example-step"><div class="step-label">Step 2 &#8212; Factorise each pair</div><div class="step-content">2x(x + 3) + 3(x + 3)</div></div>
+          <div class="example-step"><div class="step-label">Step 3 &#8212; Common bracket is (x+3)</div><div class="step-content">(2x + 3)(x + 3)</div></div>
+          <div class="example-step"><div class="step-label">Final Answer</div><div class="step-content" style="color: var(--accent-3);">(2x + 3)(x + 3)</div></div>
+        </div>
+        <div class="tip-box"><div class="tip-label">Watch For</div><p>If the brackets don't match after Step 2, you may need to swap terms or factor out a negative.</p></div>
+      </div>
+    </div>
+    <div class="material-practice-section"><div class="section-divider"><span class="num">PRACTICE</span><h3>20 Questions</h3><div class="line"></div></div><div id="practice-M9"></div></div>
+  </section>
+
+  <!-- SLIDE 13: MATERIAL 10 -->
+  <section class="slide" data-slide="12">
+    <div class="slide-header"><span class="label-tag">Material 10 of 10</span><h2>Special <span class="accent">identities</span> &amp; tricks</h2></div>
+    <div class="material-layout">
+      <div class="material-section">
+        <h3>The Three Famous Identities</h3>
+        <div class="def-card">
+          <div class="formula" style="border-left-color: var(--accent);">(a+b)&#178; = a&#178; + 2ab + b&#178;</div>
+          <div class="formula" style="border-left-color: var(--accent-2);">(a&#8722;b)&#178; = a&#178; &#8722; 2ab + b&#178;</div>
+          <div class="formula" style="border-left-color: var(--accent-3);">a&#178; &#8722; b&#178; = (a+b)(a&#8722;b)</div>
+        </div>
+        <h3>Why They Matter</h3>
+        <div class="example-step"><div class="step-label">Speed</div><div class="step-explanation">Skip the FOIL steps &#8212; recognise the pattern and write the answer directly.</div></div>
+        <div class="example-step"><div class="step-label">Reverse use</div><div class="step-explanation">Factorise instantly: x&#178; &#8722; 16 = (x+4)(x&#8722;4)</div></div>
+      </div>
+      <div class="material-section">
+        <h3>Worked Examples</h3>
+        <div class="def-card">
+          <div class="example-step"><div class="step-label">Identity 1 &#8594; Expand (x+4)&#178;</div><div class="step-content">= x&#178; + 2(4)x + 4&#178;</div><div class="step-content" style="color: var(--accent-3);">= x&#178; + 8x + 16</div></div>
+          <div class="example-step"><div class="step-label">Identity 2 &#8594; Expand (2x&#8722;3)&#178;</div><div class="step-content">= (2x)&#178; &#8722; 2(2x)(3) + 3&#178;</div><div class="step-content" style="color: var(--accent-3);">= 4x&#178; &#8722; 12x + 9</div></div>
+          <div class="example-step"><div class="step-label">Identity 3 &#8594; Factorise x&#178; &#8722; 25</div><div class="step-content">a&#178; = x&#178;, b&#178; = 25 &#8594; b = 5</div><div class="step-content" style="color: var(--accent-3);">= (x+5)(x&#8722;5)</div></div>
+        </div>
+        <div class="tip-box"><div class="tip-label">Memory Hooks</div><p><strong>Square of sum:</strong> "Square, Double, Square"<br><strong>Difference of squares:</strong> "Minus means plus-times-minus"</p></div>
+      </div>
+    </div>
+    <div class="material-practice-section"><div class="section-divider"><span class="num">PRACTICE</span><h3>20 Questions</h3><div class="line"></div></div><div id="practice-M10"></div></div>
+  </section>
+
+  <!-- SLIDE 14: MEMORY GAME -->
+  <section class="slide" data-slide="13">
+    <div class="slide-header"><span class="label-tag">Game &#183; Memory Challenge</span><h2>Match the <span class="accent">pairs</span></h2></div>
+    <p style="color: var(--fg-dim); font-size: 15px; max-width: 700px; margin-bottom: 24px;">Cards are revealed for <strong style="color: var(--accent);">30 seconds</strong>. Memorize their positions, then find all matching pairs!</p>
+    <div class="memory-container">
+      <div class="memory-info">
+        <div class="memory-stat"><div class="memory-stat-value" id="memMoves">0</div><div class="memory-stat-label">Moves</div></div>
+        <div class="memory-stat"><div class="memory-stat-value" id="memMatched">0/8</div><div class="memory-stat-label">Pairs Found</div></div>
+        <div class="memory-stat"><div class="memory-stat-value" id="memTime">0:00</div><div class="memory-stat-label">Time</div></div>
+        <div class="memory-stat"><div class="memory-stat-value" id="memBest">&#8212;</div><div class="memory-stat-label">Best Score</div></div>
+      </div>
+      <div class="memory-game" id="memoryGame"></div>
+      <div class="memory-instructions" id="memInstructions">Initializing...</div>
+      <button class="memory-reset" id="memReset">&#8635; Reset Game</button>
+    </div>
+  </section>
+
+  <!-- SLIDE 15: QUIZ -->
+  <section class="slide" data-slide="14">
+    <div class="slide-header"><span class="label-tag">Final Quiz &#183; 30 Questions</span><h2>Test your <span class="accent">mastery</span></h2></div>
+    <div class="quiz-header">
+      <div class="quiz-stats">
+        <div class="quiz-stat"><div class="quiz-stat-value" id="quizScore">0</div><div class="quiz-stat-label">Correct</div></div>
+        <div class="quiz-stat"><div class="quiz-stat-value" id="quizTotal">30</div><div class="quiz-stat-label">Total</div></div>
+        <div class="quiz-stat"><div class="quiz-stat-value" id="quizPercent">0%</div><div class="quiz-stat-label">Score</div></div>
+      </div>
+      <button class="check-all-btn" id="checkAllBtn">&#10003; Check All Answers</button>
+    </div>
+    <div class="quiz-legend">
+      <div class="legend-item"><div class="legend-dot" style="background: var(--accent-3);"></div> Correct</div>
+      <div class="legend-item"><div class="legend-dot" style="background: var(--accent-2);"></div> Incorrect</div>
+      <div class="legend-item"><div class="legend-dot" style="background: var(--muted);"></div> Not answered</div>
+    </div>
+    <div id="quizContainer"></div>
+  </section>
+
+  <!-- SLIDE 16: CONCLUSION -->
+  <section class="slide" data-slide="15">
+    <div class="conclusion">
+      <span class="label-tag" style="align-self: flex-start;">Conclusion &#183; Reflection</span>
+      <h2>What we've <span class="accent">unpacked</span> today</h2>
+      <div class="conclusion-grid">
+        <div class="conclusion-card"><div class="card-num">01 &#8212; SUMMARY</div><h3>Key Concepts</h3><ul><li>Quadratic = degree 2 polynomial</li><li>Add/Subtract: combine like terms</li><li>Expand: distribute the multiplier</li><li>Factorise: extract the HCF</li><li>FOIL for (a+b)(c+d)</li><li>Group pairs for 4-term expressions</li></ul></div>
+        <div class="conclusion-card"><div class="card-num">02 &#8212; IDENTITIES</div><h3>Remember Forever</h3><ul><li>(a+b)&#178; = a&#178; + 2ab + b&#178;</li><li>(a&#8722;b)&#178; = a&#178; &#8722; 2ab + b&#178;</li><li>a&#178; &#8722; b&#178; = (a+b)(a&#8722;b)</li><li>Always check by expanding back</li><li>Look for patterns before working</li></ul></div>
+        <div class="conclusion-card"><div class="card-num">03 &#8212; REFLECT</div><h3>Ask Yourself</h3><ul><li>Which topic felt easiest? Why?</li><li>Where did I make careless errors?</li><li>How would I explain FOIL to a friend?</li><li>Where in life do I see quadratics?</li><li>What will I practise more tonight?</li></ul></div>
+      </div>
+      <div class="thank-you"><h3>Thank you for today.</h3><p id="personalizedThanks">&#8212; Mathematics rewards those who think slowly and carefully &#8212;</p></div>
+    </div>
+  </section>
+
+</div>
+
+<div class="nav-controls">
+  <button class="nav-btn" id="prevBtn" disabled>&#8592;</button>
+  <button class="nav-btn" id="nextBtn">&#8594;</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============ STATE ============
+var currentSlide = 0;
+var totalSlides = 16;
+var studentName = '';
+var memFlipped = [];
+var memMatchedCount = 0;
+var memMoves = 0;
+var memStartTime = null;
+var memTimerInterval = null;
+var memPreviewInterval = null;
+var memLocked = false;
+
+// ============ NAVIGATION ============
+var slidesEls = document.querySelectorAll('.slide');
+var prevBtn = document.getElementById('prevBtn');
+var nextBtn = document.getElementById('nextBtn');
+var progressFill = document.getElementById('progressFill');
+var currentSlideSpan = document.getElementById('currentSlide');
+
+function goToSlide(index) {
+  if (index < 0 || index >= totalSlides) return;
+  slidesEls[currentSlide].classList.remove('active');
+  slidesEls[currentSlide].classList.add('prev');
+  currentSlide = index;
+  slidesEls[currentSlide].classList.remove('prev');
+  slidesEls[currentSlide].classList.add('active');
+  for (var i = 0; i < slidesEls.length; i++) {
+    if (i !== currentSlide && i !== currentSlide - 1) slidesEls[i].classList.remove('prev');
+  }
+  updateNav();
+  slidesEls[currentSlide].scrollTop = 0;
+}
+
+function updateNav() {
+  prevBtn.disabled = currentSlide === 0;
+  nextBtn.disabled = currentSlide === totalSlides - 1;
+  progressFill.style.width = ((currentSlide + 1) / totalSlides * 100) + '%';
+  currentSlideSpan.textContent = String(currentSlide + 1).padStart(2, '0');
+}
+
+prevBtn.addEventListener('click', function() { goToSlide(currentSlide - 1); });
+nextBtn.addEventListener('click', function() { goToSlide(currentSlide + 1); });
+
+document.addEventListener('keydown', function(e) {
+  if (document.activeElement && document.activeElement.tagName === 'INPUT') return;
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); goToSlide(currentSlide + 1); }
+  if (e.key === 'ArrowLeft') goToSlide(currentSlide - 1);
+});
+
+document.getElementById('startBtn').addEventListener('click', function() {
+  var name = document.getElementById('studentName').value.trim();
+  if (!name) {
+    showToast('Please enter your name to begin', 'error');
+    document.getElementById('studentName').focus();
+    return;
+  }
+  studentName = name;
+  document.getElementById('personalizedThanks').textContent = name + ', mathematics rewards those who think slowly and carefully.';
+  showToast('Welcome, ' + name + '! Let\'s begin.', 'success');
+  goToSlide(1);
+});
+
+document.getElementById('studentName').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') document.getElementById('startBtn').click();
+});
+
+function showToast(msg, type) {
+  var toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.className = 'toast show ' + (type || '');
+  setTimeout(function() { toast.classList.remove('show'); }, 2800);
+}
+
+// ============ OBJECTIVES ============
+var objectives = [
+  'Recognise and define <strong>quadratic expressions</strong> and identify their standard form <span class="math-inline">ax&#178; + bx + c</span>.',
+  '<strong>Add</strong> quadratic expressions by combining like terms systematically.',
+  '<strong>Subtract</strong> quadratic expressions, distributing negatives carefully.',
+  '<strong>Expand</strong> quadratic expressions using the distributive law.',
+  '<strong>Factorise</strong> quadratic expressions by extracting common factors and using product-sum methods.',
+  '<strong>Simplify</strong> quadratic expressions through strategic combination.',
+  'Simplify algebraic expressions in <strong>two or more variables</strong> involving squares and cubes.',
+  'Expand expressions of the form <span class="math-inline">(a+b)(c+d)</span> using the FOIL method.',
+  'Factorise expressions of the form <span class="math-inline">ac + ad + bc + bd</span> by grouping.',
+  'Apply the <strong>special identities</strong>: <span class="math-inline">(a+b)&#178;</span>, <span class="math-inline">(a&#8722;b)&#178;</span>, and <span class="math-inline">a&#178; &#8722; b&#178;</span>.'
+];
+
+function renderObjectives() {
+  var container = document.getElementById('objectivesList');
+  if (!container) return;
+  var html = '';
+  for (var i = 0; i < objectives.length; i++) {
+    var num = String(i + 1).padStart(2, '0');
+    html += '<div class="objective-item"><div class="objective-num">' + num + '</div><div class="objective-text">' + objectives[i] + '</div></div>';
+  }
+  container.innerHTML = html;
+}
+
+// ============ QUESTION GENERATOR FUNCTIONS ============
+function randNonZero(min, max) {
+  var v = 0;
+  while (v === 0) v = Math.floor(Math.random() * (max - min + 1)) + min;
+  return v;
+}
+
+function sup(n) {
+  if (n === 1) return '';
+  if (n === 2) return '&#178;';
+  if (n === 3) return '&#179;';
+  if (n === 4) return '&#8308;';
+  return '';
+}
+
+function fmt(n) {
+  return (n >= 0 ? '+' : '') + n;
+}
+
+function shuffleArray(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var temp = a[i];
+    a[i] = a[j];
+    a[j] = temp;
+  }
+  return a;
+}
+
+function shuffleOptions(q) {
+  var correctAns = q.options[q.answer];
+  var shuffled = shuffleArray(q.options);
+  q.options = shuffled;
+  q.answer = shuffled.indexOf(correctAns);
+  return q;
+}
+
+// ============ GENERATE 20 PRACTICE QUESTIONS PER MATERIAL ============
+function generateMaterialPractices() {
+  var practices = [];
+  
+  // Topic 1: Identify quadratics
+  var t1 = [];
+  for (var i = 0; i < 20; i++) {
+    var deg = randNonZero(1, 4);
+    var a = randNonZero(1, 9), b = randNonZero(-9, 9), c = randNonZero(-9, 9);
+    var exp = a + 'x' + sup(deg) + fmt(b) + 'x' + fmt(c);
+    var types = ['Linear', 'Quadratic', 'Cubic', 'Quartic']; // Perbaikan urutan array
+    var typeNames = { 1: 'Linear', 2: 'Quadratic', 3: 'Cubic', 4: 'Quartic' };
+    var ansIdx = deg - 1;
+    t1.push(shuffleOptions({
+      q: 'What type of expression is ' + exp + '?',
+      options: types.slice(),
+      answer: ansIdx,
+      explanation: 'The highest power of x is ' + deg + ', making it ' + typeNames[deg] + '.'
+    }));
+  }
+  practices.push(t1);
+
+  // Topic 2: Add
+  var t2 = [];
+  for (var i = 0; i < 20; i++) {
+    var a = randNonZero(1, 9), b = randNonZero(-9, 9), c = randNonZero(-9, 9);
+    var d = randNonZero(1, 9), e = randNonZero(-9, 9), f = randNonZero(-9, 9);
+    var q = '(' + a + 'x&#178;' + fmt(b) + 'x' + fmt(c) + ') + (' + d + 'x&#178;' + fmt(e) + 'x' + fmt(f) + ')';
+    var correct = (a + d) + 'x&#178;' + fmt(b + e) + 'x' + fmt(c + f);
+    var w1 = (a + d) + 'x&#178;' + fmt(b - e) + 'x' + fmt(c + f);
+    var w2 = (a - d) + 'x&#178;' + fmt(b + e) + 'x' + fmt(c - f);
+    var w3 = (a + d) + 'x&#8308;' + fmt(b + e) + 'x' + fmt(c + f);
+    t2.push(shuffleOptions({
+      q: 'Add: ' + q,
+      options: [correct, w1, w2, w3],
+      answer: 0,
+      explanation: 'Combine like terms: (' + (a + d) + ')x&#178; + (' + (b + e) + ')x + (' + (c + f) + ') = ' + correct + '.'
+    }));
+  }
+  practices.push(t2);
+
+  // Topic 3: Subtract
+  var t3 = [];
+  for (var i = 0; i < 20; i++) {
+    var a = randNonZero(1, 9), b = randNonZero(-9, 9), c = randNonZero(-9, 9);
+    var d = randNonZero(1, 9), e = randNonZero(-9, 9), f = randNonZero(-9, 9);
+    var q = '(' + a + 'x&#178;' + fmt(b) + 'x' + fmt(c) + ') - (' + d + 'x&#178;' + fmt(e) + 'x' + fmt(f) + ')';
+    var correct = (a - d) + 'x&#178;' + fmt(b - e) + 'x' + fmt(c - f);
+    var w1 = (a - d) + 'x&#178;' + fmt(b + e) + 'x' + fmt(c + f);
+    var w2 = (a + d) + 'x&#178;' + fmt(b - e) + 'x' + fmt(c - f);
+    var w3 = (a - d) + 'x&#178;' + fmt(b - e) + 'x' + fmt(c + f);
+    t3.push(shuffleOptions({
+      q: 'Subtract: ' + q,
+      options: [correct, w1, w2, w3],
+      answer: 0,
+      explanation: 'Distribute the negative: ' + a + 'x&#178;' + fmt(b) + 'x' + fmt(c) + ' - ' + d + 'x&#178;' + fmt(-e) + 'x' + fmt(-f) + ' = ' + correct + '.'
+    }));
+  }
+  practices.push(t3);
+
+  // Topic 4: Expand
+  var t4 = [];
+  for (var i = 0; i < 20; i++) {
+    var a = randNonZero(1, 5), b = randNonZero(1, 9), c = randNonZero(-9, 9), d = randNonZero(-9, 9);
+    var q = a + 'x(' + b + 'x&#178;' + fmt(c) + 'x' + fmt(d) + ')';
+    var correct = (a * b) + 'x&#179;' + fmt(a * c) + 'x&#178;' + fmt(a * d) + 'x';
+    var w1 = (a * b) + 'x&#178;' + fmt(a * c) + 'x' + fmt(a * d);
+    var w2 = (a + b) + 'x&#179;' + fmt(a * c) + 'x&#178;' + fmt(a * d) + 'x';
+    var w3 = (a * b) + 'x&#179;' + fmt(a + c) + 'x&#178;' + fmt(a + d) + 'x';
+    t4.push(shuffleOptions({
+      q: 'Expand: ' + q,
+      options: [correct, w1, w2, w3],
+      answer: 0,
+      explanation: 'Multiply ' + a + 'x by each term: ' + (a * b) + 'x&#179; + ' + (a * c) + 'x&#178; + ' + (a * d) + 'x = ' + correct + '.'
+    }));
+  }
+  practices.push(t4);
+
+  // Topic 5: Factorise
+  var t5 = [];
+  for (var i = 0; i < 20; i++) {
+    var hcf = randNonZero(2, 6);
+    var t1c = randNonZero(2, 9), t2c = randNonZero(2, 9);
+    var p1 = randNonZero(1, 2), p2 = randNonZero(1, 2);
+    var x1 = p1 === 2 ? 'x&#178;' : 'x';
+    var x2 = p2 === 2 ? 'x&#178;' : 'x';
+    var s2 = randNonZero(0, 1) === 0 ? '+' : '-';
+    
+    var term1 = (hcf * t1c) + x1;
+    var term2 = (hcf * t2c) + x2;
+    var qStr = term1 + s2 + term2;
+    
+    var hcfStr = hcf + (p1 < p2 ? x1 : x2);
+    var in1 = t1c + (p1 > p2 ? x1 : '');
+    var in2 = (s2 === '-' ? '-' : '+') + t2c + (p2 > p1 ? x2 : '');
+    var correct = hcfStr + '(' + in1 + in2 + ')';
+    
+    var w1 = hcfStr + '(' + in1 + (in2.startsWith('-') ? '+' : '-') + t2c + (p2 > p1 ? x2 : '') + ')';
+    var w2 = (hcf + 1) + '(' + in1 + in2 + ')';
+    var w3 = hcfStr + '(' + (t1c + 1) + in2 + ')';
+    
+    t5.push(shuffleOptions({
+      q: 'Factorise: ' + qStr,
+      options: [correct, w1, w2, w3],
+      answer: 0,
+      explanation: 'HCF of coefficients is ' + hcf + '. HCF of variables is ' + (p1 < p2 ? x1 : x2) + '. Result: ' + correct + '.'
+    }));
+  }
+  practices.push(t5);
+
+  // Topic 6: Simplify
+  var t6 = [];
+  for (var i = 0; i < 20; i++) {
+    var a = randNonZero(1, 9), b = randNonZero(1, 9), c = randNonZero(1, 9);
+    var s1 = randNonZero(0, 1) === 0 ? '+' : '-';
+    var s2 = randNonZero(0, 1) === 0 ? '+' : '-';
+    var sign1 = s1 === '+' ? 1 : -1;
+    var sign2 = s2 === '+' ? 1 : -1;
+    var q = a + 'x&#178;' + s1 + b + 'x' + s2 + c + 'x&#178;';
+    var correct = (a + sign2 * c) + 'x&#178;' + s1 + b + 'x';
+    var w1 = (a + b) + 'x&#178;' + s2 + c + 'x';
+    var w2 = (a + sign2 * c) + 'x&#8308;' + s1 + b + 'x';
+    var w3 = (a + sign1 * b) + 'x&#179;' + s2 + c + 'x&#178;';
+    t6.push(shuffleOptions({
+      q: 'Simplify: ' + q,
+      options: [correct, w1, w2, w3],
+      answer: 0,
+      explanation: 'Combine like terms: ' + a + 'x&#178; ' + s2 + ' ' + c + 'x&#178; = ' + (a + sign2 * c) + 'x&#178;. The ' + b + 'x remains. Result: ' + correct + '.'
+    }));
+  }
+  practices.push(t6);
+
+  // Topic 7: Two variables
+  var t7 = [];
+  for (var i = 0; i < 20; i++) {
+    var a = randNonZero(2, 5), b = randNonZero(2, 5);
+    var x1 = randNonZero(1, 3), x2 = randNonZero(1, 3), y1 = randNonZero(1, 3), y2 = randNonZero(1, 3);
+    var q = '(' + a + 'x' + sup(x1) + 'y' + sup(y1) + ')(' + b + 'x' + sup(x2) + 'y' + sup(y2) + ')';
+    var cx = x1 + x2, cy = y1 + y2;
+    var correct = (a * b) + 'x' + sup(cx) + 'y' + sup(cy);
+    var w1 = (a * b) + 'x' + sup(cx * cy) + 'y' + sup(cx * cy);
+    var w2 = (a + b) + 'x' + sup(cx) + 'y' + sup(cy);
+    var w3 = (a * b) + 'x' + sup(x1 * x2) + 'y' + sup(y1 * y2);
+    t7.push(shuffleOptions({
+      q: 'Simplify: ' + q,
+      options: [correct, w1, w2, w3],
+      answer: 0,
+      explanation: 'Coefficients: ' + a + 'x' + b + '=' + (a * b) + '. Add exponents: x' + sup(cx) + 'y' + sup(cy) + '. Result: ' + correct + '.'
+    }));
+  }
+  practices.push(t7);
+
+  // Topic 8: Expand (a+b)(c+d)
+  var t8 = [];
+  for (var i = 0; i < 20; i++) {
+    var a = randNonZero(1, 5), b = randNonZero(1, 9), c = randNonZero(1, 5), d = randNonZero(1, 9);
+    var q = '(' + a + 'x+' + b + ')(' + c + 'x+' + d + ')';
+    var correct = (a * c) + 'x&#178;' + fmt(a * d + b * c) + 'x+' + (b * d);
+    var w1 = (a * c) + 'x&#178;' + fmt(a * d - b * c) + 'x+' + (b * d);
+    var w2 = (a * c) + 'x&#178;' + fmt(a * d + b * c) + 'x-' + (b * d);
+    var w3 = (a * c) + 'x&#8308;' + fmt(a * d + b * c) + 'x+' + (b * d);
+    t8.push(shuffleOptions({
+      q: 'Expand: ' + q,
+      options: [correct, w1, w2, w3],
+      answer: 0,
+      explanation: 'FOIL: ' + (a * c) + 'x&#178; + ' + (a * d) + 'x + ' + (b * c) + 'x + ' + (b * d) + ' = ' + correct + '.'
+    }));
+  }
+  practices.push(t8);
+
+  // Topic 9: Factorise by grouping
+  var t9 = [];
+  for (var i = 0; i < 20; i++) {
+    var c1 = randNonZero(2, 5), c2 = randNonZero(2, 5), v1 = randNonZero(1, 3), v2 = randNonZero(1, 3), cons = randNonZero(2, 9);
+    var v1Str = 'x' + sup(v1), v2Str = 'x' + sup(v2);
+    var term1 = (c1 * cons) + v1Str, term2 = (c2 * cons) + v2Str;
+    var q = term1 + '+' + term2;
+    var correct = cons + '(' + c1 + v1Str + '+' + c2 + v2Str + ')';
+    var w1 = cons + '(' + c1 + v1Str + '-' + c2 + v2Str + ')';
+    var w2 = (cons + 1) + '(' + c1 + v1Str + '+' + c2 + v2Str + ')';
+    var w3 = cons + '(' + (c1 + 1) + v1Str + '+' + c2 + v2Str + ')';
+    t9.push(shuffleOptions({
+      q: 'Factorise: ' + q,
+      options: [correct, w1, w2, w3],
+      answer: 0,
+      explanation: 'HCF of coefficients is ' + cons + '. Factor it out: ' + correct + '.'
+    }));
+  }
+  practices.push(t9);
+
+  // Topic 10: Identities
+  var t10 = [];
+  for (var i = 0; i < 20; i++) {
+    var type = (i % 3) + 1;
+    var a = randNonZero(2, 9), b = randNonZero(2, 9);
+    var q, correct, w1, w2, w3, exp;
+    if (type === 1) {
+      q = '(' + a + 'x+' + b + ')&#178;';
+      correct = (a * a) + 'x&#178;' + fmt(2 * a * b) + 'x+' + (b * b);
+      w1 = (a * a) + 'x&#178;+' + (b * b);
+      w2 = (a * a) + 'x&#178;' + fmt(a * b) + 'x+' + (b * b);
+      w3 = (2 * a) + 'x&#178;' + fmt(2 * a * b) + 'x+' + (2 * b);
+      exp = '(a+b)&#178; = a&#178; + 2ab + b&#178;. Here: ' + (a * a) + 'x&#178; + ' + (2 * a * b) + 'x + ' + (b * b) + '.';
+    } else if (type === 2) {
+      q = '(' + a + 'x-' + b + ')&#178;';
+      correct = (a * a) + 'x&#178;' + fmt(-2 * a * b) + 'x+' + (b * b);
+      w1 = (a * a) + 'x&#178;-' + (b * b);
+      w2 = (a * a) + 'x&#178;' + fmt(2 * a * b) + 'x+' + (b * b);
+      w3 = (a * a) + 'x&#178;' + fmt(-a * b) + 'x-' + (b * b);
+      exp = '(a-b)&#178; = a&#178; - 2ab + b&#178;. Here: ' + (a * a) + 'x&#178; - ' + (2 * a * b) + 'x + ' + (b * b) + '.';
+    } else {
+      q = a + 'x&#178;-' + (b * b);
+      correct = '(' + a + 'x+' + b + ')(' + a + 'x-' + b + ')';
+      w1 = '(' + a + 'x+' + b + ')&#178;';
+      w2 = '(' + a + 'x-' + b + ')&#178;';
+      w3 = a + '(x+' + b + ')(x-' + b + ')';
+      exp = 'a&#178; - b&#178; = (a+b)(a-b). Here a=' + a + 'x, b=' + b + '.';
+    }
+    t10.push(shuffleOptions({
+      q: (type === 3 ? 'Factorise: ' : 'Expand: ') + q,
+      options: [correct, w1, w2, w3],
+      answer: 0,
+      explanation: exp
+    }));
+  }
+  practices.push(t10);
+
+  return practices;
+}
+
+var materialPractices = generateMaterialPractices();
+
+function renderMaterialPractice(topicNum) {
+  var container = document.getElementById('practice-M' + topicNum);
+  if (!container) return;
+  var questions = materialPractices[topicNum - 1];
+  if (!questions) return;
+  var html = '';
+  for (var i = 0; i < questions.length; i++) {
+    var q = questions[i];
+    var qNum = String(i + 1).padStart(2, '0');
+    html += '<div class="question-card">';
+    html += '<div class="question-header"><span class="question-number">Q' + qNum + '</span><span class="question-topic">Topic ' + topicNum + '</span></div>';
+    html += '<div class="question-text">' + q.q + '</div>';
+    html += '<div class="options">';
+    for (var j = 0; j < q.options.length; j++) {
+      var letter = String.fromCharCode(65 + j);
+      html += '<div class="option mp-option" data-topic="' + topicNum + '" data-q="' + i + '" data-opt="' + j + '">';
+      html += '<div class="option-letter">' + letter + '</div><span>' + q.options[j] + '</span></div>';
+    }
+    html += '</div>';
+    html += '<button class="show-answer-btn mp-show-btn" data-topic="' + topicNum + '" data-q="' + i + '">Show Answer &amp; Explanation</button>';
+    html += '<div class="explanation" id="mp-exp-' + topicNum + '-' + i + '">';
+    html += '<div class="explanation-label">Answer &amp; Explanation</div>';
+    html += '<div>Correct answer: <span class="answer-reveal">' + q.options[q.answer] + '</span></div>';
+    html += '<p style="margin-top: 8px;">' + q.explanation + '</p></div></div>';
+  }
+  container.innerHTML = html;
+}
+
+// ============ 30 QUIZ QUESTIONS ============
+var quizQuestions = [
+  { topic: 'Topic 1', q: 'Which expression is quadratic?', options: ['5x &#8722; 3', 'x&#178; + 7', 'x&#8308; + 2', '8'], answer: 1, explanation: 'A quadratic expression has its highest power of x equal to 2. Only x&#178; + 7 fits.' },
+  { topic: 'Topic 1', q: 'In 3x&#178; &#8722; 5x + 2, what is the value of a?', options: ['2', '&#8722;5', '3', '5'], answer: 2, explanation: 'In standard form ax&#178; + bx + c, "a" is the coefficient of x&#178;. Here a = 3.' },
+  { topic: 'Topic 1', q: 'Which is NOT a quadratic expression?', options: ['x&#178; &#8722; 9', '2x&#178; + 3x', 'x&#178;', '4x + 1'], answer: 3, explanation: '4x + 1 is linear (degree 1), not quadratic.' },
+  { topic: 'Topic 2', q: 'Add: (3x&#178; + 2x + 1) + (x&#178; + 5x + 4)', options: ['4x&#178; + 7x + 5', '4x&#178; + 3x + 5', '3x&#178; + 7x + 5', '4x&#178; + 7x + 4'], answer: 0, explanation: 'Combine like terms: (3+1)x&#178; + (2+5)x + (1+4) = 4x&#178; + 7x + 5.' },
+  { topic: 'Topic 2', q: 'Add: (x&#178; &#8722; 3x) + (2x&#178; + 4x &#8722; 1)', options: ['3x&#178; + x &#8722; 1', '3x&#178; + x + 1', '3x&#178; &#8722; x &#8722; 1', '3x&#178; + 7x &#8722; 1'], answer: 0, explanation: '(1+2)x&#178; + (&#8722;3+4)x + (0&#8722;1) = 3x&#178; + x &#8722; 1.' },
+  { topic: 'Topic 2', q: 'Add: (2x&#178; + x &#8722; 3) + (x&#178; &#8722; 2x + 6)', options: ['3x&#178; &#8722; x + 3', '3x&#178; + 3x + 3', '3x&#178; &#8722; x + 9', '2x&#178; &#8722; x + 3'], answer: 0, explanation: '(2+1)x&#178; + (1&#8722;2)x + (&#8722;3+6) = 3x&#178; &#8722; x + 3.' },
+  { topic: 'Topic 3', q: 'Subtract: (4x&#178; + 3x &#8722; 1) &#8722; (x&#178; + 2x + 5)', options: ['3x&#178; + x &#8722; 6', '3x&#178; + 5x + 4', '3x&#178; + x + 4', '5x&#178; + x &#8722; 6'], answer: 0, explanation: 'Distribute negative: 4x&#178; + 3x &#8722; 1 &#8722; x&#178; &#8722; 2x &#8722; 5 = 3x&#178; + x &#8722; 6.' },
+  { topic: 'Topic 3', q: 'Subtract: (5x&#178; &#8722; 2x + 3) &#8722; (2x&#178; &#8722; 4x &#8722; 1)', options: ['3x&#178; + 2x + 4', '3x&#178; &#8722; 6x + 4', '3x&#178; + 2x + 2', '7x&#178; + 2x + 2'], answer: 0, explanation: '5x&#178; &#8722; 2x + 3 &#8722; 2x&#178; + 4x + 1 = 3x&#178; + 2x + 4. Note &#8722;(&#8722;4x) = +4x.' },
+  { topic: 'Topic 3', q: 'Subtract: (x&#178; + 7) &#8722; (3x&#178; &#8722; 2x + 4)', options: ['&#8722;2x&#178; + 2x + 3', '&#8722;2x&#178; &#8722; 2x + 3', '2x&#178; + 2x + 3', '4x&#178; &#8722; 2x + 3'], answer: 0, explanation: 'x&#178; + 7 &#8722; 3x&#178; + 2x &#8722; 4 = &#8722;2x&#178; + 2x + 3.' },
+  { topic: 'Topic 4', q: 'Expand: 4(x&#178; + 3x &#8722; 2)', options: ['4x&#178; + 12x &#8722; 8', '4x&#178; + 3x &#8722; 2', '4x&#178; + 12x &#8722; 2', 'x&#178; + 12x &#8722; 8'], answer: 0, explanation: 'Multiply each term by 4: 4x&#178; + 12x &#8722; 8.' },
+  { topic: 'Topic 4', q: 'Expand: 3x(x &#8722; 4)', options: ['3x&#178; &#8722; 12x', '3x&#178; &#8722; 4', '3x &#8722; 12', '3x&#178; &#8722; 12'], answer: 0, explanation: '3x &#183; x &#8722; 3x &#183; 4 = 3x&#178; &#8722; 12x.' },
+  { topic: 'Topic 4', q: 'Expand: &#8722;2x(3x&#178; &#8722; 5)', options: ['&#8722;6x&#179; + 10x', '&#8722;6x&#179; &#8722; 10x', '6x&#179; + 10x', '&#8722;6x&#178; + 10x'], answer: 0, explanation: '&#8722;2x &#183; 3x&#178; + (&#8722;2x) &#183; (&#8722;5) = &#8722;6x&#179; + 10x. Two negatives make a positive.' },
+  { topic: 'Topic 5', q: 'Factorise: 6x&#178; + 9x', options: ['3x(2x + 3)', '3(2x&#178; + 3x)', '6x(x + 9)', '3x(2x + 9)'], answer: 0, explanation: 'HCF of 6 and 9 is 3. HCF of x&#178; and x is x. Combined: 3x. Result: 3x(2x + 3).' },
+  { topic: 'Topic 5', q: 'Factorise: x&#178; + 5x + 6', options: ['(x+2)(x+3)', '(x+1)(x+6)', '(x+5)(x+1)', '(x&#8722;2)(x&#8722;3)'], answer: 0, explanation: 'Two numbers that multiply to 6 and add to 5: 2 and 3. So (x+2)(x+3).' },
+  { topic: 'Topic 5', q: 'Factorise: x&#178; &#8722; 8x + 15', options: ['(x&#8722;3)(x&#8722;5)', '(x&#8722;3)(x+5)', '(x+3)(x&#8722;5)', '(x&#8722;1)(x&#8722;15)'], answer: 0, explanation: 'Two numbers that multiply to 15 and add to &#8722;8: &#8722;3 and &#8722;5. So (x&#8722;3)(x&#8722;5).' },
+  { topic: 'Topic 6', q: 'Simplify: 5x&#178; + 3x &#8722; 2x&#178; + 7x', options: ['3x&#178; + 10x', '7x&#178; + 10x', '3x&#178; + 4x', '3x&#178; &#8722; 4x'], answer: 0, explanation: 'Combine like terms: (5&#8722;2)x&#178; + (3+7)x = 3x&#178; + 10x.' },
+  { topic: 'Topic 6', q: 'Simplify: 2(x + 3) + 3(x + 3)', options: ['5x + 15', '5x + 6', '5x + 9', '6x + 15'], answer: 0, explanation: 'Factorise first: (2+3)(x+3) = 5(x+3) = 5x + 15.' },
+  { topic: 'Topic 6', q: 'Simplify: (8x&#178; &#8722; 4x) &#247; 4', options: ['2x&#178; &#8722; x', '2x&#178; &#8722; 4x', '8x&#178; &#8722; x', '2x &#8722; x'], answer: 0, explanation: 'Divide each term by 4: 8x&#178;/4 = 2x&#178;, &#8722;4x/4 = &#8722;x. Result: 2x&#178; &#8722; x.' },
+  { topic: 'Topic 7', q: 'Simplify: 4a&#178;b + 3a&#178;b &#8722; 2ab&#178;', options: ['7a&#178;b &#8722; 2ab&#178;', '5a&#178;b', '7a&#178;b + 2ab&#178;', '5a&#178;b&#178;'], answer: 0, explanation: '4a&#178;b + 3a&#178;b = 7a&#178;b (like terms). The &#8722;2ab&#178; has different powers, so it stays separate.' },
+  { topic: 'Topic 7', q: 'Simplify: (3x&#179;y&#178;)(2xy)', options: ['6x&#8308;y&#179;', '6x&#179;y&#178;', '5x&#8308;y&#179;', '6x&#8308;y&#178;'], answer: 0, explanation: 'Coefficients: 3&#215;2 = 6. x: x&#179;&#183;x = x&#8308;. y: y&#178;&#183;y = y&#179;. Result: 6x&#8308;y&#179;.' },
+  { topic: 'Topic 7', q: 'Simplify: 2xy&#178; &#183; 3x&#178;y &#183; xy', options: ['6x&#8308;y&#8308;', '6x&#178;y&#178;', '6x&#8308;y&#179;', '5x&#8308;y&#8308;'], answer: 0, explanation: '2&#215;3 = 6. x: 1+2+1 = 4. y: 2+1+1 = 4. Result: 6x&#8308;y&#8308;.' },
+  { topic: 'Topic 8', q: 'Expand: (x + 2)(x + 6)', options: ['x&#178; + 8x + 12', 'x&#178; + 12x + 8', 'x&#178; + 8x + 8', 'x&#178; + 14x + 12'], answer: 0, explanation: 'FOIL: x&#178; + 6x + 2x + 12 = x&#178; + 8x + 12.' },
+  { topic: 'Topic 8', q: 'Expand: (x &#8722; 4)(x + 3)', options: ['x&#178; &#8722; x &#8722; 12', 'x&#178; + x &#8722; 12', 'x&#178; &#8722; x + 12', 'x&#178; &#8722; 7x &#8722; 12'], answer: 0, explanation: 'FOIL: x&#183;x = x&#178;, x&#183;3 = 3x, (&#8722;4)&#183;x = &#8722;4x, (&#8722;4)&#183;3 = &#8722;12. Combine: x&#178; &#8722; x &#8722; 12.' },
+  { topic: 'Topic 8', q: 'Expand: (3x + 2)(x &#8722; 5)', options: ['3x&#178; &#8722; 13x &#8722; 10', '3x&#178; &#8722; 15x &#8722; 10', '3x&#178; &#8722; 13x + 10', '3x&#178; &#8722; 7x &#8722; 10'], answer: 0, explanation: 'FOIL: 3x&#183;x = 3x&#178;, 3x&#183;(&#8722;5) = &#8722;15x, 2&#183;x = 2x, 2&#183;(&#8722;5) = &#8722;10. Combine: 3x&#178; &#8722; 13x &#8722; 10.' },
+  { topic: 'Topic 9', q: 'Factorise: 2x&#178; + 4x + 3x + 6', options: ['(2x+3)(x+2)', '(2x+2)(x+3)', '(2x+6)(x+1)', '(x+2)(2x+3)'], answer: 0, explanation: 'Group: (2x&#178; + 4x) + (3x + 6) = 2x(x+2) + 3(x+2) = (2x+3)(x+2). Note both A and D are correct; A is listed first.' },
+  { topic: 'Topic 9', q: 'Factorise: xy + 2x + 3y + 6', options: ['(x+3)(y+2)', '(x+2)(y+3)', '(x+6)(y+1)', '(xy+2)(3+y)'], answer: 0, explanation: 'Group: (xy + 2x) + (3y + 6) = x(y+2) + 3(y+2) = (x+3)(y+2).' },
+  { topic: 'Topic 9', q: 'Factorise: 6ax + 9a + 2bx + 3b', options: ['(3a+b)(2x+3)', '(3a+2)(2x+b)', '(6a+2b)(x+3)', '(3a+b)(2x+3)'], answer: 0, explanation: 'Group: (6ax + 9a) + (2bx + 3b) = 3a(2x+3) + b(2x+3) = (3a+b)(2x+3).' },
+  { topic: 'Topic 10', q: 'Expand: (x + 6)&#178;', options: ['x&#178; + 12x + 36', 'x&#178; + 6x + 36', 'x&#178; + 12x + 6', '2x&#178; + 12x + 36'], answer: 0, explanation: '(a+b)&#178; = a&#178; + 2ab + b&#178; with a = x, b = 6: x&#178; + 12x + 36.' },
+  { topic: 'Topic 10', q: 'Expand: (2x &#8722; 3)&#178;', options: ['4x&#178; &#8722; 12x + 9', '4x&#178; &#8722; 9', '4x&#178; + 12x + 9', '2x&#178; &#8722; 12x + 9'], answer: 0, explanation: '(a&#8722;b)&#178; = a&#178; &#8722; 2ab + b&#178; with a = 2x, b = 3: (2x)&#178; &#8722; 2(2x)(3) + 3&#178; = 4x&#178; &#8722; 12x + 9.' },
+  { topic: 'Topic 10', q: 'Factorise: x&#178; &#8722; 49', options: ['(x+7)(x&#8722;7)', '(x&#8722;7)&#178;', '(x+7)&#178;', '(x&#8722;49)(x+1)'], answer: 0, explanation: 'Difference of squares: a&#178; &#8722; b&#178; = (a+b)(a&#8722;b). Here a = x, b = 7: (x+7)(x&#8722;7).' }
+];
+
+// Shuffle quiz options for varied answers
+for (var i = 0; i < quizQuestions.length; i++) {
+  quizQuestions[i] = shuffleOptions(quizQuestions[i]);
+}
+
+function renderQuiz() {
+  var container = document.getElementById('quizContainer');
+  if (!container) return;
+  var html = '';
+  for (var i = 0; i < quizQuestions.length; i++) {
+    var q = quizQuestions[i];
+    var qNum = String(i + 1).padStart(2, '0');
+    html += '<div class="question-card">';
+    html += '<div class="question-header"><span class="question-number">Q' + qNum + '</span><span class="question-topic">' + q.topic + '</span></div>';
+    html += '<div class="question-text">' + q.q + '</div>';
+    html += '<div class="options">';
+    for (var j = 0; j < q.options.length; j++) {
+      var letter = String.fromCharCode(65 + j);
+      html += '<div class="option quiz-option" data-quiz-q="' + i + '" data-opt="' + j + '">';
+      html += '<div class="option-letter">' + letter + '</div><span>' + q.options[j] + '</span></div>';
+    }
+    html += '</div>';
+    html += '<div class="explanation" id="quiz-exp-' + i + '"><div class="explanation-label">Explanation</div><p>' + q.explanation + '</p></div>';
+    html += '</div>';
+  }
+  container.innerHTML = html;
+}
+
+// ============ MEMORY GAME WITH 30s PREVIEW ============
+var memoryPairs = [
+  { a: '(x+2)(x+3)', b: 'x&#178;+5x+6' },
+  { a: '(x+4)(x&#8722;1)', b: 'x&#178;+3x&#8722;4' },
+  { a: '(x+5)&#178;', b: 'x&#178;+10x+25' },
+  { a: '(x&#8722;3)&#178;', b: 'x&#178;&#8722;6x+9' },
+  { a: '(x+7)(x&#8722;7)', b: 'x&#178;&#8722;49' },
+  { a: '(2x+1)(x+3)', b: '2x&#178;+7x+3' },
+  { a: '4x(x+2)', b: '4x&#178;+8x' },
+  { a: '(x+4)(x+5)', b: 'x&#178;+9x+20' }
+];
+
+var memCards = [];
+
+function initMemoryGame() {
+  var game = document.getElementById('memoryGame');
+  if (!game) return;
+  
+  if (memTimerInterval) { clearInterval(memTimerInterval); memTimerInterval = null; }
+  if (memPreviewInterval) { clearInterval(memPreviewInterval); memPreviewInterval = null; }
+  
+  memCards = [];
+  for (var i = 0; i < memoryPairs.length; i++) {
+    memCards.push({ id: i, text: memoryPairs[i].a });
+    memCards.push({ id: i, text: memoryPairs[i].b });
+  }
+  memCards = shuffleArray(memCards);
+  
+  game.innerHTML = '';
+  for (var idx = 0; idx < memCards.length; idx++) {
+    var card = memCards[idx];
+    var el = document.createElement('div');
+    el.className = 'memory-card preview';
+    el.setAttribute('data-idx', idx);
+    el.setAttribute('data-id', card.id);
+    el.innerHTML = '<div class="card-face card-front">?</div><div class="card-face card-back">' + card.text + '</div>';
+    (function(idxVal) {
+      el.addEventListener('click', function() { flipCard(idxVal); });
+    })(idx);
+    game.appendChild(el);
+  }
+  
+  memFlipped = [];
+  memMatchedCount = 0;
+  memMoves = 0;
+  memLocked = true; // Lock during preview
+  memStartTime = null;
+  
+  document.getElementById('memMoves').textContent = '0';
+  document.getElementById('memMatched').textContent = '0/8';
+  document.getElementById('memTime').textContent = '0:00';
+  document.getElementById('memInstructions').innerHTML = 'Memorize the pairs! Game starts in <span id="memCountdown" style="color: var(--accent); font-weight: bold;">30</span>s';
+  
+  var timeLeft = 30;
+  memPreviewInterval = setInterval(function() {
+    timeLeft--;
+    var cd = document.getElementById('memCountdown');
+    if (cd) cd.textContent = timeLeft;
+    if (timeLeft <= 0) {
+      clearInterval(memPreviewInterval);
+      memPreviewInterval = null;
+      var cards = document.querySelectorAll('.memory-card');
+      for (var i = 0; i < cards.length; i++) cards[i].classList.remove('preview');
+      memLocked = false;
+      memStartTime = Date.now();
+      memTimerInterval = setInterval(updateTimer, 1000);
+      document.getElementById('memInstructions').textContent = 'Find the pairs! Click any card to begin.';
+    }
+  }, 1000);
+}
+
+function flipCard(idx) {
+  if (memLocked) return;
+  var cardEl = document.querySelector('.memory-card[data-idx="' + idx + '"]');
+  if (!cardEl) return;
+  if (cardEl.classList.contains('flipped') || cardEl.classList.contains('matched')) return;
+  
+  cardEl.classList.add('flipped');
+  memFlipped.push(idx);
+  
+  if (memFlipped.length === 2) {
+    memMoves++;
+    document.getElementById('memMoves').textContent = memMoves;
+    memLocked = true;
+    var a = memFlipped[0];
+    var b = memFlipped[1];
+    var cardA = document.querySelector('.memory-card[data-idx="' + a + '"]');
+    var cardB = document.querySelector('.memory-card[data-idx="' + b + '"]');
+    
+    if (cardA.getAttribute('data-id') === cardB.getAttribute('data-id')) {
+      setTimeout(function() {
+        cardA.classList.add('matched');
+        cardB.classList.add('matched');
+        memMatchedCount++;
+        document.getElementById('memMatched').textContent = memMatchedCount + '/8';
+        memFlipped = [];
+        memLocked = false;
+        if (memMatchedCount === 8) {
+          clearInterval(memTimerInterval);
+          var finalTime = document.getElementById('memTime').textContent;
+          document.getElementById('memInstructions').innerHTML = '<strong style="color: var(--accent-3);">Excellent! You found all 8 pairs!</strong><br>' + memMoves + ' moves &#183; ' + finalTime;
+          var savedBest = localStorage.getItem('memBestScore');
+          var score = memMoves;
+          if (!savedBest || score < parseInt(savedBest)) {
+            localStorage.setItem('memBestScore', String(score));
+            document.getElementById('memBest').textContent = score;
+          }
+          showToast('Perfect match! All pairs found.', 'success');
+        }
+      }, 500);
+    } else {
+      setTimeout(function() {
+        cardA.classList.remove('flipped');
+        cardB.classList.remove('flipped');
+        memFlipped = [];
+        memLocked = false;
+      }, 1100);
+    }
+  }
+}
+
+function updateTimer() {
+  if (!memStartTime) return;
+  var elapsed = Math.floor((Date.now() - memStartTime) / 1000);
+  var m = Math.floor(elapsed / 60);
+  var s = elapsed % 60;
+  document.getElementById('memTime').textContent = m + ':' + String(s).padStart(2, '0');
+}
+
+// ============ EVENT DELEGATION ============
+document.addEventListener('click', function(e) {
+  var mpOpt = e.target.closest('.mp-option');
+  if (mpOpt) {
+    var topic = mpOpt.getAttribute('data-topic');
+    var q = mpOpt.getAttribute('data-q');
+    var siblings = document.querySelectorAll('.mp-option[data-topic="' + topic + '"][data-q="' + q + '"]');
+    for (var i = 0; i < siblings.length; i++) siblings[i].classList.remove('selected');
+    mpOpt.classList.add('selected');
+    return;
+  }
+  var mpBtn = e.target.closest('.mp-show-btn');
+  if (mpBtn) {
+    var topic = mpBtn.getAttribute('data-topic');
+    var q = mpBtn.getAttribute('data-q');
+    var exp = document.getElementById('mp-exp-' + topic + '-' + q);
+    if (exp) {
+      exp.classList.toggle('show');
+      if (exp.classList.contains('show')) {
+        var question = materialPractices[parseInt(topic) - 1][parseInt(q)];
+        var opts = document.querySelectorAll('.mp-option[data-topic="' + topic + '"][data-q="' + q + '"]');
+        for (var i = 0; i < opts.length; i++) {
+          opts[i].classList.remove('correct', 'wrong');
+          if (i === question.answer) opts[i].classList.add('correct');
+          else if (opts[i].classList.contains('selected')) opts[i].classList.add('wrong');
+        }
+      }
+    }
+    return;
+  }
+  var qOpt = e.target.closest('.quiz-option');
+  if (qOpt) {
+    var q = qOpt.getAttribute('data-quiz-q');
+    var siblings = document.querySelectorAll('.quiz-option[data-quiz-q="' + q + '"]');
+    for (var i = 0; i < siblings.length; i++) siblings[i].classList.remove('selected');
+    qOpt.classList.add('selected');
+    return;
+  }
+});
+
+document.getElementById('checkAllBtn').addEventListener('click', function() {
+  var correct = 0;
+  var answered = 0;
+  for (var i = 0; i < quizQuestions.length; i++) {
+    var q = quizQuestions[i];
+    var opts = document.querySelectorAll('.quiz-option[data-quiz-q="' + i + '"]');
+    for (var k = 0; k < opts.length; k++) opts[k].classList.remove('correct', 'wrong');
+    var selectedIdx = -1;
+    for (var j = 0; j < opts.length; j++) {
+      if (opts[j].classList.contains('selected')) { selectedIdx = j; answered++; break; }
+    }
+    if (selectedIdx === q.answer) { opts[q.answer].classList.add('correct'); correct++; }
+    else if (selectedIdx !== -1) { opts[selectedIdx].classList.add('wrong'); opts[q.answer].classList.add('correct'); }
+    else { opts[q.answer].classList.add('correct'); }
+    var exp = document.getElementById('quiz-exp-' + i);
+    if (exp) exp.classList.add('show');
+  }
+  document.getElementById('quizScore').textContent = correct;
+  document.getElementById('quizPercent').textContent = Math.round(correct / 30 * 100) + '%';
+  if (answered < 30) showToast('Answered ' + answered + '/30 &#183; ' + correct + ' correct so far', '');
+  else {
+    if (correct === 30) showToast('Perfect score! Outstanding work.', 'success');
+    else if (correct >= 24) showToast('Great job! ' + correct + '/30 correct.', 'success');
+    else if (correct >= 18) showToast('Good effort! ' + correct + '/30 correct.', '');
+    else showToast(correct + '/30 correct. Review the explanations.', 'error');
+  }
+  var firstWrong = document.querySelector('.quiz-option.wrong');
+  if (firstWrong) setTimeout(function() { firstWrong.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 200);
+});
+
+document.getElementById('memReset').addEventListener('click', function() {
+  initMemoryGame();
+  showToast('Game reset. Previewing cards...', '');
+});
+
+if (!Element.prototype.closest) {
+  Element.prototype.closest = function(s) {
+    var el = this;
+    do {
+      if (el.matches(s)) return el;
+      el = el.parentElement || el.parentNode;
+    } while (el !== null && el.nodeType === 1);
+    return null;
+  };
+}
+
+// ============ INIT EVERYTHING ============
+renderObjectives();
+for (var t = 1; t <= 10; t++) renderMaterialPractice(t);
+renderQuiz();
+initMemoryGame();
+var savedBest = localStorage.getItem('memBestScore');
+if (savedBest) document.getElementById('memBest').textContent = savedBest;
+updateNav();
+</script>
+
+</body>
+</html>
