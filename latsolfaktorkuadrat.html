@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Latihan Pemfaktoran Persamaan Kuadrat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Space+Grotesk:wght@400;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep: #0f0c29;
+  --bg-mid: #302b63;
+  --bg-light: #24243e;
+  --neon-green: #00ff9d;
+  --neon-cyan: #00d4ff;
+  --neon-pink: #ff0055;
+  --gold: #fbbf24;
+  --text: #ffffff;
+  --text-dim: #cbd5e1;
+  --glass: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Space Grotesk', sans-serif;
+  background: linear-gradient(135deg, var(--bg-deep), var(--bg-mid), var(--bg-light));
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.bg-pattern {
+  position: fixed; inset: 0; z-index: -1;
+  background-image: 
+    linear-gradient(rgba(0, 212, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 212, 255, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: radial-gradient(ellipse at center, black 20%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 20%, transparent 80%);
+}
+
+.floating-shape {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(60px);
+  z-index: -1;
+  animation: float 20s infinite ease-in-out;
+}
+.shape-1 { width: 300px; height: 300px; background: rgba(0, 255, 157, 0.1); top: 10%; left: 10%; }
+.shape-2 { width: 400px; height: 400px; background: rgba(255, 0, 85, 0.08); bottom: 10%; right: 10%; animation-delay: 5s; }
+
+@keyframes float {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(50px, -30px); }
+}
+
+/* COVER */
+.cover {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.cover-card {
+  max-width: 1000px;
+  width: 100%;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 32px;
+  padding: 3rem;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  position: relative;
+}
+
+.cover-header { text-align: center; margin-bottom: 2.5rem; }
+
+.badge {
+  display: inline-block;
+  padding: 0.4rem 1rem;
+  background: rgba(0, 255, 157, 0.1);
+  border: 1px solid rgba(0, 255, 157, 0.3);
+  border-radius: 999px;
+  color: var(--neon-green);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  margin-bottom: 1rem;
+}
+
+.cover-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(90deg, var(--neon-cyan), var(--neon-green));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.cover-subtitle { color: var(--text-dim); font-size: 1.1rem; }
+
+.input-section {
+  margin-bottom: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.input-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  letter-spacing: 0.05em;
+}
+
+.name-input {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1.5px solid var(--glass-border);
+  border-radius: 16px;
+  color: var(--text);
+  font-size: 1rem;
+  font-family: inherit;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.name-input:focus {
+  border-color: var(--neon-green);
+  box-shadow: 0 0 0 4px rgba(0, 255, 157, 0.15);
+}
+
+.start-btn {
+  padding: 1rem 2rem;
+  background: linear-gradient(90deg, var(--neon-green), var(--neon-cyan));
+  border: none;
+  border-radius: 16px;
+  color: var(--bg-deep);
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.start-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(0, 255, 157, 0.4);
+}
+
+.start-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.tricks-section { margin-top: 2rem; }
+
+.tricks-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  color: var(--gold);
+}
+
+.tricks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.trick-card {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.trick-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--neon-cyan);
+}
+
+.trick-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 4px;
+  background: linear-gradient(90deg, var(--neon-cyan), var(--neon-green));
+}
+
+.trick-card.pink::before { background: linear-gradient(90deg, var(--neon-pink), var(--gold)); }
+.trick-card.gold::before { background: linear-gradient(90deg, var(--gold), var(--neon-pink)); }
+
+.trick-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.trick-icon {
+  width: 40px; height: 40px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  color: var(--neon-green);
+  font-family: 'Outfit', sans-serif;
+}
+
+.trick-card.pink .trick-icon { color: var(--neon-pink); }
+.trick-card.gold .trick-icon { color: var(--gold); }
+
+.trick-title { font-weight: 700; font-size: 1.1rem; }
+
+.trick-content { color: var(--text-dim); font-size: 0.95rem; line-height: 1.6; }
+.trick-content .formula {
+  font-family: 'JetBrains Mono', monospace;
+  background: rgba(0,0,0,0.4);
+  padding: 0.5rem;
+  border-radius: 8px;
+  display: block;
+  margin: 0.5rem 0;
+  color: var(--neon-cyan);
+  text-align: center;
+}
+
+/* QUIZ */
+.quiz { display: none; min-height: 100vh; padding: 0 0 4rem; }
+.quiz.active { display: block; }
+
+.quiz-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(15, 12, 41, 0.9);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border-bottom: 1px solid var(--glass-border);
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.student-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.avatar {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--neon-green), var(--neon-cyan));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  color: var(--bg-deep);
+}
+
+.progress-section { display: flex; align-items: center; gap: 1rem; }
+
+.progress-bar {
+  width: 200px;
+  height: 8px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--neon-cyan), var(--neon-green));
+  transition: width 0.4s ease;
+}
+
+.score-pill {
+  padding: 0.5rem 1rem;
+  background: rgba(0, 255, 157, 0.1);
+  border: 1px solid rgba(0, 255, 157, 0.3);
+  border-radius: 999px;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  color: var(--neon-green);
+  font-size: 0.9rem;
+}
+
+.finish-btn {
+  padding: 0.5rem 1.2rem;
+  background: linear-gradient(90deg, var(--neon-pink), #ff7891);
+  border: none;
+  border-radius: 10px;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: transform 0.2s;
+}
+.finish-btn:hover { transform: translateY(-2px); }
+
+.quiz-container {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.section-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin: 3rem 0 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--glass-border);
+  color: var(--neon-cyan);
+}
+
+.question-card {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.question-card.correct {
+  border-color: var(--neon-green);
+  box-shadow: 0 0 20px -5px rgba(0, 255, 157, 0.3);
+}
+.question-card.incorrect {
+  border-color: var(--neon-pink);
+  box-shadow: 0 0 20px -5px rgba(255, 0, 85, 0.3);
+}
+
+.q-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+
+.q-number {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--gold);
+  background: rgba(251, 191, 36, 0.1);
+  padding: 0.2rem 0.6rem;
+  border-radius: 8px;
+}
+
+.q-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 1rem 0;
+  color: var(--text);
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.input-label-small {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  font-weight: 600;
+}
+
+.factor-input {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1.5px solid var(--glass-border);
+  border-radius: 10px;
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.05rem;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.factor-input:focus {
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.15);
+}
+
+.question-card.correct .factor-input { border-color: var(--neon-green); background: rgba(0, 255, 157, 0.05); }
+.question-card.incorrect .factor-input { border-color: var(--neon-pink); background: rgba(255, 0, 85, 0.05); }
+
+.feedback {
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-top: 0.5rem;
+  display: none;
+}
+.feedback.show { display: block; }
+.feedback.correct-text { color: var(--neon-green); }
+.feedback.incorrect-text { color: var(--neon-pink); }
+
+.actions { display: flex; gap: 0.75rem; margin-top: 1rem; flex-wrap: wrap; }
+
+.btn {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 10px;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.btn-check {
+  background: var(--neon-green);
+  color: var(--bg-deep);
+}
+.btn-check:hover { transform: translateY(-2px); box-shadow: 0 5px 15px -5px rgba(0, 255, 157, 0.4); }
+
+.btn-explain {
+  background: rgba(0, 212, 255, 0.1);
+  border: 1px solid rgba(0, 212, 255, 0.3);
+  color: var(--neon-cyan);
+}
+.btn-explain:hover { background: rgba(0, 212, 255, 0.2); transform: translateY(-2px); }
+
+.btn-reset {
+  background: transparent;
+  border: 1px solid var(--glass-border);
+  color: var(--text-dim);
+  font-weight: 600;
+}
+.btn-reset:hover { background: rgba(255,255,255,0.05); color: var(--text); }
+
+.explanation-box {
+  margin-top: 1.5rem;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: none;
+  animation: slideIn 0.4s ease;
+}
+.explanation-box.show { display: block; }
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.exp-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.exp-title { font-family: 'Outfit', sans-serif; font-weight: 700; color: var(--neon-cyan); }
+
+.step-counter {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--neon-cyan);
+  background: rgba(0, 212, 255, 0.1);
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+}
+
+.steps-container { display: flex; flex-direction: column; gap: 0.5rem; }
+
+.step {
+  display: none;
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 3px solid var(--neon-cyan);
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-dim);
+  animation: fadeStep 0.4s ease;
+}
+.step.show { display: block; }
+
+@keyframes fadeStep {
+  from { opacity: 0; transform: translateX(-10px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.exp-controls {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.step-btn {
+  padding: 0.5rem 1rem;
+  background: rgba(0, 212, 255, 0.15);
+  border: 1px solid rgba(0, 212, 255, 0.3);
+  color: var(--neon-cyan);
+  border-radius: 8px;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.step-btn:hover:not(:disabled) { background: rgba(0, 212, 255, 0.25); }
+.step-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.step-btn.all-btn {
+  background: rgba(251, 191, 36, 0.1);
+  border-color: rgba(251, 191, 36, 0.3);
+  color: var(--gold);
+}
+.step-btn.all-btn:hover:not(:disabled) { background: rgba(251, 191, 36, 0.2); }
+
+/* RESULTS MODAL */
+.result-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 12, 41, 0.9);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 2rem;
+}
+.result-modal.active { display: flex; }
+
+.result-card {
+  max-width: 500px;
+  width: 100%;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 32px;
+  padding: 3rem 2rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.result-score {
+  font-family: 'Outfit', sans-serif;
+  font-size: 5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--neon-green), var(--neon-cyan));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1;
+  margin-bottom: 1rem;
+}
+
+.result-msg { color: var(--text-dim); margin-bottom: 2rem; font-size: 1.1rem; }
+
+.result-actions { display: flex; gap: 1rem; justify-content: center; }
+
+.confetti {
+  position: fixed;
+  width: 10px; height: 10px;
+  pointer-events: none;
+  z-index: 999;
+  animation: confettiFall 3s linear forwards;
+}
+@keyframes confettiFall {
+  to { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+
+@media (max-width: 768px) {
+  .quiz-header { flex-direction: column; align-items: flex-start; }
+  .progress-section { width: 100%; }
+  .progress-bar { width: 100%; }
+  .cover-card { padding: 2rem 1.5rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-pattern"></div>
+<div class="floating-shape shape-1"></div>
+<div class="floating-shape shape-2"></div>
+
+<!-- COVER -->
+<section class="cover" id="cover">
+  <div class="cover-card">
+    <div class="cover-header">
+      <span class="badge">● MATEMATIKA INTERAKTIF ●</span>
+      <h1 class="cover-title">Latihan Pemfaktoran<br>Persamaan Kuadrat</h1>
+      <p class="cover-subtitle">20 Soal Latihan Beserta Pembahasan Interaktif</p>
+    </div>
+
+    <div class="input-section">
+      <label class="input-label" for="nameInput">Nama Siswa</label>
+      <input type="text" id="nameInput" class="name-input" placeholder="Masukkan nama lengkap kamu di sini..." required>
+      <button class="start-btn" id="startBtn" disabled>Mulai Latihan ➜</button>
+    </div>
+
+    <div class="tricks-section">
+      <h3 class="tricks-title">✨ Cara Cepat Pemfaktoran ✨</h3>
+      <div class="tricks-grid">
+        <div class="trick-card">
+          <div class="trick-header">
+            <div class="trick-icon">1</div>
+            <div class="trick-title">Jika A = 1</div>
+          </div>
+          <div class="trick-content">
+            Bentuk umum: <span class="formula">x² + bx + c = 0</span>
+            Cari 2 angka (p & q) di mana <strong>p × q = c</strong> dan <strong>p + q = b</strong>.
+            Faktor: <span class="formula">(x + p)(x + q) = 0</span>
+          </div>
+        </div>
+
+        <div class="trick-card pink">
+          <div class="trick-header">
+            <div class="trick-icon">2</div>
+            <div class="trick-title">Jika A ≠ 1 (AC Method)</div>
+          </div>
+          <div class="trick-content">
+            Bentuk umum: <span class="formula">ax² + bx + c = 0</span>
+            Kalikan <strong>A × C</strong>. Cari 2 angka (p & q) di mana <strong>p × q = AC</strong> dan <strong>p + q = B</strong>.
+            Pecah suku tengah, lalu faktorkan dengan pengelompokan.
+          </div>
+        </div>
+
+        <div class="trick-card gold">
+          <div class="trick-header">
+            <div class="trick-icon">3</div>
+            <div class="trick-title">Selisih Kuadrat</div>
+          </div>
+          <div class="trick-content">
+            Bentuk umum: <span class="formula">a² - b² = 0</span>
+            Faktor: <span class="formula">(a - b)(a + b) = 0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- QUIZ -->
+<section class="quiz" id="quiz">
+  <header class="quiz-header">
+    <div class="student-info">
+      <div class="avatar" id="avatar">A</div>
+      <div>
+        <div style="font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em;">Siswa</div>
+        <div style="font-weight: 700;" id="studentName">Nama Siswa</div>
+      </div>
+    </div>
+    <div class="progress-section">
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="score-pill" id="scorePill">0 / 20 Benar</div>
+      <button class="finish-btn" id="finishBtn">Selesai</button>
+    </div>
+  </header>
+
+  <div class="quiz-container" id="quizContainer">
+    <!-- Question cards will be injected here -->
+  </div>
+</section>
+
+<!-- RESULT MODAL -->
+<div class="result-modal" id="resultModal">
+  <div class="result-card">
+    <h2 style="font-family: 'Outfit'; font-size: 1.5rem; margin-bottom: 1rem; color: var(--gold);">Latihan Selesai!</h2>
+    <div class="result-score" id="finalScore">0/20</div>
+    <p class="result-msg" id="resultMsg">Kerja bagus! Teruslah berlatih!</p>
+    <div class="result-actions">
+      <button class="btn btn-reset" id="closeModalBtn">Tutup</button>
+      <button class="btn btn-check" id="restartBtn">Ulangi Lagi</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = [
+  // Bagian I: A = 1
+  { id: 1, part: "Bagian I: Persamaan dengan A = 1", equation: "x² + 5x + 6 = 0", answers: ["(x+2)(x+3)=0", "(x+3)(x+2)=0", "(x+2)(x+3)", "(x+3)(x+2)"], steps: ["Cari dua angka yang dikalikan menghasilkan 6, dan dijumlahkan menghasilkan 5.", "Angka tersebut adalah 2 dan 3.", "Faktor: (x + 2)(x + 3) = 0"] },
+  { id: 2, part: "Bagian I: Persamaan dengan A = 1", equation: "x² - 7x + 12 = 0", answers: ["(x-3)(x-4)=0", "(x-4)(x-3)=0", "(x-3)(x-4)", "(x-4)(x-3)"], steps: ["Cari dua angka yang dikalikan menghasilkan 12, dan dijumlahkan menghasilkan -7.", "Angka tersebut adalah -3 dan -4.", "Faktor: (x - 3)(x - 4) = 0"] },
+  { id: 3, part: "Bagian I: Persamaan dengan A = 1", equation: "x² + 2x - 15 = 0", answers: ["(x+5)(x-3)=0", "(x-3)(x+5)=0", "(x+5)(x-3)", "(x-3)(x+5)"], steps: ["Cari dua angka yang dikalikan menghasilkan -15, dan dijumlahkan menghasilkan 2.", "Angka tersebut adalah 5 dan -3.", "Faktor: (x + 5)(x - 3) = 0"] },
+  { id: 4, part: "Bagian I: Persamaan dengan A = 1", equation: "x² - x - 20 = 0", answers: ["(x-5)(x+4)=0", "(x+4)(x-5)=0", "(x-5)(x+4)", "(x+4)(x-5)"], steps: ["Cari dua angka yang dikalikan menghasilkan -20, dan dijumlahkan menghasilkan -1.", "Angka tersebut adalah -5 dan 4.", "Faktor: (x - 5)(x + 4) = 0"] },
+  { id: 5, part: "Bagian I: Persamaan dengan A = 1", equation: "x² + 8x + 16 = 0", answers: ["(x+4)(x+4)=0", "(x+4)²=0", "(x+4)(x+4)", "(x+4)²"], steps: ["Cari dua angka yang dikalikan menghasilkan 16, dan dijumlahkan menghasilkan 8.", "Angka tersebut adalah 4 dan 4.", "Faktor: (x + 4)(x + 4) = 0 atau (x + 4)² = 0"] },
+  { id: 6, part: "Bagian I: Persamaan dengan A = 1", equation: "x² - 9 = 0", answers: ["(x-3)(x+3)=0", "(x+3)(x-3)=0", "(x-3)(x+3)", "(x+3)(x-3)"], steps: ["Persamaan ini adalah selisih dua kuadrat: a² - b² = (a - b)(a + b).", "Nilai a = x dan b = 3.", "Faktor: (x - 3)(x + 3) = 0"] },
+  { id: 7, part: "Bagian I: Persamaan dengan A = 1", equation: "x² + 10x + 21 = 0", answers: ["(x+7)(x+3)=0", "(x+3)(x+7)=0", "(x+7)(x+3)", "(x+3)(x+7)"], steps: ["Cari dua angka yang dikalikan menghasilkan 21, dan dijumlahkan menghasilkan 10.", "Angka tersebut adalah 7 dan 3.", "Faktor: (x + 7)(x + 3) = 0"] },
+  { id: 8, part: "Bagian I: Persamaan dengan A = 1", equation: "x² - 10x + 25 = 0", answers: ["(x-5)(x-5)=0", "(x-5)²=0", "(x-5)(x-5)", "(x-5)²"], steps: ["Cari dua angka yang dikalikan menghasilkan 25, dan dijumlahkan menghasilkan -10.", "Angka tersebut adalah -5 dan -5.", "Faktor: (x - 5)(x - 5) = 0 atau (x - 5)² = 0"] },
+  { id: 9, part: "Bagian I: Persamaan dengan A = 1", equation: "x² - 3x - 18 = 0", answers: ["(x-6)(x+3)=0", "(x+3)(x-6)=0", "(x-6)(x+3)", "(x+3)(x-6)"], steps: ["Cari dua angka yang dikalikan menghasilkan -18, dan dijumlahkan menghasilkan -3.", "Angka tersebut adalah -6 dan 3.", "Faktor: (x - 6)(x + 3) = 0"] },
+  { id: 10, part: "Bagian I: Persamaan dengan A = 1", equation: "x² + 7x - 18 = 0", answers: ["(x+9)(x-2)=0", "(x-2)(x+9)=0", "(x+9)(x-2)", "(x-2)(x+9)"], steps: ["Cari dua angka yang dikalikan menghasilkan -18, dan dijumlahkan menghasilkan 7.", "Angka tersebut adalah 9 dan -2.", "Faktor: (x + 9)(x - 2) = 0"] },
+
+  // Bagian II: A ≠ 1
+  { id: 11, part: "Bagian II: Persamaan dengan A ≠ 1", equation: "2x² + 5x + 3 = 0", answers: ["(2x+3)(x+1)=0", "(x+1)(2x+3)=0", "(2x+3)(x+1)", "(x+1)(2x+3)"], steps: ["Kalikan A = 2 dan C = 3 → Hasilnya 6.", "Cari dua angka dikalikan hasil 6, dijumlahkan hasil 5 (nilai B). Angka itu adalah 2 dan 3.", "Pecah tengah: 2x² + 2x + 3x + 3 = 0.", "Faktorkan dengan pengelompokan: 2x(x + 1) + 3(x + 1) = 0.", "Faktor: (2x + 3)(x + 1) = 0"] },
+  { id: 12, part: "Bagian II: Persamaan dengan A ≠ 1", equation: "3x² - x - 2 = 0", answers: ["(3x+2)(x-1)=0", "(x-1)(3x+2)=0", "(3x+2)(x-1)", "(x-1)(3x+2)"], steps: ["Kalikan A = 3 dan C = -2 → Hasilnya -6.", "Cari dua angka dikalikan hasil -6, dijumlahkan hasil -1 (nilai B). Angka itu adalah -3 dan 2.", "Pecah tengah: 3x² - 3x + 2x - 2 = 0.", "Faktorkan dengan pengelompokan: 3x(x - 1) + 2(x - 1) = 0.", "Faktor: (3x + 2)(x - 1) = 0"] },
+  { id: 13, part: "Bagian II: Persamaan dengan A ≠ 1", equation: "4x² + 11x - 3 = 0", answers: ["(4x-1)(x+3)=0", "(x+3)(4x-1)=0", "(4x-1)(x+3)", "(x+3)(4x-1)"], steps: ["Kalikan A = 4 dan C = -3 → Hasilnya -12.", "Cari dua angka dikalikan hasil -12, dijumlahkan hasil 11. Angka itu adalah 12 dan -1.", "Pecah tengah: 4x² + 12x - x - 3 = 0.", "Faktorkan: 4x(x + 3) - 1(x + 3) = 0.", "Faktor: (4x - 1)(x + 3) = 0"] },
+  { id: 14, part: "Bagian II: Persamaan dengan A ≠ 1", equation: "5x² - 17x + 6 = 0", answers: ["(5x-2)(x-3)=0", "(x-3)(5x-2)=0", "(5x-2)(x-3)", "(x-3)(5x-2)"], steps: ["Kalikan A = 5 dan C = 6 → Hasilnya 30.", "Cari dua angka dikalikan hasil 30, dijumlahkan hasil -17. Angka itu adalah -15 dan -2.", "Pecah tengah: 5x² - 15x - 2x + 6 = 0.", "Faktorkan: 5x(x - 3) - 2(x - 3) = 0.", "Faktor: (5x - 2)(x - 3) = 0"] },
+  { id: 15, part: "Bagian II: Persamaan dengan A ≠ 1", equation: "2x² - 7x - 15 = 0", answers: ["(2x+3)(x-5)=0", "(x-5)(2x+3)=0", "(2x+3)(x-5)", "(x-5)(2x+3)"], steps: ["Kalikan A = 2 dan C = -15 → Hasilnya -30.", "Cari dua angka dikalikan hasil -30, dijumlahkan hasil -7. Angka itu adalah -10 dan 3.", "Pecah tengah: 2x² - 10x + 3x - 15 = 0.", "Faktorkan: 2x(x - 5) + 3(x - 5) = 0.", "Faktor: (2x + 3)(x - 5) = 0"] },
+  { id: 16, part: "Bagian II: Persamaan dengan A ≠ 1", equation: "3x² + 14x + 8 = 0", answers: ["(3x+2)(x+4)=0", "(x+4)(3x+2)=0", "(3x+2)(x+4)", "(x+4)(3x+2)"], steps: ["Kalikan A = 3 dan C = 8 → Hasilnya 24.", "Cari dua angka dikalikan hasil 24, dijumlahkan hasil 14. Angka itu adalah 12 dan 2.", "Pecah tengah: 3x² + 12x + 2x + 8 = 0.", "Faktorkan: 3x(x + 4) + 2(x + 4) = 0.", "Faktor: (3x + 2)(x + 4) = 0"] },
+  { id: 17, part: "Bagian II: Persamaan dengan A ≠ 1", equation: "4x² - 9 = 0", answers: ["(2x-3)(2x+3)=0", "(2x+3)(2x-3)=0", "(2x-3)(2x+3)", "(2x+3)(2x-3)"], steps: ["Persamaan ini adalah selisih dua kuadrat: (2x)² - (3)² = 0.", "Gunakan rumus a² - b² = (a - b)(a + b).", "Faktor: (2x - 3)(2x + 3) = 0"] },
+  { id: 18, part: "Bagian II: Persamaan dengan A ≠ 1", equation: "6x² + 7x - 3 = 0", answers: ["(3x-1)(2x+3)=0", "(2x+3)(3x-1)=0", "(3x-1)(2x+3)", "(2x+3)(3x-1)"], steps: ["Kalikan A = 6 dan C = -3 → Hasilnya -18.", "Cari dua angka dikalikan hasil -18, dijumlahkan hasil 7. Angka itu adalah 9 dan -2.", "Pecah tengah: 6x² + 9x - 2x - 3 = 0.", "Faktorkan: 3x(2x + 3) - 1(2x + 3) = 0.", "Faktor: (3x - 1)(2x + 3) = 0"] },
+  { id: 19, part: "Bagian II: Persamaan dengan A ≠ 1", equation: "5x² + 13x - 6 = 0", answers: ["(5x-2)(x+3)=0", "(x+3)(5x-2)=0", "(5x-2)(x+3)", "(x+3)(5x-2)"], steps: ["Kalikan A = 5 dan C = -6 → Hasilnya -30.", "Cari dua angka dikalikan hasil -30, dijumlahkan hasil 13. Angka itu adalah 15 dan -2.", "Pecah tengah: 5x² + 15x - 2x - 6 = 0.", "Faktorkan: 5x(x + 3) - 2(x + 3) = 0.", "Faktor: (5x - 2)(x + 3) = 0"] },
+  { id: 20, part: "Bagian II: Persamaan dengan A ≠ 1", equation: "8x² - 10x + 3 = 0", answers: ["(4x-3)(2x-1)=0", "(2x-1)(4x-3)=0", "(4x-3)(2x-1)", "(2x-1)(4x-3)"], steps: ["Kalikan A = 8 dan C = 3 → Hasilnya 24.", "Cari dua angka dikalikan hasil 24, dijumlahkan hasil -10. Angka itu adalah -6 dan -4.", "Pecah tengah: 8x² - 4x - 6x + 3 = 0.", "Faktorkan: 4x(2x - 1) - 3(2x - 1) = 0.", "Faktor: (4x - 3)(2x - 1) = 0"] }
+];
+
+// State variables
+let totalCorrect = 0;
+let totalAnswered = 0;
+
+// DOM elements
+const startBtn = document.getElementById('startBtn');
+const nameInput = document.getElementById('nameInput');
+const cover = document.getElementById('cover');
+const quiz = document.getElementById('quiz');
+const studentNameDisplay = document.getElementById('studentName');
+const avatarDisplay = document.getElementById('avatar');
+const quizContainer = document.getElementById('quizContainer');
+const progressFill = document.getElementById('progressFill');
+const scorePill = document.getElementById('scorePill');
+const finishBtn = document.getElementById('finishBtn');
+const resultModal = document.getElementById('resultModal');
+const finalScore = document.getElementById('finalScore');
+const resultMsg = document.getElementById('resultMsg');
+const closeModalBtn = document.getElementById('closeModalBtn');
+const restartBtn = document.getElementById('restartBtn');
+
+// Enable start button when name is typed
+nameInput.addEventListener('input', () => {
+  startBtn.disabled = nameInput.value.trim() === '';
+});
+
+startBtn.addEventListener('click', startQuiz);
+finishBtn.addEventListener('click', showResults);
+closeModalBtn.addEventListener('click', () => resultModal.classList.remove('active'));
+restartBtn.addEventListener('click', restartExercise);
+
+function startQuiz() {
+  const name = nameInput.value.trim();
+  studentNameDisplay.textContent = name;
+  avatarDisplay.textContent = name.charAt(0).toUpperCase();
+  
+  cover.style.display = 'none';
+  quiz.classList.add('active');
+  
+  buildQuiz();
+}
+
+function buildQuiz() {
+  let currentPart = "";
+  QUESTIONS.forEach((q, index) => {
+    if (q.part !== currentPart) {
+      currentPart = q.part;
+      const titleDiv = document.createElement('h2');
+      titleDiv.className = 'section-title';
+      titleDiv.textContent = currentPart;
+      quizContainer.appendChild(titleDiv);
+    }
+
+    const card = document.createElement('div');
+    card.className = 'question-card';
+    card.id = `q-${q.id}`;
+    
+    let stepsHTML = '';
+    q.steps.forEach((step, i) => {
+      stepsHTML += `<div class="step" data-step="${i+1}">${step}</div>`;
+    });
+
+    card.innerHTML = `
+      <div class="q-header">
+        <span class="q-number">Soal ${q.id}</span>
+      </div>
+      <div class="q-text">${q.equation}</div>
+      <div class="input-group">
+        <label class="input-label-small">Masukkan Faktor (contoh: (x+2)(x+3)=0)</label>
+        <input type="text" class="factor-input" placeholder="Tulis faktor di sini..." data-qid="${q.id}">
+        <div class="feedback" id="fb-${q.id}"></div>
+      </div>
+      <div class="actions">
+        <button class="btn btn-check" data-qid="${q.id}">Cek Jawaban</button>
+        <button class="btn btn-explain" data-qid="${q.id}">Pembahasan</button>
+        <button class="btn btn-reset" data-qid="${q.id}">Reset</button>
+      </div>
+      <div class="explanation-box" id="exp-${q.id}">
+        <div class="exp-header">
+          <div class="exp-title">📖 Pembahasan Soal ${q.id}</div>
+          <div class="step-counter">Langkah <span id="curr-${q.id}">0</span> / ${q.steps.length}</div>
+        </div>
+        <div class="steps-container">${stepsHTML}</div>
+        <div class="exp-controls">
+          <button class="step-btn prev-btn" data-qid="${q.id}">← Sebelumnya</button>
+          <button class="step-btn next-btn" data-qid="${q.id}">Langkah Berikutnya →</button>
+          <button class="step-btn all-btn" data-qid="${q.id}">Tampilkan Semua</button>
+        </div>
+      </div>
+    `;
+    quizContainer.appendChild(card);
+  });
+
+  // Attach event listeners
+  document.querySelectorAll('.btn-check').forEach(btn => btn.addEventListener('click', (e) => checkAnswer(e.target.dataset.qid)));
+  document.querySelectorAll('.btn-explain').forEach(btn => btn.addEventListener('click', (e) => toggleExplanation(e.target.dataset.qid)));
+  document.querySelectorAll('.btn-reset').forEach(btn => btn.addEventListener('click', (e) => resetQuestion(e.target.dataset.qid)));
+  
+  document.querySelectorAll('.next-btn').forEach(btn => btn.addEventListener('click', (e) => navigateStep(e.target.dataset.qid, 'next')));
+  document.querySelectorAll('.prev-btn').forEach(btn => btn.addEventListener('click', (e) => navigateStep(e.target.dataset.qid, 'prev')));
+  document.querySelectorAll('.all-btn').forEach(btn => btn.addEventListener('click', (e) => showAllSteps(e.target.dataset.qid)));
+}
+
+function normalizeInput(input) {
+  if (!input) return "";
+  let clean = input.toLowerCase().replace(/\s+/g, '').replace(/=0$/, '').replace(/\*/g, '');
+  // Extract the two bracketed terms
+  let terms = clean.match(/\(([^()]+)\)/g);
+  if (terms && terms.length === 2) {
+    // Sort the brackets to handle commutative property (e.g. (x+3)(x+2) becomes same as (x+2)(x+3))
+    terms = terms.map(t => t.replace(/[()]/g, ''));
+    terms.sort();
+    return terms.join('|');
+  }
+  return clean;
+}
+
+function checkAnswer(qid) {
+  const question = QUESTIONS.find(q => q.id == qid);
+  const input = document.querySelector(`.factor-input[data-qid="${qid}"]`);
+  const card = document.getElementById(`q-${qid}`);
+  const feedback = document.getElementById(`fb-${qid}`);
+  
+  const userVal = input.value.trim();
+  if (userVal === '') {
+    alert("Masukkan jawaban terlebih dahulu!");
+    return;
+  }
+
+  const userNorm = normalizeInput(userVal);
+  const correctNorm = question.answers.map(a => normalizeInput(a));
+  
+  // Check if already answered to prevent double counting
+  const wasAnswered = card.classList.contains('correct') || card.classList.contains('incorrect');
+
+  if (correctNorm.includes(userNorm)) {
+    card.classList.add('correct');
+    card.classList.remove('incorrect');
+    feedback.innerHTML = "✓ Benar! Jawabanmu tepat.";
+    feedback.className = "feedback show correct-text";
+    if (!wasAnswered) {
+      totalCorrect++;
+      totalAnswered++;
+    } else if (card.classList.contains('incorrect')) {
+      // Was incorrect before, now correct
+      totalCorrect++;
+    }
+  } else {
+    card.classList.add('incorrect');
+    card.classList.remove('correct');
+    feedback.innerHTML = `✗ Belum tepat. Coba lagi atau lihat pembahasan. Jawaban yang benar formatnya seperti: ${question.answers[0]}`;
+    feedback.className = "feedback show incorrect-text";
+    if (!wasAnswered) {
+      totalAnswered++;
+    }
+  }
+  
+  updateScore();
+}
+
+function updateScore() {
+  scorePill.textContent = `${totalCorrect} / ${QUESTIONS.length} Benar`;
+  const pct = (totalAnswered / QUESTIONS.length) * 100;
+  progressFill.style.width = `${pct}%`;
+}
+
+function toggleExplanation(qid) {
+  const expBox = document.getElementById(`exp-${qid}`);
+  expBox.classList.toggle('show');
+  
+  if (expBox.classList.contains('show')) {
+    // Reset to first step
+    showStep(qid, 1);
+    setTimeout(() => {
+      expBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 100);
+  }
+}
+
+function navigateStep(qid, dir) {
+  const expBox = document.getElementById(`exp-${qid}`);
+  const currStepEl = document.getElementById(`curr-${qid}`);
+  let curr = parseInt(currStepEl.textContent) || 0;
+  const totalSteps = QUESTIONS.find(q => q.id == qid).steps.length;
+
+  if (dir === 'next') {
+    curr = Math.min(curr + 1, totalSteps);
+  } else {
+    curr = Math.max(curr - 1, 1);
+  }
+  showStep(qid, curr);
+}
+
+function showStep(qid, stepNum) {
+  const expBox = document.getElementById(`exp-${qid}`);
+  const steps = expBox.querySelectorAll('.step');
+  const currStepEl = document.getElementById(`curr-${qid}`);
+  const totalSteps = steps.length;
+  
+  steps.forEach((s, i) => {
+    if (i < stepNum) s.classList.add('show');
+    else s.classList.remove('show');
+  });
+  
+  currStepEl.textContent = stepNum;
+  
+  // Update button states
+  expBox.querySelector('.prev-btn').disabled = stepNum <= 1;
+  expBox.querySelector('.next-btn').disabled = stepNum >= totalSteps;
+  expBox.querySelector('.all-btn').disabled = false;
+}
+
+function showAllSteps(qid) {
+  const expBox = document.getElementById(`exp-${qid}`);
+  const steps = expBox.querySelectorAll('.step');
+  const currStepEl = document.getElementById(`curr-${qid}`);
+  const totalSteps = steps.length;
+  
+  steps.forEach(s => s.classList.add('show'));
+  currStepEl.textContent = totalSteps;
+  
+  expBox.querySelector('.prev-btn').disabled = false;
+  expBox.querySelector('.next-btn').disabled = true;
+  expBox.querySelector('.all-btn').disabled = true;
+}
+
+function resetQuestion(qid) {
+  const card = document.getElementById(`q-${qid}`);
+  const input = document.querySelector(`.factor-input[data-qid="${qid}"]`);
+  const feedback = document.getElementById(`fb-${qid}`);
+  const expBox = document.getElementById(`exp-${qid}`);
+  
+  // Decrement score if it was correct
+  if (card.classList.contains('correct')) {
+    totalCorrect--;
+  }
+  if (card.classList.contains('correct') || card.classList.contains('incorrect')) {
+    totalAnswered--;
+  }
+  
+  input.value = '';
+  card.classList.remove('correct', 'incorrect');
+  feedback.classList.remove('show');
+  expBox.classList.remove('show');
+  
+  updateScore();
+}
+
+function showResults() {
+  finalScore.textContent = `${totalCorrect}/${QUESTIONS.length}`;
+  let pct = (totalCorrect / QUESTIONS.length) * 100;
+  let msg = "";
+  
+  if (pct === 100) msg = "Sempurna! Kamu menguasai pemfaktoran kuadrat. 🌟";
+  else if (pct >= 80) msg = "Kerja bagus! Pemahamanmu sudah sangat baik. 🚀";
+  else if (pct >= 60) msg = "Good job! Teruslah berlatih untuk lebih mahir. 💪";
+  else if (pct >= 40) msg = "Tetap semangat! Yuk review pembahasan dan coba lagi. 📚";
+  else msg = "Jangan menyerah! Pelajari kembali trik di awal dan coba ulangi. 🌱";
+  
+  resultMsg.textContent = msg;
+  resultModal.classList.add('active');
+  
+  if (pct >= 80) launchConfetti();
+}
+
+function restartExercise() {
+  resultModal.classList.remove('active');
+  quiz.classList.remove('active');
+  cover.style.display = 'flex';
+  nameInput.value = '';
+  startBtn.disabled = true;
+  quizContainer.innerHTML = '';
+  totalCorrect = 0;
+  totalAnswered = 0;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function launchConfetti() {
+  const colors = ['#00ff9d', '#00d4ff', '#ff0055', '#fbbf24'];
+  for (let i = 0; i < 60; i++) {
+    setTimeout(() => {
+      const c = document.createElement('div');
+      c.className = 'confetti';
+      c.style.left = Math.random() * 100 + 'vw';
+      c.style.top = '-10px';
+      c.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+      c.style.animationDuration = (Math.random() * 2 + 2) + 's';
+      document.body.appendChild(c);
+      setTimeout(() => c.remove(), 4000);
+    }, i * 50);
+  }
+}
+</script>
+</body>
+</html>
