@@ -1,0 +1,1430 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Special Algebraic Identities — Grade 8 Cambridge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;1,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FBF6ED; --ink:#232746; --ink-soft:#5A5E7A;
+  --coral:#FF6B4A; --coral-soft:#FFE3DA;
+  --teal:#0FA3A3;  --teal-soft:#D9F3F1;
+  --gold:#E9A319;  --gold-soft:#FDEECB;
+  --green:#2FA84F; --green-soft:#DFF5E5;
+  --red:#E14B4B;   --red-soft:#FDE0E0;
+  --card:#FFFFFF; --shadow:6px 6px 0 rgba(35,39,70,.12);
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+html,body{height:100%;}
+body{
+  font-family:'Nunito',sans-serif; color:var(--ink); background:var(--paper);
+  background-image:linear-gradient(rgba(15,163,163,.06) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(15,163,163,.06) 1px,transparent 1px);
+  background-size:28px 28px; overflow:hidden;
+}
+h1,h2,h3,h4,.baloo{font-family:'Baloo 2',cursive; line-height:1.15;}
+button{font-family:inherit; cursor:pointer;}
+input,textarea{font-family:inherit;}
+.hidden{display:none!important;}
+
+/* ---------- header / footer ---------- */
+#topbar{position:fixed; top:0; left:0; right:0; height:60px; z-index:50;
+  display:flex; align-items:center; gap:14px; padding:0 16px;
+  background:rgba(251,246,237,.92); backdrop-filter:blur(6px); border-bottom:2px solid var(--ink);}
+.brand{display:flex; align-items:center; gap:10px; font-family:'Baloo 2'; font-weight:800; font-size:18px; white-space:nowrap;}
+.brand .logo{width:36px;height:36px;border:2px solid var(--ink); border-radius:10px; background:var(--gold-soft);
+  display:grid; place-items:center; font-size:15px; box-shadow:3px 3px 0 rgba(35,39,70,.15);}
+#progressbar{flex:1; height:12px; border:2px solid var(--ink); border-radius:99px; background:#fff; overflow:hidden;}
+#progressfill{height:100%; width:0%; background:linear-gradient(90deg,var(--coral),var(--gold),var(--teal)); transition:width .35s;}
+#scorechip{font-weight:800; font-size:13px; background:var(--teal-soft); border:2px solid var(--ink);
+  padding:4px 10px; border-radius:99px; white-space:nowrap;}
+#menubtn{border:2px solid var(--ink); background:#fff; border-radius:10px; padding:5px 10px; font-weight:800; box-shadow:3px 3px 0 rgba(35,39,70,.15);}
+#botbar{position:fixed; bottom:0; left:0; right:0; height:58px; z-index:50;
+  display:flex; align-items:center; justify-content:space-between; gap:12px; padding:0 16px;
+  background:rgba(251,246,237,.92); backdrop-filter:blur(6px); border-top:2px solid var(--ink);}
+.navbtn{border:2px solid var(--ink); background:#fff; border-radius:12px; font-weight:800; padding:8px 16px;
+  box-shadow:3px 3px 0 rgba(35,39,70,.18); transition:.15s;}
+.navbtn:hover{transform:translate(-1px,-1px); box-shadow:5px 5px 0 rgba(35,39,70,.18);}
+.navbtn:active{transform:translate(2px,2px); box-shadow:1px 1px 0 rgba(35,39,70,.18);}
+.navbtn:disabled{opacity:.35; cursor:default; transform:none;}
+.navbtn.primary{background:var(--coral); color:#fff;}
+#counter{font-family:'Baloo 2'; font-weight:800; font-size:15px;}
+#dots{display:flex; gap:5px; flex-wrap:wrap; justify-content:center; max-width:50vw;}
+#dots button{width:10px;height:10px;border-radius:50%;border:2px solid var(--ink);background:#fff;padding:0;}
+#dots button.on{background:var(--coral);}
+#dots button.done{background:var(--teal);}
+
+/* ---------- menu overlay ---------- */
+#menu{position:fixed; inset:0; z-index:100; background:rgba(35,39,70,.55); display:none; align-items:center; justify-content:center;}
+#menu.open{display:flex;}
+#menu .panel{background:var(--paper); border:3px solid var(--ink); border-radius:20px; box-shadow:var(--shadow);
+  width:min(560px,92vw); max-height:80vh; overflow:auto; padding:22px;}
+#menu h3{margin-bottom:12px; font-size:22px;}
+#menu .mlink{display:block; width:100%; text-align:left; background:#fff; border:2px solid var(--ink);
+  border-radius:10px; padding:8px 12px; margin:6px 0; font-weight:700; transition:.15s;}
+#menu .mlink:hover{background:var(--gold-soft); transform:translateX(4px);}
+#menu .mlink.cur{background:var(--teal-soft);}
+
+/* ---------- slides ---------- */
+#stage{position:fixed; inset:60px 0 58px 0;}
+.slide{position:absolute; inset:0; display:none; flex-direction:column; padding:20px 26px;}
+.slide.active{display:flex; animation:slideIn .45s cubic-bezier(.2,.8,.3,1);}
+@keyframes slideIn{from{opacity:0; transform:translateY(24px) scale(.99);} to{opacity:1; transform:none;}}
+.content{flex:1; overflow-y:auto; width:min(1100px,100%); margin:0 auto; padding-bottom:16px;}
+.content.center{display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; overflow:hidden;}
+.kicker{font-weight:800; letter-spacing:.14em; text-transform:uppercase; font-size:12px; color:var(--teal);
+  background:var(--teal-soft); border:2px solid var(--ink); display:inline-block; padding:4px 12px; border-radius:99px; margin-bottom:12px;}
+.kicker.k1{color:#C2401F; background:var(--coral-soft);}
+.kicker.k2{color:#0B7C7C; background:var(--teal-soft);}
+.kicker.k3{color:#9A6B00; background:var(--gold-soft);}
+h2.title{font-size:clamp(26px,4vw,40px); margin-bottom:6px;}
+.lead{font-size:16.5px; color:var(--ink-soft); max-width:760px; margin-bottom:16px;}
+.mt{margin-top:18px;} .mb{margin-bottom:14px;}
+
+/* ---------- cards & grids ---------- */
+.card{background:var(--card); border:2px solid var(--ink); border-radius:16px; box-shadow:var(--shadow); padding:18px;}
+.grid2{display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:16px;}
+.grid3{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px;}
+.qgrid{display:grid; grid-template-columns:repeat(auto-fill,minmax(330px,1fr)); gap:14px; align-items:start;}
+
+/* formula chips */
+.fx{display:inline-block; font-family:'Baloo 2'; font-weight:700; border:2px solid var(--ink);
+  border-radius:12px; padding:8px 14px; box-shadow:4px 4px 0 rgba(35,39,70,.14); margin:5px; font-size:17px;}
+.fx1{background:var(--coral-soft);} .fx2{background:var(--teal-soft);} .fx3{background:var(--gold-soft);}
+.fx.big{font-size:clamp(18px,2.4vw,24px);}
+
+/* buttons */
+.btn{border:2px solid var(--ink); border-radius:12px; background:var(--coral); color:#fff; font-weight:800;
+  padding:10px 20px; font-size:15px; box-shadow:4px 4px 0 rgba(35,39,70,.2); transition:.15s;}
+.btn:hover{transform:translate(-2px,-2px); box-shadow:6px 6px 0 rgba(35,39,70,.2);}
+.btn:active{transform:translate(2px,2px); box-shadow:0 0 0;}
+.btn.teal{background:var(--teal);} .btn.gold{background:var(--gold); color:var(--ink);}
+.btn.ghost{background:#fff; color:var(--ink);}
+.btn.warn{background:var(--red);}
+.btn.big{font-size:19px; padding:14px 30px;}
+.btn.small{padding:6px 12px; font-size:13px; border-radius:10px;}
+
+/* cover */
+.float-syms{position:absolute; inset:0; pointer-events:none; overflow:hidden;}
+.float-syms span{position:absolute; font-family:'Baloo 2'; font-weight:800; color:rgba(35,39,70,.10);
+  animation:floaty 7s ease-in-out infinite; user-select:none;}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(-4deg);}50%{transform:translateY(-22px) rotate(5deg);}}
+.cover h1{font-size:clamp(40px,7vw,76px);}
+.cover-sub{font-family:'Baloo 2'; font-size:clamp(20px,3vw,30px); color:var(--teal); font-weight:800; margin-top:2px;}
+.hl{background:linear-gradient(transparent 55%, var(--gold-soft) 55%); padding:0 4px;}
+.tagline{max-width:620px; margin:18px auto 22px; color:var(--ink-soft); font-size:16px;}
+.hint-keys{margin-top:22px; font-size:13px; color:var(--ink-soft);}
+
+/* flip cards */
+.flip{perspective:1000px; cursor:pointer; min-height:190px;}
+.flip .inner{position:relative; width:100%; height:100%; min-height:190px; transition:transform .6s; transform-style:preserve-3d;}
+.flip.flipped .inner{transform:rotateY(180deg);}
+.face{position:absolute; inset:0; backface-visibility:hidden; border:2px solid var(--ink); border-radius:16px;
+  box-shadow:var(--shadow); padding:16px; display:flex; flex-direction:column; justify-content:center; gap:6px;}
+.face.front{background:#fff;} .face.back{background:var(--teal-soft); transform:rotateY(180deg);}
+.face .emo{font-size:30px;}
+.face h4{font-size:16.5px;} .face p{font-size:14px; color:var(--ink-soft);}
+.face.back p{color:var(--ink);}
+.tap{font-size:12px; font-weight:800; color:var(--coral);}
+
+/* checklist */
+.checklist{list-style:none; display:grid; gap:10px; max-width:720px; margin:0 auto;}
+.checklist li{background:#fff; border:2px solid var(--ink); border-radius:12px; padding:12px 16px; font-weight:700;
+  display:flex; gap:12px; align-items:center; cursor:pointer; transition:.15s; box-shadow:4px 4px 0 rgba(35,39,70,.1);}
+.checklist li .box{width:26px;height:26px; min-width:26px; border:2px solid var(--ink); border-radius:8px; display:grid; place-items:center; font-size:16px; background:#fff;}
+.checklist li.done{background:var(--green-soft);}
+.checklist li.done .box{background:var(--green); color:#fff;}
+.checklist li.done .txt{text-decoration:line-through; opacity:.75;}
+
+/* identity map cards */
+.idcard{cursor:pointer; transition:.15s; position:relative;}
+.idcard:hover{transform:translate(-3px,-3px); box-shadow:9px 9px 0 rgba(35,39,70,.14);}
+.idcard .num{position:absolute; top:-14px; left:-10px; width:36px; height:36px; border:2px solid var(--ink); border-radius:50%;
+  display:grid; place-items:center; font-family:'Baloo 2'; font-weight:800; color:#fff;}
+.idcard h3{font-size:20px; margin:8px 0 6px;}
+.idcard .bigfx{font-family:'Baloo 2'; font-size:20px; font-weight:800; margin:8px 0;}
+.idcard p{font-size:13.5px; color:var(--ink-soft);}
+.ic1{background:var(--coral-soft);} .ic2{background:var(--teal-soft);} .ic3{background:var(--gold-soft);}
+.ic1 .num{background:var(--coral);} .ic2 .num{background:var(--teal);} .ic3 .num{background:var(--gold); color:var(--ink);}
+
+/* area model */
+.am{display:grid; grid-template-columns:1fr; gap:12px; justify-items:center;}
+.am-controls{display:flex; gap:18px; flex-wrap:wrap; justify-content:center; font-weight:800;}
+.am-controls label{display:flex; align-items:center; gap:8px; background:#fff; border:2px solid var(--ink); border-radius:12px; padding:6px 12px;}
+.am-controls input[type=range]{accent-color:var(--coral); width:120px;}
+.am-stage{overflow:auto; max-width:100%; padding:4px;}
+.am-square{position:relative; border:3px solid var(--ink); background:#fff;}
+.am-piece{position:absolute; border:2px solid var(--ink); display:grid; place-items:center; text-align:center;
+  font-size:11.5px; font-weight:800; overflow:hidden; line-height:1.2; padding:2px;}
+.c1{background:var(--coral-soft);} .c2{background:var(--gold-soft);} .c3{background:var(--teal-soft);}
+.am-piece.hl{outline:3px solid var(--green); outline-offset:-3px;}
+.am-eq{font-family:'Baloo 2'; font-weight:700; font-size:18px; background:#fff; border:2px solid var(--ink);
+  border-radius:12px; padding:8px 16px; text-align:center;}
+.am-eq .f1{color:#C2401F;} .am-eq .f2{color:#9A6B00;} .am-eq .f3{color:#0B7C7C;}
+.legend{display:flex; gap:10px; flex-wrap:wrap; justify-content:center; font-size:12.5px; font-weight:700;}
+.legend span{border:2px solid var(--ink); border-radius:99px; padding:3px 10px; background:#fff;}
+
+/* morph (identity 3) */
+.morph-stage{position:relative; width:316px; height:226px; margin:0 auto;}
+.mpiece{position:absolute; border:2px solid var(--ink); display:grid; place-items:center; font-weight:800; font-size:12.5px;
+  transition:all .9s cubic-bezier(.5,1.4,.4,1); text-align:center;}
+.morph-cap{text-align:center; font-weight:700; color:var(--ink-soft); margin-top:8px; min-height:44px;}
+
+/* steps */
+.steps .step{display:none; background:#fff; border:2px dashed var(--ink-soft); border-radius:12px; padding:10px 14px; margin:8px 0; font-size:15px;}
+.steps .step.show{display:block; animation:pop .35s;}
+@keyframes pop{from{opacity:0; transform:scale(.96);} to{opacity:1; transform:none;}}
+.steps .step b{color:var(--coral);}
+
+/* trap */
+.trap-body{margin-top:12px; display:grid; gap:10px;}
+.bar-row{display:grid; grid-template-columns:170px 1fr 70px; gap:10px; align-items:center; font-weight:800; font-size:14px;}
+.bar{height:26px; border:2px solid var(--ink); border-radius:8px; background:var(--coral-soft); animation:grow 1s ease;}
+.bar.b2{background:var(--teal-soft);}
+@keyframes grow{from{width:0!important;}}
+
+/* quiz */
+.exhead{display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin-bottom:8px;}
+.exhead h2{font-size:clamp(22px,3vw,30px); flex:1;}
+.scorechip{font-weight:800; background:var(--gold-soft); border:2px solid var(--ink); border-radius:99px; padding:5px 12px; font-size:13.5px;}
+.fmt{font-size:13px; background:var(--teal-soft); border:2px solid var(--ink); border-radius:10px; padding:6px 12px; margin-bottom:12px; font-weight:700;}
+.qcard{background:#fff; border:2px solid var(--ink); border-radius:14px; padding:14px; box-shadow:var(--shadow);}
+.qcard.correct{background:var(--green-soft); border-color:var(--green);}
+.qhead{display:flex; gap:10px; align-items:flex-start; margin-bottom:8px;}
+.qnum{min-width:34px; height:26px; border:2px solid var(--ink); border-radius:8px; background:var(--gold-soft);
+  display:grid; place-items:center; font-family:'Baloo 2'; font-weight:800; font-size:13px; padding:0 6px;}
+.qtext{font-weight:700; font-size:15px; flex:1;}
+.qtext sup{font-size:11px;}
+.dif{display:inline-block; font-size:10.5px; font-weight:800; border-radius:99px; padding:1px 8px; margin-left:8px; vertical-align:middle; border:1.5px solid var(--ink);}
+.d1{background:var(--teal-soft);} .d2{background:var(--gold-soft);} .d3{background:var(--coral-soft);}
+.tag{display:inline-block; font-size:11px; font-weight:800; background:#EEEBFF; border:1.5px solid var(--ink); border-radius:99px; padding:1px 8px; margin-left:6px; vertical-align:middle;}
+.qrow{display:flex; gap:8px; flex-wrap:wrap; align-items:center;}
+.qinput{flex:1; min-width:150px; border:2px solid var(--ink); border-radius:10px; padding:8px 12px; font-size:15px; font-weight:700; background:var(--paper);}
+.qinput:focus{outline:3px solid var(--gold-soft);}
+.qinput:disabled{background:var(--green-soft);}
+.feedback{font-weight:800; font-size:13.5px; margin-top:8px; min-height:18px;}
+.feedback.ok{color:var(--green);} .feedback.no{color:var(--red);}
+.solution{margin-top:10px; background:var(--gold-soft); border:2px solid var(--ink); border-radius:10px; padding:10px 12px; font-size:14px; animation:pop .3s;}
+.shake{animation:shake .4s;}
+@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-5px);}75%{transform:translateX(5px);}}
+.mc-opt{display:block; width:100%; text-align:left; margin:6px 0; border:2px solid var(--ink); border-radius:10px;
+  background:var(--paper); padding:8px 12px; font-weight:700; font-size:14px; transition:.15s;}
+.mc-opt:hover{background:var(--gold-soft);}
+.mc-opt.right{background:var(--green-soft); border-color:var(--green);}
+.mc-opt.wrong{background:var(--red-soft); border-color:var(--red);}
+
+/* table */
+.tbl{width:100%; border-collapse:separate; border-spacing:0; background:#fff; border:2px solid var(--ink);
+  border-radius:14px; overflow:hidden; box-shadow:var(--shadow);}
+.tbl th,.tbl td{padding:10px 12px; border-bottom:2px solid rgba(35,39,70,.12); font-size:14px; text-align:left;}
+.tbl th{background:var(--ink); color:#fff; font-family:'Baloo 2';}
+.tbl tr:last-child td{border-bottom:none;}
+.tbl td b.f1{color:#C2401F;} .tbl td b.f2{color:#0B7C7C;} .tbl td b.f3{color:#9A6B00;}
+
+/* reflection */
+.stars{display:flex; gap:6px; font-size:34px; justify-content:center;}
+.stars button{background:none; border:none; filter:grayscale(1); opacity:.45; transition:.15s;}
+.stars button.on{filter:none; opacity:1; transform:scale(1.15);}
+.ref-area{width:100%; min-height:80px; border:2px solid var(--ink); border-radius:12px; padding:10px 12px; font-size:14.5px; background:#fff; resize:vertical;}
+.moods{display:flex; gap:10px; flex-wrap:wrap; justify-content:center;}
+.mood{border:2px solid var(--ink); background:#fff; border-radius:12px; padding:8px 14px; font-weight:800; box-shadow:3px 3px 0 rgba(35,39,70,.15);}
+.toast{position:fixed; bottom:74px; left:50%; transform:translateX(-50%); background:var(--ink); color:#fff;
+  font-weight:800; padding:10px 20px; border-radius:99px; z-index:200; animation:pop .3s; max-width:90vw; text-align:center;}
+
+/* thanks */
+.confetti{position:absolute; inset:0; overflow:hidden; pointer-events:none;}
+.confetti span{position:absolute; top:-40px; font-size:22px; animation:fall linear infinite;}
+@keyframes fall{to{transform:translateY(110vh) rotate(360deg);}}
+.thanks h1{font-size:clamp(40px,7vw,72px);}
+#finalscore{font-family:'Baloo 2'; font-weight:800; font-size:20px; background:var(--gold-soft); border:2px solid var(--ink);
+  border-radius:14px; display:inline-block; padding:10px 22px; box-shadow:var(--shadow); margin:14px 0;}
+
+@media (max-width:640px){
+  #dots{display:none;} .slide{padding:14px 12px;}
+  .bar-row{grid-template-columns:120px 1fr 60px; font-size:12px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ TOP BAR ============ -->
+<header id="topbar">
+  <div class="brand"><span class="logo">Σx²</span> Special Identities</div>
+  <div id="progressbar"><div id="progressfill"></div></div>
+  <span id="scorechip">⭐ 0 benar</span>
+  <button id="menubtn">☰ Map</button>
+</header>
+
+<!-- ============ SLIDES ============ -->
+<main id="stage">
+
+<!-- 1 · COVER -->
+<section class="slide cover active" data-title="Cover">
+  <div class="float-syms" id="floatsyms"></div>
+  <div class="content center">
+    <span class="kicker">Cambridge Lower Secondary · Kelas 8</span>
+    <h1>Expansion &amp; Factorisation</h1>
+    <div class="cover-sub">with <span class="hl">Special Algebraic Identities</span></div>
+    <div class="mt">
+      <span class="fx fx1 big">(a+b)² = a² + 2ab + b²</span><br>
+      <span class="fx fx2 big">(a−b)² = a² − 2ab + b²</span><br>
+      <span class="fx fx3 big">a² − b² = (a+b)(a−b)</span>
+    </div>
+    <p class="tagline">Tiga <b>jalan pintas ajaib</b> yang dipakai arsitek, kasir, insinyur, bahkan komputer untuk mengenkripsi data. Hari ini, semuanya jadi milikmu! 🚀</p>
+    <button class="btn big" id="startbtn" data-go="1">Mulai Petualangan ▶</button>
+    <div class="hint-keys">Tip: gunakan tombol ← → pada keyboard, atau geser (swipe) di HP.</div>
+  </div>
+</section>
+
+<!-- 2 · PEMANTIK -->
+<section class="slide" data-title="Matematika di Sekitar Kita">
+  <div class="content">
+    <span class="kicker">Pertanyaan Pemantik</span>
+    <h2 class="title">Matematika Rahasia di Sekitar Kita 🔍</h2>
+    <p class="lead">Sebelum bicara rumus — identitas aljabar itu bukan sekadar simbol. Ia adalah <b>jalan pintas</b> yang dipakai manusia (dan mesin!) setiap hari. Klik kartu-kartu misteri ini:</p>
+    <div class="grid2" id="flips"></div>
+    <div class="card mt">
+      <b>Identitas ini dipakai di mana saja:</b><br>
+      💸 hitung diskon belanja &nbsp;·&nbsp; 📐 desain kamar &amp; taman &nbsp;·&nbsp; 🧮 berhitung cepat di pasar &nbsp;·&nbsp; 🚀 perhitungan fisika &amp; teknik &nbsp;·&nbsp; 🔐 kriptografi (keamanan data)&nbsp;·&nbsp; 🏗️ estimasi biaya bangunan
+    </div>
+  </div>
+</section>
+
+<!-- 3 · TUJUAN -->
+<section class="slide" data-title="Tujuan Pembelajaran">
+  <div class="content">
+    <span class="kicker">Learning Objectives</span>
+    <h2 class="title">Tujuan Pembelajaran 🎯</h2>
+    <p class="lead">Klik setiap tujuan untuk mencentangnya. Di akhir pelajaran, kembali ke sini dan lihat: semua tercapai?</p>
+    <ul class="checklist" id="objlist">
+      <li><span class="box">✓</span><span class="txt">🔍 <b>Menemukan</b> dari mana ketiga identitas berasal — dengan bukti, bukan sulap!</span></li>
+      <li><span class="box">✓</span><span class="txt">🧩 <b>Meng-expand</b> bentuk (a+b)² dan (a−b)² dalam hitungan detik.</span></li>
+      <li><span class="box">✓</span><span class="txt">🔧 <b>Memfaktorkan</b> a² − b² (selisih kuadrat) dengan pola kilat.</span></li>
+      <li><span class="box">✓</span><span class="txt">⚡ <b>Menghitung kuadrat bilangan besar</b> seperti 104² atau 999² dalam hati.</span></li>
+      <li><span class="box">✓</span><span class="txt">🕵️ Menjadi <b>detektif aljabar</b>: diketahui (x+y)² dan xy → temukan x² + y².</span></li>
+      <li><span class="box">✓</span><span class="txt">🏅 Menaklukkan <b>soal-soal gaya Cambridge</b> yang non-rutin dan menantang.</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- 4 · PETA -->
+<section class="slide" data-title="Peta 3 Identitas">
+  <div class="content">
+    <span class="kicker">The Map</span>
+    <h2 class="title">Tiga Identitas Spesial 🗺️</h2>
+    <p class="lead"><b>Identitas (identity)</b> = kesamaan yang benar untuk <b>SEMUA</b> nilai a dan b. Bukan persamaan yang harus dicari solusinya — melainkan mesin yang selalu siap dipakai. Klik kartu untuk menjelajah:</p>
+    <div class="grid3">
+      <div class="card idcard ic1" data-go="4">
+        <span class="num">1</span>
+        <div class="bigfx">(a+b)² = a²+2ab+b²</div>
+        <h3>Kuadrat Jumlah</h3>
+        <p>Luas persegi besar yang dipecah jadi 4 bagian. Raja berhitung cepat: 104², luas taman, dan banyak lagi.</p>
+      </div>
+      <div class="card idcard ic2" data-go="7">
+        <span class="num">2</span>
+        <div class="bigfx">(a−b)² = a²−2ab+b²</div>
+        <h3>Kuadrat Selisih</h3>
+        <p>Saudara kembar #1, tapi hati-hati tanda minus! Dipakai untuk diskon, potongan, dan 99² dalam sekejap.</p>
+      </div>
+      <div class="card idcard ic3" data-go="10">
+        <span class="num">3</span>
+        <div class="bigfx">a²−b² = (a+b)(a−b)</div>
+        <h3>Selisih Kuadrat</h3>
+        <p>Penghapusa suku tengah! Memfaktorkan, mengalikan cepat 102×98, hingga metode faktorisasi Fermat.</p>
+      </div>
+    </div>
+    <div class="card mt" style="background:var(--coral-soft)">
+      ⚠️ <b>Catatan penting:</b> a dan b bisa berupa <b>apa saja</b> — bilangan, variabel, pecahan, bahkan bentuk aljabar lain seperti 3x atau −2y. Itulah kekuatan identitas!
+    </div>
+  </div>
+</section>
+
+<!-- 5 · ID1 ASAL -->
+<section class="slide" data-title="Identitas 1 · Asal-usul">
+  <div class="content">
+    <span class="kicker k1">Identity 1 · Origin</span>
+    <h2 class="title">Dari Mana (a+b)² Berasal? 🧱</h2>
+    <div class="grid2">
+      <div class="card">
+        <h3 class="mb">Bukti Aljabar (klik langkahnya!)</h3>
+        <div class="steps">
+          <div class="step">(a+b)² artinya <b>(a+b) dikali dirinya sendiri</b>: (a+b)(a+b)</div>
+          <div class="step">Gunakan sifat distributif (kali keluar): <b>a·a + a·b + b·a + b·b</b></div>
+          <div class="step">ab dan ba nilainya sama → <b>a² + 2ab + b²</b> ✅</div>
+          <div class="step">Kesimpulan: <b>(a+b)² ≡ a² + 2ab + b²</b> — benar untuk semua a dan b!</div>
+          <button class="btn teal small stepbtn">Tampilkan langkah ➜</button>
+        </div>
+        <p class="mt" style="font-size:14px; color:var(--ink-soft)">Pikirkan geometris: persegi bersisi (a+b) dipecah menjadi 4 bagian — dan itulah arti visual 2ab (ada <b>dua</b> persegi panjang ab!).</p>
+      </div>
+      <div class="card am">
+        <h3>🧪 Laboratorium Luas — geser a &amp; b!</h3>
+        <div id="model1"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 · ID1 PAKAI -->
+<section class="slide" data-title="Identitas 1 · Cara Pakai">
+  <div class="content">
+    <span class="kicker k1">Identity 1 · How to use</span>
+    <h2 class="title">Cara Pakai &amp; Jebakan Mematikan ⚠️</h2>
+    <div class="grid2">
+      <div class="card">
+        <h3 class="mb">Resep cepat 🍳</h3>
+        <p><b>Kuadratkan suku pertama → dua kali hasil kalinya → kuadratkan suku kedua.</b></p>
+        <div class="mt">
+          <span class="fx fx1">(x+5)² = x² + 10x + 25</span><br>
+          <span class="fx fx1">(2x+3)² = 4x² + 12x + 9</span><br>
+          <span class="fx fx1">(x+2y)² = x² + 4xy + 4y²</span>
+        </div>
+        <p class="mt" style="font-size:14px;color:var(--ink-soft)">Cocok untuk: luas taman bersisi (x+3) m, menghitung 104², mempercepat perkalian aljabar.</p>
+      </div>
+      <div class="card">
+        <h3 class="mb">Jebakan klasik 🪤</h3>
+        <p>Banyak siswa mengira (a+b)² = a² + b². <b>SALAH!</b> Suku tengah 2ab tidak boleh lupa.</p>
+        <button class="btn warn small mt" id="trap1btn">⚠️ Buktikan dengan angka!</button>
+        <div class="trap-body hidden" id="trap1">
+          <div class="bar-row"><span>(3+4)² = 7²</span><div class="bar" style="width:100%"></div><span>49</span></div>
+          <div class="bar-row"><span>3² + 4² = 9+16</span><div class="bar b2" style="width:51%"></div><span>25</span></div>
+          <p style="font-weight:800">49 ≠ 25! Yang benar: (3+4)² = 9 + 24 + 16 = 49 (lihat 2ab = 24).</p>
+        </div>
+      </div>
+    </div>
+    <div class="card mt" style="background:var(--coral-soft)">
+      🌍 <b>Di kehidupan nyata:</b> arsitek menghitung luas lantai bersisi (x+3) m tanpa mengukur ulang; kasir menghitung 105² untuk total 105 barang seharga 105 ribu; fisikawan menyederhanakan rumus energi — semuanya lewat identitas ini.
+    </div>
+  </div>
+</section>
+
+<!-- 7 · ID1 KOMPLEKS -->
+<section class="slide" data-title="Identitas 1 · Soal Kompleks">
+  <div class="content">
+    <span class="kicker k1">Identity 1 · Level Up</span>
+    <h2 class="title">Soal Kompleks — Identitas 1 💪</h2>
+    <p class="lead">Tekan tombol langkah untuk membuka pembahasan bertahap.</p>
+    <div class="grid2">
+      <div class="card">
+        <b>Contoh A — koefisien &amp; variabel:</b> Expand (3x + 4y)².
+        <div class="steps">
+          <div class="step">Kenali: a = 3x, b = 4y</div>
+          <div class="step">a² = 9x² &nbsp;·&nbsp; 2ab = 2·3x·4y = <b>24xy</b> &nbsp;·&nbsp; b² = 16y²</div>
+          <div class="step">Jawaban: <b>9x² + 24xy + 16y²</b></div>
+          <button class="btn teal small stepbtn">Langkah berikutnya ➜</button>
+        </div>
+      </div>
+      <div class="card">
+        <b>Contoh B — detektif koefisien:</b> Jika (x+k)² ≡ x² + 12x + 36, cari k.
+        <div class="steps">
+          <div class="step">Bandingkan suku tengah: 2·1·k = 12 → k = 6</div>
+          <div class="step">Cek suku akhir: k² = 36 ✓ (konsisten!)</div>
+          <div class="step">Jadi <b>k = 6</b></div>
+          <button class="btn teal small stepbtn">Langkah berikutnya ➜</button>
+        </div>
+      </div>
+      <div class="card">
+        <b>Contoh C — gabungan identitas:</b> Jika (x+y)² = 49 dan xy = 6, cari x² + y².
+        <div class="steps">
+          <div class="step">Dari identitas: (x+y)² = x² + y² + 2xy</div>
+          <div class="step">Maka x² + y² = 49 − 2(6) = 49 − 12</div>
+          <div class="step">Jawaban: <b>37</b> — tanpa perlu tahu x dan y! 🕵️</div>
+          <button class="btn teal small stepbtn">Langkah berikutnya ➜</button>
+        </div>
+      </div>
+      <div class="card" style="background:var(--coral-soft)">
+        <b>💡 Pola emas:</b> identitas bekerja pada <i>apa pun</i> yang kamu substitusikan: pecahan (x+½)², bentuk pangkat (x²+y)², bahkan (ab+1)². Kenali pola a dan b — sisanya otomatis!
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 8 · ID2 ASAL -->
+<section class="slide" data-title="Identitas 2 · Asal-usul">
+  <div class="content">
+    <span class="kicker k2">Identity 2 · Origin</span>
+    <h2 class="title">Dari Mana (a−b)² Berasal? ✂️</h2>
+    <div class="grid2">
+      <div class="card">
+        <h3 class="mb">Dua cara membuktikan</h3>
+        <div class="steps">
+          <div class="step"><b>Cara 1 — langsung:</b> (a−b)² = (a−b)(a−b) = a² − ab − ba + b² = <b>a² − 2ab + b²</b></div>
+          <div class="step"><b>Cara 2 — trik penyusupan:</b> pada Identitas 1, ganti b → (−b)</div>
+          <div class="step">Hasil: (a+(−b))² = a² + 2a(−b) + (−b)² = <b>a² − 2ab + b²</b> — sama! (−b)² selalu positif ➕</div>
+          <div class="step">Makanya suku tengah <b>minus</b>, tapi suku akhir tetap <b>plus</b>. Itu kuncinya!</div>
+          <button class="btn teal small stepbtn">Tampilkan langkah ➜</button>
+        </div>
+      </div>
+      <div class="card am">
+        <h3>🧪 Laboratorium Potongan — geser a &amp; b!</h3>
+        <div id="model2"></div>
+        <div class="legend"><span style="outline:3px solid var(--green);outline-offset:-2px">tersisa (a−b)²</span><span style="background:var(--coral-soft)">yang dibuang</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 9 · ID2 PAKAI -->
+<section class="slide" data-title="Identitas 2 · Cara Pakai">
+  <div class="content">
+    <span class="kicker k2">Identity 2 · How to use</span>
+    <h2 class="title">Cara Pakai &amp; Jebakan Mematikan ⚠️</h2>
+    <div class="grid2">
+      <div class="card">
+        <h3 class="mb">Resep cepat 🍳</h3>
+        <p><b>Kuadratkan pertama → MINUS dua kali hasil kali → PLUS kuadrat kedua.</b></p>
+        <div class="mt">
+          <span class="fx fx2">(x−4)² = x² − 8x + 16</span><br>
+          <span class="fx fx2">(3x−y)² = 9x² − 6xy + y²</span><br>
+          <span class="fx fx2">(7−x)² = x² − 14x + 49</span>
+        </div>
+        <p class="mt" style="font-size:14px;color:var(--ink-soft)">Cocok untuk: sisa luas karpet setelah dipotong, harga setelah potongan, dan 99² / 98² secara mental.</p>
+      </div>
+      <div class="card">
+        <h3 class="mb">Jebakan klasik 🪤</h3>
+        <p>Mengira (a−b)² = a² − b². <b>SALAH!</b> Lihat buktinya:</p>
+        <button class="btn warn small mt" id="trap2btn">⚠️ Buktikan dengan angka!</button>
+        <div class="trap-body hidden" id="trap2">
+          <div class="bar-row"><span>(4−3)² = 1²</span><div class="bar b2" style="width:14%"></div><span>1</span></div>
+          <div class="bar-row"><span>4² − 3² = 16−9</span><div class="bar" style="width:100%"></div><span>7</span></div>
+          <p style="font-weight:800">1 ≠ 7! Yang benar: (4−3)² = 16 − 24 + 9 = 1.</p>
+        </div>
+        <p class="mt" style="font-size:14px">Catatan: (a−b)² = (b−a)² — kuadrat menghapus arah! Jadi (7−x)² = (x−7)².</p>
+      </div>
+    </div>
+    <div class="card mt" style="background:var(--teal-soft)">
+      🌍 <b>Di kehidupan nyata:</b> toko memberi diskon pada luas kain bersisi (x−2) m; insinyur menghitung toleransi penyusutan 98² pada material; kamu menghitung 999² lebih cepat dari kalkulator dibuka!
+    </div>
+  </div>
+</section>
+
+<!-- 10 · ID2 KOMPLEKS -->
+<section class="slide" data-title="Identitas 2 · Soal Kompleks">
+  <div class="content">
+    <span class="kicker k2">Identity 2 · Level Up</span>
+    <h2 class="title">Soal Kompleks — Identitas 2 💪</h2>
+    <div class="grid2">
+      <div class="card">
+        <b>Contoh A:</b> Expand (5x − 2y)².
+        <div class="steps">
+          <div class="step">a = 5x, b = 2y</div>
+          <div class="step">a² = 25x² · 2ab = 2·5x·2y = 20xy → <b>−20xy</b> · b² = 4y²</div>
+          <div class="step">Jawaban: <b>25x² − 20xy + 4y²</b></div>
+          <button class="btn teal small stepbtn">Langkah berikutnya ➜</button>
+        </div>
+      </div>
+      <div class="card">
+        <b>Contoh B — mental math:</b> Hitung 98² tanpa kalkulator.
+        <div class="steps">
+          <div class="step">98 = 100 − 2 → pakai (a−b)²</div>
+          <div class="step">(100−2)² = 10000 − 2·100·2 + 4 = 10000 − 400 + 4</div>
+          <div class="step">Jawaban: <b>9604</b> ⚡</div>
+          <button class="btn teal small stepbtn">Langkah berikutnya ➜</button>
+        </div>
+      </div>
+      <div class="card">
+        <b>Contoh C — detektif:</b> Jika (x−y)² = 36 dan xy = 8, cari x² + y².
+        <div class="steps">
+          <div class="step">(x−y)² = x² + y² − 2xy</div>
+          <div class="step">x² + y² = 36 + 2(8) = 36 + 16</div>
+          <div class="step">Jawaban: <b>52</b> (perhatikan: di sini 2xy di-PINDAH, jadi plus!)</div>
+          <button class="btn teal small stepbtn">Langkah berikutnya ➜</button>
+        </div>
+      </div>
+      <div class="card" style="background:var(--teal-soft)">
+        <b>💡 Pola emas:</b> tanda di tengah mengikuti operasi (− → −2ab), tetapi suku terakhir <b>selalu +</b> karena kuadrat dari apa pun tak pernah negatif.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 11 · ID3 ASAL -->
+<section class="slide" data-title="Identitas 3 · Asal-usul">
+  <div class="content">
+    <span class="kicker k3">Identity 3 · Origin</span>
+    <h2 class="title">Dari Mana a² − b² Berasal? 🎩</h2>
+    <div class="grid2">
+      <div class="card">
+        <h3 class="mb">Bukti: suku tengah saling habis!</h3>
+        <div class="steps">
+          <div class="step">(a+b)(a−b) = a² − ab + ba − b²</div>
+          <div class="step">−ab + ba = 0 → <b>saling menghapus!</b> ✨</div>
+          <div class="step">Sisa: <b>a² − b²</b> — itulah kenapa identitas ini "ajaib".</div>
+          <div class="step">Dibalik (faktorisasi): a² − b² = (a+b)(a−b). Dua arah, satu identitas!</div>
+          <button class="btn teal small stepbtn">Tampilkan langkah ➜</button>
+        </div>
+        <p class="mt" style="font-size:14px;color:var(--ink-soft)">💡 Fun fact: <b>jumlah</b> kuadrat (a²+b²) TIDAK bisa difaktorkan dengan bilangan real — hanya <b>selisih</b> yang punya jalan pintas!</p>
+      </div>
+      <div class="card">
+        <h3 class="mb">Bukti Geometris — tekan tombolnya!</h3>
+        <div class="morph-stage" id="morph"></div>
+        <div style="text-align:center"><button class="btn gold small mt" id="morphbtn">🔄 Susun ulang bentuknya!</button></div>
+        <div class="morph-cap" id="morphcap">a² − b²: persegi besar (sisi a=5) dikurangi persegi kecil (sisi b=2). Bentuknya huruf L dengan luas 25 − 4 = 21.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 12 · ID3 PAKAI -->
+<section class="slide" data-title="Identitas 3 · Cara Pakai">
+  <div class="content">
+    <span class="kicker k3">Identity 3 · How to use</span>
+    <h2 class="title">Cara Pakai &amp; Kekuatan Super 🦸</h2>
+    <div class="grid2">
+      <div class="card">
+        <h3 class="mb">Dua arah penggunaan</h3>
+        <p><b>Expand:</b> (x+6)(x−6) = x² − 36 &nbsp;·&nbsp; (2x+5)(2x−5) = 4x² − 25</p>
+        <p class="mt"><b>Faktorkan:</b> x² − 49 = (x+7)(x−7) &nbsp;·&nbsp; 9x² − 25 = (3x+5)(3x−5)</p>
+        <p class="mt" style="font-size:14px;color:var(--ink-soft)">Syarat: bentuknya <b>dua kuadrat yang DIKURANGI</b>. Cari akar kuadrat masing-masing, lalu tulis (…+…)(…−…).</p>
+      </div>
+      <div class="card">
+        <h3 class="mb">Kekuatan super: perkalian kilat ⚡</h3>
+        <div class="steps">
+          <div class="step"><b>102 × 98?</b> Tulis sebagai (100+2)(100−2) = 100² − 2² = 10000 − 4</div>
+          <div class="step">Jawaban: <b>9996</b> — lebih cepat dari kalkulator saku!</div>
+          <div class="step"><b>51² − 49²?</b> = (51+49)(51−49) = 100 × 2 = <b>200</b>, tanpa mengkuadratkan apa pun 🤯</div>
+          <button class="btn teal small stepbtn">Lihat triknya ➜</button>
+        </div>
+        <p class="mt" style="font-size:13.5px;color:var(--ink-soft)">🔐 Fun fact: matematikawan Fermat memakai ide ini untuk memfaktorkan bilangan besar — cikal bakal ilmu yang melindungi password-mu!</p>
+      </div>
+    </div>
+    <div class="card mt" style="background:var(--gold-soft)">
+      🌍 <b>Di kehidupan nyata:</b> tukang memotong lubang persegi (b×b) dari pelat persegi (a×a) dan menghitung sisa material; desainer game menghitung area cincin; ahli data mempercepat 103×97 — semuanya a² − b².
+    </div>
+  </div>
+</section>
+
+<!-- 13 · ID3 KOMPLEKS -->
+<section class="slide" data-title="Identitas 3 · Soal Kompleks">
+  <div class="content">
+    <span class="kicker k3">Identity 3 · Level Up</span>
+    <h2 class="title">Soal Kompleks — Identitas 3 💪</h2>
+    <div class="grid2">
+      <div class="card">
+        <b>Contoh A:</b> Faktorkan 49x² − 81y².
+        <div class="steps">
+          <div class="step">49x² = (7x)² dan 81y² = (9y)²</div>
+          <div class="step">a = 7x, b = 9y → (a+b)(a−b)</div>
+          <div class="step">Jawaban: <b>(7x+9y)(7x−9y)</b></div>
+          <button class="btn teal small stepbtn">Langkah berikutnya ➜</button>
+        </div>
+      </div>
+      <div class="card">
+        <b>Contoh B — identitas bertingkat:</b> Expand (u+2)(u−2)(u²+4).
+        <div class="steps">
+          <div class="step">(u+2)(u−2) = u² − 4</div>
+          <div class="step">Sekarang (u²−4)(u²+4) = (u²)² − 4² = u⁴ − 16</div>
+          <div class="step">Jawaban: <b>u⁴ − 16</b> — identitas dipakai 2 kali beruntun! 🔥</div>
+          <button class="btn teal small stepbtn">Langkah berikutnya ➜</button>
+        </div>
+      </div>
+      <div class="card">
+        <b>Contoh C — selisih kuadrat raksasa:</b> Hitung 88² − 12².
+        <div class="steps">
+          <div class="step">= (88+12)(88−12) = 100 × 76</div>
+          <div class="step">Jawaban: <b>7600</b> — tanpa mengkuadratkan 88!</div>
+          <button class="btn teal small stepbtn">Langkah berikutnya ➜</button>
+        </div>
+      </div>
+      <div class="card" style="background:var(--gold-soft)">
+        <b>💡 Radar deteksi:</b> lihat dua kuadrat yang dikurangi? Itu bel a² − b². Lihat (…+…)(…−…) dengan suku sama? Itu juga a² − b². Latihan radar ini di Latihan 1C!
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 14 · REAL LIFE -->
+<section class="slide" data-title="Identitas di Kehidupan Nyata">
+  <div class="content">
+    <span class="kicker">Real World</span>
+    <h2 class="title">Kenapa 3 Identitas Ini Sangat Berguna? 🌍</h2>
+    <div class="grid3">
+      <div class="card ic1"><h3>🛒 Belanja &amp; Diskon — Identitas 1 &amp; 2</h3>
+        <p style="font-size:14px">Harga naik lalu turun? Total luas dua area? Identitas kuadrat membuat hitungan instan: harga 104² kupon = (100+4)² = 10.816 — selesai sebelum kasir selesai mengalikan!</p></div>
+      <div class="card ic2"><h3>📐 Arsitektur &amp; Desain — Identitas 1</h3>
+        <p style="font-size:14px">Lantai bersisi (x+3) m → luas x²+6x+9 m². Tukang tahu persis material yang perlu dibeli tanpa mengukur berulang.</p></div>
+      <div class="card ic3"><h3>🧵 Menjahit &amp; Memotong — Identitas 3</h3>
+        <p style="font-size:14px">Kain persegi 50 dm dipotong lubang 4 dm → sisa 50²−4² = (50+4)(50−4) = 54×46. Pola potong langsung terlihat!</p></div>
+      <div class="card ic2"><h3>⚡ Trik Mental Juara — Semua</h3>
+        <p style="font-size:14px">99², 105², 102×98, 51²−49²... para juara perhitungan mental hidup dari tiga identitas ini. Coba mesin di bawah!</p></div>
+      <div class="card ic3"><h3>🔐 Keamanan Data — Identitas 3</h3>
+        <p style="font-size:14px">Metode faktorisasi Fermat memecah bilangan besar lewat a²−b². Konsep dari kelas 8 ini adalah nenek moyang kriptografi modern!</p></div>
+      <div class="card ic1"><h3>🚀 Sains &amp; Teknik — Semua</h3>
+        <p style="font-size:14px">Fisika, teknik, ekonomi: banyak rumus disederhanakan dengan identitas sebelum dihitung. Yang paham pola = yang paling cepat.</p></div>
+    </div>
+    <div class="card mt am">
+      <h3>🎛️ Mesin Kuadrat Kilat — geser angkanya!</h3>
+      <div class="am-controls"><label>n <input type="range" id="mentalN" min="91" max="109" value="104"> <b id="mentalVal">104</b></label></div>
+      <div class="am-eq" id="mentalOut" style="max-width:640px"></div>
+      <div class="legend"><button class="btn small ghost preset" data-n="97">coba 97</button><button class="btn small ghost preset" data-n="105">coba 105</button><button class="btn small ghost preset" data-n="99">coba 99</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- 15 · LATIHAN 1A -->
+<section class="slide" data-title="Latihan 1 · (a+b)²">
+  <div class="content">
+    <div class="exhead"><h2>📝 Latihan 1A · Identitas (a+b)² — 20 Soal</h2><span class="scorechip" id="chip-ex1">⭐ 0/20</span><button class="btn ghost small" data-reset="ex1">↺ Reset</button></div>
+    <div class="fmt">✍️ Ketik jawabanmu: pangkat pakai <b>^</b> → x^2 &nbsp;·&nbsp; pecahan pakai <b>/</b> → 3/4 &nbsp;·&nbsp; urutan suku bebas, sistem kami paham kok! (tanpa tanda kurung)</div>
+    <div class="qgrid" id="q-ex1"></div>
+  </div>
+</section>
+
+<!-- 16 · LATIHAN 1B -->
+<section class="slide" data-title="Latihan 1 · (a−b)²">
+  <div class="content">
+    <div class="exhead"><h2>📝 Latihan 1B · Identitas (a−b)² — 20 Soal</h2><span class="scorechip" id="chip-ex2">⭐ 0/20</span><button class="btn ghost small" data-reset="ex2">↺ Reset</button></div>
+    <div class="fmt">✍️ Ingat: suku tengah <b>minus</b>, suku akhir <b>plus</b>. Format: x^2 - 4x + 4</div>
+    <div class="qgrid" id="q-ex2"></div>
+  </div>
+</section>
+
+<!-- 17 · LATIHAN 1C -->
+<section class="slide" data-title="Latihan 1 · a²−b²">
+  <div class="content">
+    <div class="exhead"><h2>📝 Latihan 1C · Identitas a²−b² — 20 Soal</h2><span class="scorechip" id="chip-ex3">⭐ 0/20</span><button class="btn ghost small" data-reset="ex3">↺ Reset</button></div>
+    <div class="fmt">✍️ Untuk soal faktorisasi, ketik seperti: (x+5)(x-5)</div>
+    <div class="qgrid" id="q-ex3"></div>
+  </div>
+</section>
+
+<!-- 18 · LATIHAN 2 -->
+<section class="slide" data-title="Latihan 2 · Kuadrat Bilangan Besar">
+  <div class="content">
+    <div class="exhead"><h2>🚀 Latihan 2 · Kuadrat Bilangan Besar — 20 Soal</h2><span class="scorechip" id="chip-ex4">⭐ 0/20</span><button class="btn ghost small" data-reset="ex4">↺ Reset</button></div>
+    <div class="fmt">Contoh: 104² = (100+4)² = 10000 + 2·100·4 + 16 = <b>10816</b>. Ketik angka saja — tapi hitung dengan identitas ya! 😉</div>
+    <div class="qgrid" id="q-ex4"></div>
+  </div>
+</section>
+
+<!-- 19 · LATIHAN 3 -->
+<section class="slide" data-title="Latihan 3 · Soal Detektif">
+  <div class="content">
+    <div class="exhead"><h2>🕵️ Latihan 3 · Soal Detektif — 5 Soal</h2><span class="scorechip" id="chip-ex5">⭐ 0/5</span><button class="btn ghost small" data-reset="ex5">↺ Reset</button></div>
+    <div class="fmt">Kamu TIDAK perlu mencari x dan y! Gunakan hubungan: (x±y)² = x² + y² ± 2xy → pindahkan suku yang diketahui.</div>
+    <div class="qgrid" id="q-ex5"></div>
+  </div>
+</section>
+
+<!-- 20 · CAMBRIDGE A -->
+<section class="slide" data-title="Latihan 4 · Cambridge A">
+  <div class="content">
+    <div class="exhead"><h2>📘 Latihan 4 · Cambridge Exercise (A)</h2><span class="scorechip" id="chip-camA">⭐ 0/18</span><button class="btn ghost small" data-reset="camA">↺ Reset</button></div>
+    <div class="fmt">Soal asli gaya Cambridge: expand tiap bentuk. Format: a^2+8a+16</div>
+    <div id="q-camA"></div>
+  </div>
+</section>
+
+<!-- 21 · CAMBRIDGE B -->
+<section class="slide" data-title="Latihan 4 · Cambridge B">
+  <div class="content">
+    <div class="exhead"><h2>📘 Latihan 4 · Cambridge Exercise (B)</h2><span class="scorechip" id="chip-camB">⭐ 0/10</span><button class="btn ghost small" data-reset="camB">↺ Reset</button></div>
+    <div class="fmt">Pecahan & bentuk campuran — tulis seperti: a^2/25 + 6ab/5 + 9b^2</div>
+    <div id="q-camB"></div>
+  </div>
+</section>
+
+<!-- 22 · CAMBRIDGE C -->
+<section class="slide" data-title="Latihan 4 · Cambridge C">
+  <div class="content">
+    <div class="exhead"><h2>📘 Latihan 4 · Cambridge Exercise (C)</h2><span class="scorechip" id="chip-camC">⭐ 0/5</span><button class="btn ghost small" data-reset="camC">↺ Reset</button></div>
+    <div class="fmt">Simplify & soal detektif. Angka atau bentuk aljabar, sesuai pertanyaan.</div>
+    <div id="q-camC"></div>
+  </div>
+</section>
+
+<!-- 23 · CAMBRIDGE D -->
+<section class="slide" data-title="Latihan 4 · Cambridge D">
+  <div class="content">
+    <div class="exhead"><h2>📘 Latihan 4 · Cambridge Exercise (D) — Bukti Bilangan</h2><span class="scorechip" id="chip-camD">⭐ 0/10</span><button class="btn ghost small" data-reset="camD">↺ Reset</button></div>
+    <div class="fmt">Soal pembuktian dengan m bilangan bulat positif — pilihan ganda + isian aljabar.</div>
+    <div id="q-camD"></div>
+  </div>
+</section>
+
+<!-- 24 · KESIMPULAN -->
+<section class="slide" data-title="Kesimpulan">
+  <div class="content">
+    <span class="kicker">Summary</span>
+    <h2 class="title">Kesimpulan — Harta Karunmu Hari Ini 💎</h2>
+    <table class="tbl">
+      <tr><th>Identitas</th><th>Bentuk</th><th>Cara Mengingat</th><th>Senjata Utama Untuk</th></tr>
+      <tr><td><b class="f1">1 · Kuadrat Jumlah</b></td><td>(a+b)² = a²+2ab+b²</td><td>Luas persegi dipecah 4 → ada <b>dua</b> ab</td><td>Expand cepat, luas, 104²</td></tr>
+      <tr><td><b class="f2">2 · Kuadrat Selisih</b></td><td>(a−b)² = a²−2ab+b²</td><td>Tengah minus, ujung tetap <b>plus</b></td><td>Diskon, potongan, 99²</td></tr>
+      <tr><td><b class="f3">3 · Selisih Kuadrat</b></td><td>a²−b² = (a+b)(a−b)</td><td>Suku tengah saling habis 🎩</td><td>Faktorisasi, 102×98, Fermat</td></tr>
+    </table>
+    <div class="card mt" style="background:var(--green-soft)"><b>🌟 Pesan terpenting:</b> Identitas bukan hafalan buta — ia <b>pola yang kamu buktikan sendiri</b>. Sekali melihat polanya, kamu tidak perlu menghafal lagi!</div>
+    <h3 class="mt mb">🎫 Exit Ticket — buktikan kamu siap! (3 soal)</h3>
+    <div class="qgrid" id="q-exit"></div>
+  </div>
+</section>
+
+<!-- 25 · REFLEKSI -->
+<section class="slide" data-title="Refleksi">
+  <div class="content">
+    <span class="kicker">Reflection</span>
+    <h2 class="title">Refleksi Diri 🪞</h2>
+    <p class="lead">Tidak ada jawaban benar/salah di sini — ini tentang perjalananmu hari ini.</p>
+    <div class="grid2">
+      <div class="card" style="text-align:center">
+        <h3 class="mb">Seberapa seru pelajaran ini?</h3>
+        <div class="stars" id="stars">
+          <button>⭐</button><button>⭐</button><button>⭐</button><button>⭐</button><button>⭐</button>
+        </div>
+        <p id="starcap" style="font-weight:800; margin-top:8px">Klik untuk memberi bintang!</p>
+      </div>
+      <div class="card" style="text-align:center">
+        <h3 class="mb">Bagaimana perasaanmu tiap identitas? (klik untuk ganti)</h3>
+        <div class="moods">
+          <button class="mood" data-i="0">1️⃣ (a+b)² : 🙂</button>
+          <button class="mood" data-i="1">2️⃣ (a−b)² : 🙂</button>
+          <button class="mood" data-i="2">3️⃣ a²−b² : 🙂</button>
+        </div>
+        <p style="font-size:13px; color:var(--ink-soft); margin-top:8px">🙂 aman · 🤔 perlu latihan · 😅 bantuan dong</p>
+      </div>
+    </div>
+    <div class="card mt">
+      <b>1) Tiga hal yang hari ini saya PAHAMI:</b>
+      <textarea class="ref-area mt" id="ref1" placeholder="Contoh: kenapa suku tengah 2ab muncul dua kali, cara menghitung 98² cepat..."></textarea>
+      <b class="mt">2) Hal yang masih bikin saya bertanya-tanya:</b>
+      <textarea class="ref-area mt" id="ref2" placeholder="Contoh: kapan memakai identitas 2 vs identitas 3..."></textarea>
+      <div style="text-align:center" class="mt"><button class="btn teal" id="refsave">💾 Simpan Refleksiku</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- 26 · THANKS -->
+<section class="slide thanks" data-title="Thank You">
+  <div class="confetti" id="confetti"></div>
+  <div class="content center">
+    <span class="kicker k3">Sampai Jumpa!</span>
+    <h1>Thank You for Today! 🎉</h1>
+    <p class="tagline" style="font-size:17px"><i>"Mathematics is the art of seeing patterns."</i><br>Hari ini kamu tidak hanya menghafal tiga identitas — kamu <b>membuktikannya, memakainya, dan menguasainya</b>. Terus berlatih, dan kuadrat apa pun tidak akan pernah menakutkan lagi! 💪</p>
+    <div id="finalscore">🏆 Kamu menyelesaikan 0 soal dengan benar hari ini!</div><br>
+    <div>
+      <span class="fx fx1">See the pattern ✨</span>
+      <span class="fx fx2">Trust the algebra 🧮</span>
+      <span class="fx fx3">Enjoy the shortcut ⚡</span>
+    </div>
+    <p class="hint-keys">Cambridge Lower Secondary Mathematics · Grade 8 · Expansion &amp; Factorisation using Special Algebraic Identities</p>
+    <button class="btn ghost small mt" data-go="0">🔁 Ulangi dari awal</button>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ BOTTOM BAR ============ -->
+<footer id="botbar">
+  <button class="navbtn" id="prevbtn">◀ Sebelumnya</button>
+  <div id="dots"></div>
+  <span id="counter">1 / 26</span>
+  <button class="navbtn primary" id="nextbtn">Berikutnya ▶</button>
+</footer>
+
+<!-- ============ MENU ============ -->
+<div id="menu"><div class="panel">
+  <h3>🗺️ Peta Slide</h3>
+  <div id="menulist"></div>
+  <div style="text-align:center" class="mt"><button class="btn small ghost" id="menuclose">✕ Tutup</button></div>
+</div></div>
+
+<script>
+/* =====================================================================
+   UTILITIES + SAFE STORAGE + ERROR GUARD
+   ===================================================================== */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+
+/* Penyimpanan aman: tidak crash walau localStorage diblokir (mode sandbox/preview) */
+const store={
+  mem:{},
+  get(k){ try{ return window.localStorage.getItem(k); }catch(e){ return (k in this.mem)?this.mem[k]:null; } },
+  set(k,v){ try{ window.localStorage.setItem(k,v); }catch(e){ this.mem[k]=v; } }
+};
+
+/* Bungkus modul agar error di satu fitur tidak mematikan seluruh aplikasi */
+function safe(name,fn){ try{ fn(); }catch(err){ console.warn('[Modul: '+name+'] gagal dimuat:',err); } }
+
+/* Toast global */
+let toastT;
+function toast(msg){
+  let t=document.querySelector('.toast'); if(t)t.remove();
+  t=document.createElement('div'); t.className='toast'; t.textContent=msg;
+  document.body.appendChild(t); clearTimeout(toastT);
+  toastT=setTimeout(()=>t.remove(),2600);
+}
+
+/* Pelaporan error ramah (sekali per 4 detik) */
+let lastErrT=0;
+window.addEventListener('error',e=>{
+  const now=Date.now();
+  if(now-lastErrT>4000){ lastErrT=now; toast('⚠️ Kendala kecil: '+(e.message||'unknown')+' — navigasi tetap aman.'); }
+});
+
+/* =====================================================================
+   [1] DECK ENGINE — DIPASANG PALING AWAL agar navigasi SELALU berfungsi
+   ===================================================================== */
+const slides=$$('.slide');
+let cur=0;
+const dots=$('#dots');
+slides.forEach((s,i)=>{
+  const b=document.createElement('button');
+  b.title=s.dataset.title||('Slide '+(i+1));
+  b.addEventListener('click',()=>go(i));
+  dots.appendChild(b);
+});
+const menuList=$('#menulist');
+slides.forEach((s,i)=>{
+  const b=document.createElement('button');
+  b.className='mlink'; b.textContent=(i+1)+'. '+(s.dataset.title||'');
+  b.addEventListener('click',()=>{ go(i); $('#menu').classList.remove('open'); });
+  menuList.appendChild(b);
+});
+function go(i){
+  cur=Math.max(0,Math.min(slides.length-1,i));
+  slides.forEach((s,k)=>s.classList.toggle('active',k===cur));
+  [...dots.children].forEach((d,k)=>{ d.classList.toggle('on',k===cur); d.classList.toggle('done',k<cur); });
+  $('#counter').textContent=(cur+1)+' / '+slides.length;
+  $('#progressfill').style.width=((cur+1)/slides.length*100)+'%';
+  $('#prevbtn').disabled=cur===0; $('#nextbtn').disabled=cur===slides.length-1;
+  [...menuList.children].forEach((m,k)=>m.classList.toggle('cur',k===cur));
+  const c=slides[cur].querySelector('.content'); if(c)c.scrollTop=0;
+  if(cur===slides.length-1&&typeof stats!=='undefined'){
+    $('#finalscore').textContent='🏆 Kamu menyelesaikan '+stats.c+' soal dengan benar hari ini!'+
+      (stats.c>=100?' Luar biasa, sang jagoan identitas! 👑':' Terus berlatih — setiap soal membuatmu lebih tajam!');
+  }
+}
+ $('#prevbtn').addEventListener('click',()=>go(cur-1));
+ $('#nextbtn').addEventListener('click',()=>go(cur+1));
+document.addEventListener('keydown',e=>{
+  if(['INPUT','TEXTAREA'].includes(e.target.tagName))return;
+  if(e.key==='ArrowRight'||e.key==='PageDown')go(cur+1);
+  if(e.key==='ArrowLeft'||e.key==='PageUp')go(cur-1);
+  if(e.key==='Escape')$('#menu').classList.remove('open');
+});
+let tx=0;
+ $('#stage').addEventListener('touchstart',e=>{tx=e.touches[0].clientX;},{passive:true});
+ $('#stage').addEventListener('touchend',e=>{
+  const dx=e.changedTouches[0].clientX-tx;
+  if(Math.abs(dx)>70&&!['INPUT','TEXTAREA'].includes(e.target.tagName))go(cur+(dx<0?1:-1));
+},{passive:true});
+/* >>> Tombol Mulai, kartu peta, dan tombol ulangi — diikat LANGSUNG di sini <<< */
+ $$('[data-go]').forEach(el=>el.addEventListener('click',()=>go(+el.dataset.go)));
+ $('#menubtn').addEventListener('click',()=>$('#menu').classList.add('open'));
+ $('#menuclose').addEventListener('click',()=>$('#menu').classList.remove('open'));
+ $('#menu').addEventListener('click',e=>{ if(e.target.id==='menu')$('#menu').classList.remove('open'); });
+go(0);
+
+/* =====================================================================
+   [2] STATISTIK — pakai store aman + parse terlindungi
+   ===================================================================== */
+const STATS_KEY='identitas8-stats';
+let stats={c:0};
+try{
+  const raw=store.get(STATS_KEY);
+  if(raw){ const p=JSON.parse(raw); if(p&&typeof p.c==='number')stats=p; }
+}catch(e){}
+function bumpStats(){
+  const el=$('#scorechip'); if(el)el.textContent='⭐ '+stats.c+' benar';
+  store.set(STATS_KEY,JSON.stringify(stats));
+}
+bumpStats();
+
+/* =====================================================================
+   [3] MESIN PEMERIKSA JAWABAN
+   ===================================================================== */
+function norm(s){
+  return (s??'').toString().toLowerCase()
+    .replace(/−|–|—/g,'-').replace(/×|·|⋅/g,'*')
+    .replace(/\s+/g,'').replace(/\*/g,'').replace(/,/g,'')
+    .replace(/²/g,'^2').replace(/³/g,'^3').replace(/⁴/g,'^4').replace(/⁵/g,'^5')
+    .replace(/([a-z])2/g,'$1^2').replace(/([a-z])3/g,'$1^3').replace(/([a-z])4/g,'$1^4');
+}
+function canonPoly(s){
+  s=norm(s);
+  if(!s||/[()]/.test(s)||!/^[-+0-9a-z^/.]+$/.test(s))return null;
+  const parts=s.match(/[+-]?[^+-]+/g); if(!parts)return null;
+  const acc=Object.create(null);
+  for(let raw of parts){
+    let sign=1,t=raw;
+    if(t[0]==='+')t=t.slice(1); else if(t[0]==='-'){sign=-1;t=t.slice(1);}
+    if(!t||t==='/')return null;
+    t=t.replace(/([a-z])\^(\d+)/g,(m,v,n)=>v.repeat(+n));
+    if(t.includes('^'))return null;
+    let num=t,den='1'; const sl=t.indexOf('/');
+    if(sl>=0){ if(sl===0||t.indexOf('/',sl+1)>=0)return null; num=t.slice(0,sl); den=t.slice(sl+1); }
+    const letters=(num.match(/[a-z]/g)||[]).concat(den.match(/[a-z]/g)||[]).sort().join('');
+    const nd=num.replace(/[a-z]/g,''), dd=den.replace(/[a-z]/g,'');
+    const c=nd===''?1:parseFloat(nd), d=dd===''?1:parseFloat(dd);
+    if(!isFinite(c)||!isFinite(d)||d===0||(c===0&&nd!==''))return null;
+    const key=letters||'#';
+    acc[key]=(acc[key]||0)+sign*c/d;
+  }
+  const keys=Object.keys(acc).filter(k=>Math.abs(acc[k])>1e-9);
+  keys.sort((a,b)=>{ if(a==='#')return 1; if(b==='#')return -1;
+    if(a.length!==b.length)return b.length-a.length; return a<b?-1:1; });
+  return keys.map(k=>k+'='+Math.round(acc[k]*1e6)/1e6).join('|');
+}
+function canonFactors(s){
+  s=norm(s).replace(/^\(|\)$/g,'');
+  return s.split(')(').map(p=>p.replace(/^\(|\)$/g,'')).filter(Boolean).sort().join('][');
+}
+function parseNum(v){
+  v=norm(v).replace(/^\+/,'');
+  if(/^-?\d+\/-?\d+$/.test(v)){ const[p,q]=v.split('/').map(Number); if(q)return p/q; }
+  if(/^-?\d*\.?\d+$/.test(v))return parseFloat(v);
+  return null;
+}
+function checkAnswer(it,input){
+  const val=(input??'').trim();
+  if(!val)return{ok:false,empty:true};
+  const t=it.t||'poly';
+  const list=Array.isArray(it.a)?it.a:[it.a];
+  if(t==='num'){ const u=parseNum(val),a=parseNum(it.a);
+    if(u==null||a==null)return{ok:false}; return{ok:Math.abs(u-a)<1e-6}; }
+  if(t==='factor'){ const u=canonFactors(val); if(!u)return{ok:false};
+    return{ok:list.some(x=>canonFactors(x)===u)}; }
+  const cu=canonPoly(val);
+  if(cu!=null)return{ok:list.some(x=>canonPoly(x)===cu)};
+  if(norm(val).includes('('))return{ok:false,noparen:true};
+  return{ok:list.some(x=>norm(x)===norm(val))};
+}
+
+/* =====================================================================
+   [4] DATA SOAL
+   ===================================================================== */
+const EX1=[
+{d:1,q:'Expand: (x + 3)²',a:'x^2+6x+9',s:'a=x, b=3 → x² + 2·x·3 + 3² = x² + 6x + 9'},
+{d:1,q:'Expand: (y + 5)²',a:'y^2+10y+25',s:'y² + 2·y·5 + 25 = y² + 10y + 25'},
+{d:1,q:'Expand: (a + 10)²',a:'a^2+20a+100',s:'a² + 20a + 100 (ingat 10² = 100)'},
+{d:1,q:'Expand: (m + 7)²',a:'m^2+14m+49',s:'m² + 14m + 49'},
+{d:1,q:'Expand: (x + 2y)²',a:'x^2+4xy+4y^2',s:'2·x·2y = 4xy dan (2y)² = 4y²'},
+{d:1,q:'Expand: (a + 3b)²',a:'a^2+6ab+9b^2',s:'2·a·3b = 6ab dan (3b)² = 9b²'},
+{d:2,q:'Expand: (2x + 3)²',a:'4x^2+12x+9',s:'a=2x → (2x)² = 4x²; 2·2x·3 = 12x; 3² = 9'},
+{d:2,q:'Expand: (3m + 4)²',a:'9m^2+24m+16',s:'9m² + 24m + 16'},
+{d:2,q:'Expand: (5a + 2b)²',a:'25a^2+20ab+4b^2',s:'25a² + 2·5a·2b + 4b² = 25a² + 20ab + 4b²'},
+{d:2,q:'Expand: (4x + 5y)²',a:'16x^2+40xy+25y^2',s:'16x² + 40xy + 25y²'},
+{d:2,q:'Expand: (x + 1/2)²',a:'x^2+x+1/4',s:'2·x·½ = x dan (½)² = 1/4'},
+{d:2,q:'Expand: (x + 0.3)²',a:'x^2+0.6x+0.09',s:'2·x·0.3 = 0.6x dan 0.3² = 0.09'},
+{d:2,q:'Expand: (x² + y)²',a:'x^4+2x^2y+y^2',s:'a = x² → (x²)² = x⁴; 2·x²·y = 2x²y'},
+{d:2,q:'Expand: (5 + x)²',a:'x^2+10x+25',s:'(5+x)² = (x+5)² — urutan tidak mengubah apa pun!'},
+{d:3,q:'Jika x = 3, cari nilai (2x + 1)²',t:'num',a:49,s:'(2·3+1)² = 7² = 49. Atau 4x²+4x+1 → 36+12+1 = 49'},
+{d:3,q:'Sederhanakan: (x + 5)² − (x + 3)²',a:'4x+16',s:'(x²+10x+25) − (x²+6x+9) = 4x + 16'},
+{d:3,q:'Jika (x + 4)² ≡ x² + kx + 16, cari nilai k.',t:'num',a:8,s:'Bandingkan suku tengah: 2·1·4 = 8 → k = 8'},
+{d:3,q:'Jika (x + p)² ≡ x² + 12x + q, cari nilai p × q.',t:'num',a:216,s:'2p = 12 → p = 6; q = 6² = 36; p×q = 216'},
+{d:3,q:'Sederhanakan: (x + 5)² − (x + 3)(x + 7)',t:'num',a:4,s:'(x²+10x+25) − (x²+10x+21) = 4. Suku x saling habis!'},
+{d:3,q:'Sederhanakan: (2x + 7)² − (2x − 7)²',a:'56x',s:'A²−B² = (A+B)(A−B) = (4x)(14) = 56x — dua identitas jalan bareng! 🔥'}
+];
+const EX2=[
+{d:1,q:'Expand: (x − 2)²',a:'x^2-4x+4',s:'x² − 2·x·2 + 4 = x² − 4x + 4'},
+{d:1,q:'Expand: (y − 6)²',a:'y^2-12y+36',s:'y² − 12y + 36'},
+{d:1,q:'Expand: (a − 9)²',a:'a^2-18a+81',s:'a² − 18a + 81'},
+{d:1,q:'Expand: (m − 4)²',a:'m^2-8m+16',s:'m² − 8m + 16'},
+{d:1,q:'Expand: (x − 3y)²',a:'x^2-6xy+9y^2',s:'2·x·3y = 6xy → minus; (3y)² = 9y² → plus'},
+{d:1,q:'Expand: (a − 5b)²',a:'a^2-10ab+25b^2',s:'a² − 10ab + 25b²'},
+{d:2,q:'Expand: (2x − 1)²',a:'4x^2-4x+1',s:'4x² − 4x + 1'},
+{d:2,q:'Expand: (3n − 5)²',a:'9n^2-30n+25',s:'9n² − 30n + 25'},
+{d:2,q:'Expand: (4p − 3q)²',a:'16p^2-24pq+9q^2',s:'16p² − 24pq + 9q²'},
+{d:2,q:'Expand: (6a − b)²',a:'36a^2-12ab+b^2',s:'36a² − 12ab + b²'},
+{d:2,q:'Expand: (x − 1/2)²',a:'x^2-x+1/4',s:'2·x·½ = x → −x; (½)² = 1/4'},
+{d:2,q:'Expand: (x − 0.2)²',a:'x^2-0.4x+0.04',s:'2·x·0.2 = 0.4x → −0.4x; 0.2² = 0.04'},
+{d:2,q:'Expand: (x² − 2)²',a:'x^4-4x^2+4',s:'(x²)² = x⁴; 2·x²·2 = 4x² → −4x²; 2² = 4'},
+{d:2,q:'Jika x = 5, cari nilai (3x − 2)²',t:'num',a:169,s:'(15−2)² = 13² = 169'},
+{d:2,q:'Expand: (7 − x)²',a:'x^2-14x+49',s:'(7−x)² = (x−7)² = x² − 14x + 49 — kuadrat menghapus arah!'},
+{d:3,q:'Sederhanakan: (x − 4)² − (x − 2)²',a:'-4x+12',s:'(x²−8x+16) − (x²−4x+4) = −4x + 12'},
+{d:3,q:'Jika (x − 3)² ≡ x² + kx + 9, cari nilai k.',t:'num',a:-6,s:'2·(−3) = −6 → k = −6; cek 9 = (−3)² ✓'},
+{d:3,q:'Jika (x − p)² ≡ x² − 10x + q, cari nilai p × q.',t:'num',a:125,s:'2p = 10 → p = 5; q = 25; p×q = 125'},
+{d:3,q:'Sederhanakan: (a − b)² − (a + b)²',a:'-4ab',s:'(a²−2ab+b²) − (a²+2ab+b²) = −4ab'},
+{d:3,q:'Sederhanakan: (3x − 1)² + (3x + 1)²',a:'18x^2+2',s:'(9x²−6x+1) + (9x²+6x+1) = 18x² + 2 — suku tengah saling hapus!'}
+];
+const EX3=[
+{d:1,q:'Expand: (x + 3)(x − 3)',a:'x^2-9',s:'(x+3)(x−3) = x² − 3² = x² − 9'},
+{d:1,q:'Expand: (y + 7)(y − 7)',a:'y^2-49',s:'y² − 49'},
+{d:1,q:'Expand: (a + 1)(a − 1)',a:'a^2-1',s:'a² − 1'},
+{d:1,q:'Expand: (m + 10)(m − 10)',a:'m^2-100',s:'m² − 100'},
+{d:1,q:'Expand: (x + 2y)(x − 2y)',a:'x^2-4y^2',s:'x² − (2y)² = x² − 4y²'},
+{d:1,q:'Expand: (3a + 2)(3a − 2)',a:'9a^2-4',s:'(3a)² − 2² = 9a² − 4'},
+{d:1,q:'Expand: (5x + 4)(5x − 4)',a:'25x^2-16',s:'25x² − 16'},
+{d:1,q:'Expand: (2m + 7n)(2m − 7n)',a:'4m^2-49n^2',s:'4m² − 49n²'},
+{d:1,q:'Expand: (6p + 5q)(6p − 5q)',a:'36p^2-25q^2',s:'36p² − 25q²'},
+{d:1,q:'Expand: (x/3 + 2)(x/3 − 2)',a:'x^2/9-4',s:'(x/3)² − 2² = x²/9 − 4'},
+{d:2,q:'Factorise: x² − 25',t:'factor',a:'(x+5)(x-5)',s:'a = x, b = 5 → (x+5)(x−5)'},
+{d:2,q:'Factorise: y² − 81',t:'factor',a:'(y+9)(y-9)',s:'(y+9)(y−9)'},
+{d:2,q:'Factorise: 4a² − 9',t:'factor',a:'(2a+3)(2a-3)',s:'4a² = (2a)², 9 = 3² → (2a+3)(2a−3)'},
+{d:2,q:'Factorise: 16x² − 49y²',t:'factor',a:'(4x+7y)(4x-7y)',s:'(4x)² − (7y)² → (4x+7y)(4x−7y)'},
+{d:2,q:'Factorise: 100 − 9m²',t:'factor',a:'(10+3m)(10-3m)',s:'10² − (3m)² → (10+3m)(10−3m) — urutan terbalik tetap sah!'},
+{d:3,q:'Hitung 53 × 47 tanpa kalkulator (petunjuk: 50±3)',t:'num',a:2491,s:'(50+3)(50−3) = 2500 − 9 = 2491 ⚡'},
+{d:3,q:'Sederhanakan: (x − 3)(x + 3) − (x − 1)²',a:'2x-10',s:'(x²−9) − (x²−2x+1) = 2x − 10'},
+{d:3,q:'Sederhanakan: (2x + 3)(2x − 3) + (x + 1)²',a:'5x^2+2x-8',s:'(4x²−9) + (x²+2x+1) = 5x² + 2x − 8'},
+{d:3,q:'Hitung 51² − 49² tanpa mengkuadratkan!',t:'num',a:200,s:'(51+49)(51−49) = 100 × 2 = 200 🤯'},
+{d:3,q:'Expand: (u + 2)(u − 2)(u² + 4)',a:'u^4-16',s:'(u+2)(u−2) = u²−4 → (u²−4)(u²+4) = u⁴−16 — identitas dipakai 2×!'}
+];
+const EXBIG=[
+{d:1,q:'104² = ?',tg:'(a+b)²',t:'num',a:10816,s:'(100+4)² = 10000 + 800 + 16 = 10816'},
+{d:1,q:'102² = ?',tg:'(a+b)²',t:'num',a:10404,s:'(100+2)² = 10000 + 400 + 4 = 10404'},
+{d:1,q:'101² = ?',tg:'(a+b)²',t:'num',a:10201,s:'(100+1)² = 10000 + 200 + 1 = 10201'},
+{d:1,q:'105² = ?',tg:'(a+b)²',t:'num',a:11025,s:'(100+5)² = 10000 + 1000 + 25 = 11025'},
+{d:1,q:'98² = ?',tg:'(a−b)²',t:'num',a:9604,s:'(100−2)² = 10000 − 400 + 4 = 9604'},
+{d:1,q:'97² = ?',tg:'(a−b)²',t:'num',a:9409,s:'(100−3)² = 10000 − 600 + 9 = 9409'},
+{d:1,q:'99² = ?',tg:'(a−b)²',t:'num',a:9801,s:'(100−1)² = 10000 − 200 + 1 = 9801'},
+{d:1,q:'96² = ?',tg:'(a−b)²',t:'num',a:9216,s:'(100−4)² = 10000 − 800 + 16 = 9216'},
+{d:2,q:'201² = ?',tg:'(a+b)²',t:'num',a:40401,s:'(200+1)² = 40000 + 400 + 1 = 40401'},
+{d:2,q:'302² = ?',tg:'(a+b)²',t:'num',a:91204,s:'(300+2)² = 90000 + 1200 + 4 = 91204'},
+{d:2,q:'52² = ?',tg:'(a+b)²',t:'num',a:2704,s:'(50+2)² = 2500 + 200 + 4 = 2704'},
+{d:2,q:'63² = ?',tg:'(a+b)²',t:'num',a:3969,s:'(60+3)² = 3600 + 360 + 9 = 3969'},
+{d:2,q:'55² = ?',tg:'(a+b)²',t:'num',a:3025,s:'(50+5)² = 2500 + 500 + 25 = 3025'},
+{d:2,q:'71² = ?',tg:'(a+b)²',t:'num',a:5041,s:'(70+1)² = 4900 + 140 + 1 = 5041'},
+{d:2,q:'48² = ?',tg:'(a−b)²',t:'num',a:2304,s:'(50−2)² = 2500 − 200 + 4 = 2304'},
+{d:2,q:'68² = ?',tg:'(a−b)²',t:'num',a:4624,s:'(70−2)² = 4900 − 280 + 4 = 4624'},
+{d:2,q:'999² = ?',tg:'(a−b)²',t:'num',a:998001,s:'(1000−1)² = 1000000 − 2000 + 1 = 998001'},
+{d:3,q:'102 × 98 = ? (petunjuk: (a+b)(a−b))',tg:'a²−b²',t:'num',a:9996,s:'(100+2)(100−2) = 10000 − 4 = 9996'},
+{d:3,q:'105 × 95 = ?',tg:'a²−b²',t:'num',a:9975,s:'(100+5)(100−5) = 10000 − 25 = 9975'},
+{d:3,q:'52² − 48² = ?',tg:'a²−b²',t:'num',a:400,s:'(52+48)(52−48) = 100 × 4 = 400 — tanpa mengkuadratkan!'}
+];
+const EXGIVEN=[
+{d:2,q:'Jika (x + y)² = 147 dan xy = −10, cari nilai x² + y².',t:'num',a:167,s:'x²+y² = (x+y)² − 2xy = 147 − 2(−10) = 147 + 20 = 167'},
+{d:2,q:'Jika (x − y)² = 49 dan xy = 12, cari nilai x² + y².',t:'num',a:73,s:'x²+y² = (x−y)² + 2xy = 49 + 24 = 73'},
+{d:2,q:'Jika x² + y² = 106 dan xy = 5, cari nilai (x + y)².',t:'num',a:116,s:'(x+y)² = x²+y² + 2xy = 106 + 10 = 116'},
+{d:2,q:'Jika x + y = 12 dan xy = 27, cari nilai x² + y².',t:'num',a:90,s:'x²+y² = (x+y)² − 2xy = 144 − 54 = 90'},
+{d:3,q:'Jika x − y = 3 dan xy = 40, cari nilai x² + y².',t:'num',a:89,s:'x²+y² = (x−y)² + 2xy = 9 + 80 = 89'}
+];
+const CAM_A=[
+{t:'Soal 1 — Expand bentuk (a+b)²',items:[
+ {l:'1a',d:1,q:'(a + 4)²',a:'a^2+8a+16',s:'a² + 2·a·4 + 16 = a² + 8a + 16'},
+ {l:'1b',d:1,q:'(3b + 2)²',a:'9b^2+12b+4',s:'(3b)² + 2·3b·2 + 4 = 9b² + 12b + 4'},
+ {l:'1c',d:1,q:'(c + 4d)²',a:'c^2+8cd+16d^2',s:'c² + 8cd + 16d²'},
+ {l:'1d',d:2,q:'(9h + 2k)²',a:'81h^2+36hk+4k^2',s:'(9h)² + 2·9h·2k + (2k)² = 81h² + 36hk + 4k²'},
+ {l:'1e',d:2,q:'(3a + 4b)²',a:'9a^2+24ab+16b^2',s:'9a² + 24ab + 16b²'},
+ {l:'1f',d:2,q:'(2b + 3a)²',a:'4b^2+12ab+9a^2',s:'(2b)² + 2·2b·3a + (3a)² = 4b² + 12ab + 9a²'}]},
+{t:'Soal 2 — Expand bentuk (a−b)²',items:[
+ {l:'2a',d:1,q:'(m − 9)²',a:'m^2-18m+81',s:'m² − 18m + 81'},
+ {l:'2b',d:1,q:'(5n − 4)²',a:'25n^2-40n+16',s:'25n² − 40n + 16'},
+ {l:'2c',d:2,q:'(9 − 5p)²',a:'81-90p+25p^2',s:'81 − 2·9·5p + 25p² = 81 − 90p + 25p²'},
+ {l:'2d',d:2,q:'(3q − 8r)²',a:'9q^2-48qr+64r^2',s:'9q² − 48qr + 64r²'},
+ {l:'2e',d:2,q:'(3a − 4b)²',a:'9a^2-24ab+16b^2',s:'9a² − 24ab + 16b²'},
+ {l:'2f',d:2,q:'(5b − 3a)²',a:'25b^2-30ab+9a^2',s:'25b² − 30ab + 9a²'}]},
+{t:'Soal 3 — Selisih kuadrat',items:[
+ {l:'3a',d:1,q:'(s + 5)(s − 5)',a:'s^2-25',s:'s² − 25'},
+ {l:'3b',d:1,q:'(w − 10x)(w + 10x)',a:'w^2-100x^2',s:'w² − (10x)² = w² − 100x²'},
+ {l:'3c',d:1,q:'(2t + 11)(2t − 11)',a:'4t^2-121',s:'(2t)² − 11² = 4t² − 121'},
+ {l:'3d',d:1,q:'(7 − 2u)(7 + 2u)',a:'49-4u^2',s:'49 − (2u)² = 49 − 4u²'}]},
+{t:'Soal 5 & 6 — Detektif',items:[
+ {l:'5',d:2,q:'Jika x² + y² = 80 dan xy = 12, cari nilai (x − y)².',t:'num',a:56,s:'(x−y)² = x²+y² − 2xy = 80 − 24 = 56'},
+ {l:'6',d:2,q:'Jika x + y = 10 dan x − y = 4, cari nilai x² − y².',t:'num',a:40,s:'x²−y² = (x+y)(x−y) = 10 × 4 = 40 — Identitas 3 tanpa tahu x dan y! 🕵️'}]}
+];
+const CAM_B=[
+{t:'Soal 7 — Expand dengan pecahan',items:[
+ {l:'7a',d:2,q:'(a/5 + 3b)²',a:'a^2/25+6ab/5+9b^2',s:'(a/5)² = a²/25; 2·(a/5)·(3b) = 6ab/5; (3b)² = 9b²'},
+ {l:'7b',d:2,q:'(c/2 + 2d/3)²',a:'c^2/4+2cd/3+4d^2/9',s:'c²/4; 2·(c/2)·(2d/3) = 2cd/3; (2d/3)² = 4d²/9'}]},
+{t:'Soal 8 — Expand dengan pecahan (negatif)',items:[
+ {l:'8a',d:2,q:'(3h/2 − 5k)²',a:'9h^2/4-15hk+25k^2',s:'(3h/2)² = 9h²/4; 2·(3h/2)·(5k) = 15hk → −15hk; 25k²'},
+ {l:'8b',d:2,q:'(−6m/5 − 3n)²',a:'36m^2/25+36mn/5+9n^2',s:'(−6m/5−3n)² = (6m/5+3n)² = 36m²/25 + 36mn/5 + 9n² — kuadrat menghapus minus!'}]},
+{t:'Soal 9 — Expand campuran',items:[
+ {l:'9a',d:2,q:'(6p + 5)(5 − 6p)',a:'25-36p^2',s:'Tulis ulang: (5+6p)(5−6p) = 25 − 36p²'},
+ {l:'9b',d:2,q:'(9r − 4q/5)(9r + 4q/5)',a:'81r^2-16q^2/25',s:'(9r)² − (4q/5)² = 81r² − 16q²/25'},
+ {l:'9c',d:2,q:'(s/2 + t/3)(t/3 − s/2)',a:'t^2/9-s^2/4',s:'Susun: (t/3+s/2)(t/3−s/2) = t²/9 − s²/4'},
+ {l:'9d',d:3,q:'(u + 2)(u − 2)(u² + 4)',a:'u^4-16',s:'(u²−4)(u²+4) = u⁴ − 16 — identitas dipakai dua kali!'}]},
+{t:'Soal 10 — Simplify',items:[
+ {l:'10a',d:3,q:'4(x + 3)² − 3(x + 4)(x − 4)',a:'x^2+24x+84',s:'4(x²+6x+9) − 3(x²−16) = 4x²+24x+36 − 3x²+48 = x²+24x+84'},
+ {l:'10b',d:3,q:'(5x − 7y)(5x + 7y) − 2(x − 2y)²',a:'23x^2+8xy-57y^2',s:'(25x²−49y²) − 2(x²−4xy+4y²) = 25x²−49y²−2x²+8xy−8y² = 23x²+8xy−57y²'}]}
+];
+const CAM_C=[
+{t:'Soal 11 & 12 — Detektif',items:[
+ {l:'11',d:3,q:'Jika x² + y² = 14 dan xy = 5, cari nilai (x/2 + y/2)².',t:'num',a:6,s:'(x/2+y/2)² = ¼(x+y)² = ¼(x²+y²+2xy) = ¼(14+10) = ¼ × 24 = 6'},
+ {l:'12',d:3,q:'Jika 2x² − 2y² = 125 dan x − y = 2.5, cari nilai x + y.',t:'num',a:25,s:'x²−y² = 125÷2 = 62.5; lalu x²−y² = (x−y)(x+y) → x+y = 62.5 ÷ 2.5 = 25'}]},
+{t:'Soal 13 — Expand bertingkat',items:[
+ {l:'13',d:3,q:'Expand: (x²/16 + y²/25)(x/4 + y/5)(x/4 − y/5)',a:'x^4/256-y^4/625',s:'(x/4+y/5)(x/4−y/5) = x²/16 − y²/25. Lalu (x²/16+y²/25)(x²/16−y²/25) = (x²/16)² − (y²/25)² = x⁴/256 − y⁴/625 — Identitas 3 dua kali! 🔥'}]},
+{t:'Soal 14 — Simplify & aplikasi',items:[
+ {l:'14(i)',d:3,q:'Simplify: (p − 2q)² − p(p − 4q)',a:'4q^2',s:'(p²−4pq+4q²) − (p²−4pq) = 4q² — semua suku p habis!'},
+ {l:'14(ii)',d:3,q:'Dengan substitusi yang tepat, cari nilai 5310² − 5330 × 5290.',t:'num',a:400,s:'5330 = 5310+20 dan 5290 = 5310−20 → hasil kali = 5310² − 20². Jadi jawabannya 20² = 400 ⚡'}]}
+];
+const CAM_D=[
+{t:'Soal 16 — m bilangan bulat positif (bilangan genap berurutan)',items:[
+ {l:'16(i)',d:2,q:'Jelaskan mengapa 2m selalu merupakan bilangan GENAP.',t:'mc',a:1,o:['Karena semua bilangan positif itu genap','Karena 2m = 2 × m, jadi selalu kelipatan 2 dan habis dibagi 2','Karena 2m selalu habis dibagi 4'],s:'2m adalah 2 dikali m — hasilnya selalu kelipatan 2. Kelipatan 2 = definisi bilangan genap. ✔'},
+ {l:'16(ii)',d:2,q:'Tulis ekspresi untuk bilangan GENAP berikutnya yang lebih besar dari 2m.',a:'2m+2',s:'Bilangan genap "melompat" 2 unit: 2m → 2m + 2'},
+ {l:'16(iii)',d:2,q:'Expand kuadrat bilangan genap pertama: (2m)² = …',a:'4m^2',s:'(2m)² = 4m²'},
+ {l:'16(iii)',d:3,q:'Expand kuadrat bilangan genap kedua: (2m + 2)² = …',a:'4m^2+8m+4',s:'4m² + 2·2m·2 + 4 = 4m² + 8m + 4'},
+ {l:'16(iv)',d:3,q:'Jumlahkan dan sederhanakan: (2m)² + (2m + 2)² = …',a:'8m^2+8m+4',s:'4m² + (4m²+8m+4) = 8m²+8m+4 = 4(2m²+2m+1). Semua suhunya kelipatan 4 → jumlah kuadrat dua bilangan genap berurutan SELALU kelipatan 4. ✔'}]},
+{t:'Soal 17 — m bilangan bulat positif (bilangan ganjil berurutan)',items:[
+ {l:'17(i)',d:2,q:'Jelaskan mengapa (2m + 1) selalu merupakan bilangan GANJIL.',t:'mc',a:1,o:['Karena 2m+1 habis dibagi 2','Karena 2m genap, ditambah 1 menjadi ganjil (bersisa 1 jika dibagi 2)','Karena m pasti ganjil'],s:'2m selalu genap; genap + 1 = ganjil (bersisa 1 dibagi 2). ✔'},
+ {l:'17(ii)',d:2,q:'Tulis ekspresi untuk bilangan GANJIL berikutnya yang lebih besar dari (2m + 1).',a:'2m+3',s:'Bilangan ganjil juga melompat 2 unit: 2m+1 → 2m+3'},
+ {l:'17(iii)',d:2,q:'Expand kuadrat bilangan ganjil pertama: (2m + 1)² = …',a:'4m^2+4m+1',s:'4m² + 4m + 1'},
+ {l:'17(iii)',d:3,q:'Expand kuadrat bilangan ganjil kedua: (2m + 3)² = …',a:'4m^2+12m+9',s:'4m² + 2·2m·3 + 9 = 4m² + 12m + 9'},
+ {l:'17(iv)',d:3,q:'Jumlahkan dan sederhanakan: (2m + 1)² + (2m + 3)² = …',a:'8m^2+16m+10',s:'(4m²+4m+1) + (4m²+12m+9) = 8m²+16m+10 = 2(4m²+8m+5) → selalu GENAP. ✔'}]}
+];
+const EXIT=[
+{q:'🎫 1. Bentuk sederhana dari (x + 7)² adalah…',t:'mc',a:1,o:['x² + 49','x² + 14x + 49','x² + 7x + 49','2x + 14'],s:'Jangan lupakan suku tengah 2ab = 2·x·7 = 14x!'},
+{q:'🎫 2. Faktorisasi dari 9x² − 16 adalah…',t:'mc',a:1,o:['(3x − 4)²','(3x − 4)(3x + 4)','(9x − 4)(x + 4)','(3x − 16)(3x + 1)'],s:'a = 3x, b = 4 → selisih kuadrat → (3x−4)(3x+4)'},
+{q:'🎫 3. Cara TERCEPAT menghitung 45² adalah…',t:'mc',a:0,o:['(40+5)² = 1600+400+25 = 2025, atau (50−5)² = 2500−500+25 = 2025','Mengalikan 45 × 45 dengan cara bersusun panjang','Langsung 50² = 2500','Menambahkan 45 sebanyak 45 kali'],s:'Pilih bilangan "ramah" terdekat (40 atau 50), lalu pakai identitas kuadrat!'}
+];
+
+/* =====================================================================
+   [5] RENDERER KUIS
+   ===================================================================== */
+const diflabel={1:'mudah',2:'sedang',3:'sulit'};
+function quizCard(it,idx,counter){
+  const card=document.createElement('div'); card.className='qcard';
+  const dif=it.d?`<span class="dif d${it.d}">${diflabel[it.d]||''}</span>`:'';
+  const tag=it.tg?`<span class="tag">${it.tg}</span>`:'';
+  const label=it.l||String(idx+1);
+  let inner=`<div class="qhead"><span class="qnum">${label}</span><div class="qtext">${it.q}${dif}${tag}</div></div>`;
+  if(it.t==='mc'){
+    inner+='<div class="mcopts">'+it.o.map((o,i)=>`<button class="mc-opt" data-i="${i}">${String.fromCharCode(65+i)}. ${o}</button>`).join('')+'</div>';
+  }else{
+    const ph=it.t==='num'?'angka saja…':(it.t==='factor'?'(x+5)(x-5)':'contoh: x^2+6x+9');
+    inner+=`<div class="qrow"><input class="qinput" placeholder="${ph}" autocomplete="off"><button class="btn teal small chk">Cek ✓</button><button class="btn ghost small solbtn">💡 Pembahasan</button></div><div class="feedback"></div>`;
+  }
+  inner+=`<div class="solution hidden"><b>💬 Pembahasan:</b> ${it.s}</div>`;
+  card.innerHTML=inner;
+  let solved=false;
+  const fb=card.querySelector('.feedback');
+  function markOK(){ if(solved)return; solved=true;
+    stats.c++; bumpStats(); counter();
+    card.classList.add('correct');
+    const inp=card.querySelector('.qinput'); if(inp)inp.disabled=true;
+    card.querySelectorAll('.mc-opt').forEach(b=>b.disabled=true);
+    fb.className='feedback ok'; fb.textContent='✅ Tepat! Kerja bagus! 🎉';
+  }
+  card.querySelectorAll('.mc-opt').forEach(btn=>btn.addEventListener('click',()=>{
+    if(solved)return;
+    if(+btn.dataset.i===it.a){btn.classList.add('right');markOK();}
+    else{btn.classList.add('wrong','shake');setTimeout(()=>btn.classList.remove('shake'),450);
+      fb.className='feedback no';fb.textContent='❌ Bukan itu — coba pilihan lain!';}
+  }));
+  const chk=card.querySelector('.chk');
+  if(chk){
+    const inp=card.querySelector('.qinput');
+    const doCheck=()=>{
+      if(solved)return;
+      const r=checkAnswer(it,inp.value);
+      if(r.empty){fb.className='feedback no';fb.textContent='✍️ Tulis dulu jawabanmu ya!';return;}
+      if(r.ok){markOK();}
+      else{fb.className='feedback no';
+        fb.textContent=r.noparen?'🤔 Tulis tanpa tanda kurung ya — lihat contoh format di atas!':'❌ Belum tepat. Coba lagi, atau buka 💡 pembahasan.';
+        card.classList.add('shake');setTimeout(()=>card.classList.remove('shake'),450);}
+    };
+    chk.addEventListener('click',doCheck);
+    inp.addEventListener('keydown',e=>{if(e.key==='Enter')doCheck();});
+  }
+  const sol=card.querySelector('.solbtn');
+  if(sol)sol.addEventListener('click',()=>card.querySelector('.solution').classList.toggle('hidden'));
+  else card.querySelector('.mcopts').insertAdjacentHTML('afterend','<button class="btn ghost small solbtn2">💡 Pembahasan</button>');
+  const sol2=card.querySelector('.solbtn2');
+  if(sol2)sol2.addEventListener('click',()=>card.querySelector('.solution').classList.toggle('hidden'));
+  return card;
+}
+function renderQuiz(cid,items,chipId){
+  const wrap=document.getElementById(cid); if(!wrap)return{reset(){}};
+  wrap.innerHTML='';
+  let done=0;
+  const chip=document.getElementById(chipId);
+  const counter=()=>{
+    if(chip)chip.textContent='⭐ '+done+'/'+items.length;
+    if(done===items.length)toast('🏆 Latihan selesai sempurna! '+items.length+'/'+items.length);
+  };
+  items.forEach((it,idx)=>wrap.appendChild(quizCard(it,idx,()=>{done++;counter();})));
+  counter();
+  return{reset(){
+    done=0;
+    wrap.querySelectorAll('.qcard').forEach(c=>{
+      c.classList.remove('correct');
+      const i=c.querySelector('.qinput'); if(i){i.disabled=false;i.value='';}
+      const f=c.querySelector('.feedback'); if(f){f.textContent='';f.className='feedback';}
+      c.querySelectorAll('.mc-opt').forEach(b=>{b.disabled=false;b.classList.remove('right','wrong');});
+      c.querySelector('.solution').classList.add('hidden');
+    });
+    if(chip)chip.textContent='⭐ 0/'+items.length;
+  }};
+}
+const quizzes={};
+safe('Latihan interaktif',()=>{
+  quizzes.ex1=renderQuiz('q-ex1',EX1,'chip-ex1');
+  quizzes.ex2=renderQuiz('q-ex2',EX2,'chip-ex2');
+  quizzes.ex3=renderQuiz('q-ex3',EX3,'chip-ex3');
+  quizzes.ex4=renderQuiz('q-ex4',EXBIG,'chip-ex4');
+  quizzes.ex5=renderQuiz('q-ex5',EXGIVEN,'chip-ex5');
+  const grp=(arr)=>arr.flatMap(g=>g.items.map(it=>({...it,q:'<b>'+g.t.split('—')[0].trim()+':</b> '+it.q})));
+  quizzes.camA=renderQuiz('q-camA',grp(CAM_A),'chip-camA');
+  quizzes.camB=renderQuiz('q-camB',grp(CAM_B),'chip-camB');
+  quizzes.camC=renderQuiz('q-camC',grp(CAM_C),'chip-camC');
+  quizzes.camD=renderQuiz('q-camD',grp(CAM_D),'chip-camD');
+  quizzes.exit=renderQuiz('q-exit',EXIT,'chip-exit');
+});
+document.addEventListener('click',e=>{
+  const r=e.target.closest('[data-reset]');
+  if(r&&quizzes[r.dataset.reset]){ quizzes[r.dataset.reset].reset(); toast('↺ Latihan direset. Semangat ulang!'); }
+});
+
+/* =====================================================================
+   [6] MODUL-MODUL INTERAKTIF (masing-masing terlindungi)
+   ===================================================================== */
+safe('Simbol melayang (cover)',()=>{
+  const syms=['(a+b)²','a²−b²','x²','2ab','√','Σ','(a−b)²','=','+','y²','101²','π','(x+3)²','×'];
+  const box=$('#floatsyms');
+  syms.forEach(s=>{
+    const sp=document.createElement('span'); sp.textContent=s;
+    sp.style.left=(5+Math.random()*88)+'%'; sp.style.top=(4+Math.random()*88)+'%';
+    sp.style.fontSize=(18+Math.random()*34)+'px';
+    sp.style.animationDelay=(Math.random()*5)+'s';
+    sp.style.animationDuration=(6+Math.random()*5)+'s';
+    box.appendChild(sp);
+  });
+});
+
+safe('Kartu flip pemantik',()=>{
+  const data=[
+   ['🧠','Bisa menghitung 104² dalam 5 detik? Tanpa kalkulator!','104² = (100+4)² = 10.000 + 800 + 16 = 10.816. Kuncinya: Identitas 1 — kuadratkan yang mudah (100), sisanya kecil!'],
+   ['🌻','1 + 3 + 5 + 7 + 9 = ? Kenapa hasilnya selalu kuadrat?','25 = 5². Menambahkan bilangan ganjil membentuk "persegi" yang makin besar — makanya disebut bilangan KUADRAT!'],
+   ['🌳','Taman persegi bersisi (x+3) m. Berapa luasnya?','(x+3)² = x² + 6x + 9. Aljabar adalah "peta luas" — kita tahu luasnya sebelum mengukur!'],
+   ['🛹','51² − 49² = ? Hitung TANPA mengkuadratkan!','(51+49)(51−49) = 100 × 2 = 200. Sihir Identitas 3: selisih kuadrat!']];
+  const box=$('#flips');
+  data.forEach(d=>{
+    const el=document.createElement('div'); el.className='flip';
+    el.innerHTML=`<div class="inner">
+      <div class="face front"><span class="emo">${d[0]}</span><h4>${d[1]}</h4><span class="tap">👆 klik untuk membuka jawaban</span></div>
+      <div class="face back"><h4>✨ Jawaban</h4><p>${d[2]}</p><span class="tap">👆 klik untuk menutup</span></div></div>`;
+    el.addEventListener('click',()=>el.classList.toggle('flipped'));
+    box.appendChild(el);
+  });
+});
+
+safe('Checklist tujuan',()=>{
+  $$('#objlist li').forEach(li=>li.addEventListener('click',()=>li.classList.toggle('done')));
+});
+
+safe('Jebakan klasik',()=>{
+  $('#trap1btn').addEventListener('click',()=>$('#trap1').classList.toggle('hidden'));
+  $('#trap2btn').addEventListener('click',()=>$('#trap2').classList.toggle('hidden'));
+});
+
+safe('Langkah bertahap',()=>{
+  $$('.steps').forEach(st=>{
+    const btn=st.querySelector('.stepbtn'), steps=[...st.querySelectorAll('.step')];
+    if(!btn)return;
+    btn.addEventListener('click',()=>{
+      const next=steps.find(s=>!s.classList.contains('show'));
+      if(next){ next.classList.add('show');
+        if(steps.every(s=>s.classList.contains('show'))){ btn.textContent='✓ Selesai — kamu paham!'; btn.disabled=true; } }
+    });
+  });
+});
+
+safe('Model luas (Identitas 1 & 2)',()=>{
+  function buildSquareModel(rootId,mode){
+    const root=document.getElementById(rootId); if(!root)return;
+    root.innerHTML=`<div class="am-controls">
+      <label>a <input type="range" class="ra" min="2" max="8" value="5"> <b class="va">5</b></label>
+      <label>b <input type="range" class="rb" min="1" max="7" value="3"> <b class="vb">3</b></label></div>
+      <div class="am-stage"><div class="am-square"></div></div><div class="am-eq"></div>`;
+    const ra=root.querySelector('.ra'), rb=root.querySelector('.rb'),
+          sq=root.querySelector('.am-square'), eq=root.querySelector('.am-eq');
+    const K=26;
+    function render(){
+      const a=+ra.value; rb.max=mode==='min'?a-1:7;
+      let b=+rb.value; if(b>+rb.max){ b=+rb.max; rb.value=b; }
+      root.querySelector('.va').textContent=a; root.querySelector('.vb').textContent=b;
+      sq.style.width=sq.style.height=((a+b)*K)+'px';
+      sq.innerHTML='';
+      let pieces;
+      if(mode==='sum'){
+        const m=a*K;
+        pieces=[{x:0,y:0,w:a,h:a,c:'c1',t:'a² = '+(a*a)},{x:m,y:0,w:b,h:a,c:'c2',t:'ab = '+(a*b)},
+                {x:0,y:m,w:a,h:b,c:'c2',t:'ab = '+(a*b)},{x:m,y:m,w:b,h:b,c:'c3',t:'b² = '+(b*b)}];
+        eq.innerHTML='(a+b)² = '+(a+b)+'² = <span class="f1">'+(a*a)+'</span> + <span class="f2">'+(2*a*b)+'</span> + <span class="f3">'+(b*b)+'</span> = '+((a+b)**2);
+      }else{
+        const m=a-b, mk=m*K;
+        pieces=[{x:0,y:0,w:m,h:m,c:'c3',hl:1,t:'(a−b)² = '+(m*m)},{x:mk,y:0,w:b,h:m,c:'c1',t:'buang '+(b*m)},
+                {x:0,y:mk,w:m,h:b,c:'c1',t:'buang '+(m*b)},{x:mk,y:mk,w:b,h:b,c:'c2',t:'b² = '+(b*b)}];
+        eq.innerHTML='(a−b)² = '+a+'² − 2·'+a+'·'+b+' + '+b+'² = <span class="f1">'+(a*a)+'</span> − <span class="f2">'+(2*a*b)+'</span> + <span class="f3">'+(b*b)+'</span> = '+((a-b)**2);
+      }
+      pieces.forEach(p=>{
+        const d=document.createElement('div');
+        d.className='am-piece '+p.c+(p.hl?' hl':'');
+        d.style.cssText='left:'+p.x+'px;top:'+p.y+'px;width:'+(p.w*K)+'px;height:'+(p.h*K)+'px';
+        d.innerHTML='<span>'+p.t+'</span>'; sq.appendChild(d);
+      });
+    }
+    ra.addEventListener('input',render); rb.addEventListener('input',render); render();
+  }
+  buildSquareModel('model1','sum');
+  buildSquareModel('model2','min');
+});
+
+safe('Model susun-ulang (Identitas 3)',()=>{
+  const K=44, a=5, b=2, m=a-b, box=$('#morph');
+  if(!box)return;
+  const P=[
+   {cls:'mpiece c3',s1:[0,b*K,a*K,m*K],s2:[0,0,a*K,m*K],t:'a(a−b) = 15'},
+   {cls:'mpiece c2',s1:[0,0,m*K,b*K],s2:[a*K,0,b*K,m*K],t:'(a−b)·b = 6'},
+   {cls:'mpiece c1',s1:[m*K,0,b*K,b*K],s2:null,t:'b² = 4'}
+  ];
+  P.forEach(p=>{
+    const d=document.createElement('div'); d.className=p.cls; d.textContent=p.t;
+    d.style.cssText='left:'+p.s1[0]+'px;top:'+p.s1[1]+'px;width:'+p.s1[2]+'px;height:'+p.s1[3]+'px;transition:all .9s cubic-bezier(.5,1.4,.4,1)';
+    d.dataset.s1=JSON.stringify(p.s1); d.dataset.s2=p.s2?JSON.stringify(p.s2):'';
+    box.appendChild(d);
+  });
+  let morphed=false;
+  $('#morphbtn').addEventListener('click',()=>{
+    morphed=!morphed;
+    [...box.children].forEach(d=>{
+      const tgt=(morphed&&d.dataset.s2)?JSON.parse(d.dataset.s2):JSON.parse(d.dataset.s1);
+      d.style.left=tgt[0]+'px'; d.style.top=tgt[1]+'px'; d.style.width=tgt[2]+'px'; d.style.height=tgt[3]+'px';
+      d.style.opacity=(morphed&&!d.dataset.s2)?0:1;
+    });
+    $('#morphcap').textContent=morphed
+      ?'✨ Disusun ulang menjadi persegi panjang (a+b)×(a−b) = 7 × 3 = 21. Luasnya sama dengan 25 − 4 = 21! Maka a² − b² = (a+b)(a−b).'
+      :'a² − b²: persegi besar (sisi a = 5) dikurangi persegi kecil (sisi b = 2). Bentuk huruf L, luas 25 − 4 = 21. Tekan tombol untuk menyusun ulang!';
+  });
+});
+
+safe('Mesin kuadrat kilat',()=>{
+  const nEl=$('#mentalN'), out=$('#mentalOut'), val=$('#mentalVal');
+  if(!nEl)return;
+  function upd(){
+    const n=+nEl.value; val.textContent=n;
+    const d=Math.abs(n-100);
+    if(n===100){ out.textContent='100² = 100. Basisnya memang 100!'; return; }
+    if(n>100) out.innerHTML=n+'² = (100 + '+d+')² = 10000 + 2·100·'+d+' + '+(d*d)+' = <b>'+(n*n).toLocaleString('id-ID')+'</b>';
+    else out.innerHTML=n+'² = (100 − '+d+')² = 10000 − 2·100·'+d+' + '+(d*d)+' = <b>'+(n*n).toLocaleString('id-ID')+'</b>';
+  }
+  nEl.addEventListener('input',upd);
+  $$('.preset').forEach(btn=>btn.addEventListener('click',()=>{ nEl.value=btn.dataset.n; upd(); }));
+  upd();
+});
+
+safe('Refleksi',()=>{
+  let starN=0;
+  const caps=['Masih biasa saja...','Lumayan!','Seru!','Sangat seru!','KELAS TERBAIK EVER! 🎉'];
+  $$('#stars button').forEach((b,i)=>b.addEventListener('click',()=>{
+    starN=i+1;
+    $$('#stars button').forEach((x,k)=>x.classList.toggle('on',k<starN));
+    $('#starcap').textContent=caps[starN-1];
+  }));
+  const moods=['🙂','🤔','😅'];
+  $$('.mood').forEach(m=>{
+    let idx=0;
+    m.addEventListener('click',()=>{ idx=(idx+1)%3; m.textContent=m.textContent.replace(/🙂|🤔|😅/,moods[idx]); });
+  });
+  $('#refsave').addEventListener('click',()=>{
+    store.set('identitas8-refleksi',JSON.stringify({bintang:starN,ref1:$('#ref1').value,ref2:$('#ref2').value}));
+    toast('💾 Refleksimu tersimpan. Terima kasih sudah jujur!');
+  });
+});
+
+safe('Konfeti',()=>{
+  const em=['🎉','✨','🌟','➗','✖️','➕','🏆','🎈'];
+  const box=$('#confetti');
+  for(let i=0;i<26;i++){
+    const s=document.createElement('span'); s.textContent=em[i%em.length];
+    s.style.left=Math.random()*100+'%';
+    s.style.animationDuration=(3.5+Math.random()*4)+'s';
+    s.style.animationDelay=(Math.random()*4)+'s';
+    s.style.fontSize=(16+Math.random()*18)+'px';
+    box.appendChild(s);
+  }
+});
+</script>
+</body>
+</html>
