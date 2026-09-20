@@ -1,0 +1,1457 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bab 4.2 — Faktorisasi dengan Identitas Aljabar Istimewa | Matematika Kelas 8</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b1220; --slide-bg:#f7f9ff; --ink:#1e293b; --muted:#64748b;
+  --brand:#4f46e5; --line:#e2e8f0; --card:#fff;
+  --green:#16a34a; --green-soft:#dcfce7;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--ink);overflow:hidden}
+button{font-family:inherit}
+
+/* ---------- Kerangka slide ---------- */
+#deck{position:fixed;inset:0}
+.slide{position:absolute;inset:0;background:var(--slide-bg);padding:78px 26px 96px;overflow-y:auto;
+  opacity:0;visibility:hidden;transform:translateY(26px) scale(.985);
+  transition:opacity .45s ease,transform .45s ease,visibility .45s}
+.slide.active{opacity:1;visibility:visible;transform:none;z-index:2}
+.wrap{max-width:1060px;margin:0 auto}
+.soft{background:linear-gradient(180deg,#eef2ff,#f7f9ff)}
+
+#top{position:fixed;top:0;left:0;right:0;height:56px;z-index:60;background:rgba(11,18,32,.94);
+  backdrop-filter:blur(8px);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 16px}
+#top .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:.9rem}
+#top .bx{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#14b8a6,#6366f1);
+  display:grid;place-items:center;font-size:.8rem;font-weight:800}
+#top .lvl8{font-size:.72rem;background:#1e293b;border:1px solid #334155;padding:4px 10px;border-radius:999px;color:#94a3b8}
+#bar{position:fixed;top:56px;left:0;height:4px;width:0;z-index:60;
+  background:linear-gradient(90deg,#34d399,#60a5fa,#a78bfa);transition:width .4s}
+
+#ctrl{position:fixed;bottom:14px;right:14px;z-index:60;display:flex;gap:8px;align-items:center;
+  background:rgba(15,23,42,.92);color:#fff;padding:8px 12px;border-radius:999px;backdrop-filter:blur(6px);
+  box-shadow:0 8px 24px rgba(0,0,0,.35)}
+#ctrl button{width:38px;height:38px;border-radius:50%;border:none;background:#1e293b;color:#fff;
+  font-size:1rem;cursor:pointer;transition:.2s}
+#ctrl button:hover{background:var(--brand)}
+#ctrl #ctr{font-size:.82rem;font-weight:700;min-width:70px;text-align:center;color:#cbd5e1}
+#ctrl #menuBtn{width:auto;border-radius:999px;padding:0 14px;font-size:.8rem;font-weight:700}
+
+#menuOv{position:fixed;inset:0;background:rgba(2,6,23,.55);backdrop-filter:blur(3px);display:none;z-index:80}
+#menuOv.show{display:block}
+.mpanel{position:absolute;top:0;right:0;bottom:0;width:min(340px,88vw);background:#0f172a;color:#e2e8f0;
+  padding:16px;overflow-y:auto;border-left:1px solid #1e293b}
+.mpanel h3{font-size:1rem;margin-bottom:6px}
+.mpanel .hint{font-size:.72rem;color:#64748b;margin-bottom:10px}
+.mi{display:flex;gap:10px;width:100%;text-align:left;background:transparent;border:none;color:#cbd5e1;
+  padding:8px 10px;border-radius:10px;cursor:pointer;font-size:.86rem;transition:.15s}
+.mi:hover{background:#1e293b}
+.mi.on{background:#312e81;color:#fff;font-weight:700}
+.mi b{color:#818cf8;min-width:26px;font-weight:800}
+.mclose{margin-top:8px;width:100%;padding:9px;border-radius:10px;border:1px solid #334155;background:transparent;color:#94a3b8;cursor:pointer}
+
+/* ---------- Umum ---------- */
+.mm{font-family:Georgia,'Cambria','Times New Roman',serif}
+.mm i{font-family:Georgia,serif}
+.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;line-height:1.1;margin:0 2px;font-size:.85em}
+.fr .t{display:block;border-bottom:1.4px solid currentColor;padding:0 4px}
+.fr .b{display:block;padding:0 4px}
+.s-head{margin-bottom:14px}
+.tag{display:inline-block;font-size:.68rem;font-weight:800;letter-spacing:1.6px;padding:5px 12px;border-radius:999px;margin-bottom:8px}
+.tag.rev{background:#e0e7ff;color:#4338ca}.tag.tj{background:#dcfce7;color:#15803d}
+.tag.mt{background:#cffafe;color:#0e7490}.tag.lc{background:#fef9c3;color:#a16207}
+.tag.lt{background:#fae8ff;color:#a21caf}
+h2{font-size:clamp(1.35rem,3vw,1.9rem);color:#0f172a;line-height:1.25}
+.s-head p{color:var(--muted);margin-top:6px;max-width:75ch;line-height:1.55;font-size:.95rem}
+.box{border-radius:14px;padding:12px 16px;margin:10px 0;font-size:.93rem;line-height:1.6}
+.warn{background:#fff7ed;border:1.5px solid #fdba74;color:#7c2d12}
+.tip{background:#f0fdfa;border:1.5px solid #5eead4;color:#115e59}
+.att{background:#fff1f2;border:1.5px solid #fda4af;color:#881337}
+.info{background:#eef2ff;border:1.5px solid #c7d2fe;color:#3730a3}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.mini{font-size:.82rem;color:var(--muted)}
+
+/* ---------- Cover ---------- */
+.cover{background:radial-gradient(1100px 560px at 82% -10%,rgba(124,58,237,.38),transparent 60%),
+  radial-gradient(900px 520px at -8% 108%,rgba(20,184,166,.30),transparent 55%),
+  linear-gradient(135deg,#0b1220,#1e1b4b 60%,#312e81);color:#fff;display:flex;align-items:center}
+.cover .wrap{text-align:center;position:relative;z-index:2}
+.kicker{display:inline-block;font-size:.72rem;letter-spacing:2.5px;font-weight:800;color:#a5b4fc;
+  border:1px solid rgba(165,180,252,.4);padding:8px 16px;border-radius:999px;margin-bottom:18px}
+.cover h1{font-size:clamp(1.9rem,5.2vw,3.3rem);line-height:1.15;font-weight:800}
+.cover h1 .grad{background:linear-gradient(90deg,#5eead4,#a5b4fc,#f0abfc);-webkit-background-clip:text;background-clip:text;color:transparent}
+.cover .sub{margin-top:14px;color:#c7d2fe;font-size:clamp(.95rem,2vw,1.1rem)}
+.chips{margin-top:18px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.chips span{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:999px;
+  padding:7px 14px;font-size:.8rem;font-weight:600;color:#e0e7ff}
+.cta{margin-top:26px;background:linear-gradient(90deg,#14b8a6,#6366f1);border:none;color:#fff;font-weight:800;
+  padding:14px 30px;border-radius:999px;font-size:1.02rem;cursor:pointer;box-shadow:0 10px 30px rgba(20,184,166,.35);transition:.2s}
+.cta:hover{transform:translateY(-2px)}
+.fl{position:absolute;color:#fff;opacity:.09;font-weight:700;user-select:none;pointer-events:none;
+  animation:fl 9s ease-in-out infinite alternate;font-family:Georgia,serif}
+@keyframes fl{from{transform:translateY(-14px) rotate(-4deg)}to{transform:translateY(16px) rotate(5deg)}}
+.hintnav{margin-top:20px;font-size:.75rem;color:#818cf8}
+
+/* ---------- Kartu flip ---------- */
+.flipgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px}
+.flip-card{perspective:1100px;cursor:pointer;min-height:210px}
+.flip-in{position:relative;width:100%;height:100%;min-height:210px;transition:transform .6s;transform-style:preserve-3d}
+.flip-card.flipped .flip-in{transform:rotateY(180deg)}
+.ff,.fb2{position:absolute;inset:0;backface-visibility:hidden;border-radius:18px;padding:18px;
+  display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:8px}
+.ff.i1,.fb2.i1{background:linear-gradient(135deg,#0d9488,#14b8a6);color:#fff}
+.ff.i2,.fb2.i2{background:linear-gradient(135deg,#d97706,#f59e0b);color:#fff}
+.ff.i3,.fb2.i3{background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff}
+.ff .nm{font-size:.68rem;letter-spacing:2px;font-weight:800;opacity:.9}
+.ff .fmm{font-size:clamp(1rem,2.4vw,1.3rem);font-weight:700}
+.ff .hc{font-size:.72rem;opacity:.85;margin-top:6px}
+.fb2{transform:rotateY(180deg)}
+.fb2 .ex{background:rgba(255,255,255,.16);border-radius:12px;padding:8px 12px;font-size:.98rem;font-weight:700}
+.fb2 p{font-size:.78rem;line-height:1.45}
+
+/* ---------- Lab interaktif ---------- */
+.lab{background:#fff;border:1.5px solid var(--line);border-radius:18px;padding:16px;box-shadow:0 4px 18px rgba(15,23,42,.06)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.tab{border:1.5px solid #cbd5e1;background:#f8fafc;border-radius:999px;padding:8px 14px;font-weight:700;font-size:.85rem;cursor:pointer;transition:.2s}
+.tab.on{color:#fff;border-color:transparent}
+.tab.on.t1{background:linear-gradient(135deg,#0d9488,#14b8a6)}
+.tab.on.t2{background:linear-gradient(135deg,#d97706,#f59e0b)}
+.tab.on.t3{background:linear-gradient(135deg,#7c3aed,#a78bfa)}
+.slrow{display:flex;gap:18px;flex-wrap:wrap;align-items:center;margin:8px 0 12px}
+.sld{flex:1;min-width:180px}
+.sld label{font-size:.8rem;font-weight:700;color:var(--muted);display:flex;justify-content:space-between}
+.sld label b{color:var(--brand);font-size:1rem}
+input[type=range]{width:100%;accent-color:var(--brand);margin-top:4px}
+#eqOut{background:#0f172a;color:#e2e8f0;border-radius:14px;padding:14px 16px;font-size:1.05rem;line-height:1.7;font-family:Georgia,serif}
+#eqOut .cok{color:#6ee7b7}
+#eqChk{margin-top:10px;font-size:.88rem;line-height:1.55}
+.am-t{font-size:.8rem;font-weight:800;color:var(--muted);text-align:center;margin-top:4px}
+.am{display:grid;gap:4px;margin:10px auto;width:max-content;max-width:100%}
+.amc{border-radius:6px;display:grid;place-items:center;font-size:.72rem;font-weight:700;color:#334155;overflow:hidden;white-space:nowrap}
+.am-a2{background:#99f6e4}.am-ab{background:#fde68a}.am-b2{background:#ddd6fe}
+.minicards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.minicards .mc{background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:12px;text-align:center;font-size:.95rem}
+.dirchips{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.dirchips span{border-radius:999px;padding:7px 14px;font-size:.8rem;font-weight:700}
+.dirchips .d1{background:#dcfce7;color:#166534}.dirchips .d2{background:#fae8ff;color:#86198f}
+
+/* ---------- Tujuan ---------- */
+.goals{display:grid;gap:10px;margin-top:14px}
+.goal{display:flex;gap:12px;align-items:center;background:#fff;border:1.5px solid var(--line);
+  border-radius:14px;padding:12px 16px;cursor:pointer;transition:.2s;user-select:none;font-size:.95rem}
+.goal:hover{border-color:#a5b4fc}
+.goal .chk{width:26px;height:26px;border-radius:8px;border:2px solid #cbd5e1;display:grid;place-items:center;
+  font-weight:900;color:#fff;flex-shrink:0}
+.goal.done{border-color:#22c55e;background:var(--green-soft)}
+.goal.done .chk{background:#22c55e;border-color:#22c55e}
+.goal.done .chk::after{content:'✓'}
+#goalCount{margin-top:12px;display:inline-block;background:#0f172a;color:#6ee7b7;font-weight:800;
+  font-size:.82rem;padding:8px 16px;border-radius:999px}
+
+/* ---------- Konsep ---------- */
+.demo{background:#fff;border:1.5px solid var(--line);border-radius:18px;padding:16px;text-align:center}
+.dbtns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:12px}
+.dbtn{border:1.5px solid #cbd5e1;background:#f8fafc;border-radius:999px;padding:8px 16px;font-weight:700;font-size:.85rem;cursor:pointer}
+.dbtn.on{background:var(--brand);border-color:var(--brand);color:#fff}
+#dLine{font-size:clamp(1.1rem,2.6vw,1.5rem);font-weight:700;font-family:Georgia,serif}
+#dLine .arr{color:var(--brand);margin:0 10px}
+#dLine .long{background:#fff1f2;padding:4px 12px;border-radius:10px;border:1.5px dashed #fda4af}
+#dLine .short{background:var(--green-soft);padding:4px 12px;border-radius:10px;border:1.5px solid #6ee7b7}
+#dCap{margin-top:10px;font-size:.88rem;color:var(--muted)}
+.eqrow{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;background:#fff;
+  border:1.5px solid var(--line);border-radius:14px;padding:10px 14px;font-size:.98rem}
+.eqrow .pill{border-radius:10px;padding:5px 10px;font-family:Georgia,serif}
+.p1{background:#f0fdfa;border:1px solid #5eead4}.p2{background:#fffbeb;border:1px solid #fcd34d}.p3{background:#f5f3ff;border:1px solid #c4b5fd}
+.resep{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}
+.resep .rp{background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:12px;font-size:.85rem;line-height:1.5}
+.rp b.n{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--brand);color:#fff;margin-bottom:6px}
+
+/* ---------- Materi & contoh ---------- */
+.fx{border-radius:16px;padding:14px 20px;font-size:clamp(1.05rem,2.6vw,1.4rem);font-weight:700;display:inline-block;font-family:Georgia,serif}
+.fx1{background:linear-gradient(135deg,#0d9488,#14b8a6);color:#fff}
+.fx2{background:linear-gradient(135deg,#d97706,#f59e0b);color:#fff}
+.fx3{background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff}
+.ciri{margin:10px 0 4px 20px;line-height:1.7;font-size:.93rem}
+.anat{display:flex;gap:16px;justify-content:center;align-items:flex-start;flex-wrap:wrap;margin:12px 0}
+.anat .t{display:flex;flex-direction:column;align-items:center;gap:4px;font-family:Georgia,serif;font-weight:700}
+.anat .lb{font-size:.66rem;color:var(--muted);font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;max-width:130px;text-align:center}
+.we{background:#fff;border:1.5px solid var(--line);border-radius:16px;padding:14px 16px;margin-top:14px}
+.we-badge{display:inline-block;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;font-weight:800;
+  padding:4px 12px;border-radius:10px;font-size:.78rem;margin-bottom:4px}
+.we-t{font-weight:700;font-size:.95rem;color:#0f172a}
+.we-q{font-weight:700;margin:10px 0 2px;font-family:Georgia,serif;font-size:1.02rem}
+.steps{margin:8px 0 4px 22px}
+.steps li{display:none;margin:6px 0;line-height:1.6;font-size:.93rem;animation:pop .35s ease}
+.steps li.on{display:list-item}
+.steps li.fin{color:#14532d;font-weight:800;background:var(--green-soft);border:1px solid #86efac;
+  border-radius:10px;padding:8px 12px;list-style:none;margin-left:-14px}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1}}
+.stepbtn{border:1.5px solid var(--brand);color:var(--brand);background:#fff;border-radius:999px;
+  padding:7px 16px;font-weight:700;font-size:.82rem;cursor:pointer;transition:.2s;margin-top:4px}
+.stepbtn:hover{background:var(--brand);color:#fff}
+.stagechips{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}
+.stagechips .st{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:10px;text-align:center;font-size:.78rem;line-height:1.4}
+.stagechips .st b{display:block;font-size:1.05rem;margin-bottom:2px}
+
+/* ---------- Kuis cepat ---------- */
+.mcq{background:#fff;border:1.5px solid var(--line);border-radius:16px;padding:14px 16px;margin-top:12px}
+.mq{font-weight:700;font-size:.97rem}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px;margin-top:10px}
+.opt{border:1.5px solid #cbd5e1;background:#f8fafc;border-radius:12px;padding:10px 12px;font-size:.95rem;
+  cursor:pointer;transition:.2s;text-align:left;font-family:Georgia,serif}
+.opt:hover{border-color:var(--brand);background:#eef2ff}
+.opt.correct{background:var(--green-soft);border-color:#22c55e;color:#14532d;font-weight:700}
+.opt.wrong{animation:shake .4s;background:#ffe4e6;border-color:#f43f5e}
+.opts.lock .opt{cursor:default;opacity:.65}
+.opts.lock .opt.correct{opacity:1}
+.fb{margin-top:10px;font-size:.88rem;border-radius:10px;padding:8px 12px;display:none;line-height:1.5}
+.fb.ok{display:block;background:var(--green-soft);color:#14532d}
+.fb.no{display:block;background:#fff1f2;color:#881337}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+
+/* ---------- Latihan ---------- */
+.lvl{padding:5px 14px;border-radius:999px;font-weight:800;font-size:.72rem;letter-spacing:1px}
+.lvl.b{background:var(--green-soft);color:#166534}.lvl.m{background:#fef3c7;color:#92400e}.lvl.a{background:#ffe4e6;color:#9f1239}
+.howto{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 4px}
+.howto span{background:#eef2ff;border:1px solid #c7d2fe;color:#3730a3;border-radius:999px;padding:6px 12px;font-size:.76rem;font-weight:700}
+.qgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px;margin-top:12px}
+.qcard{background:#fff;border:1.5px solid var(--line);border-radius:16px;padding:13px 15px;box-shadow:0 2px 10px rgba(15,23,42,.05)}
+.qhead{display:flex;gap:10px;align-items:flex-start}
+.qnum{min-width:34px;padding:3px 7px;border-radius:9px;background:var(--brand);color:#fff;display:grid;
+  place-items:center;font-weight:800;font-size:.78rem;margin-top:2px}
+.qtext{font-size:1rem;line-height:1.55}
+.qtext .lbl{font-family:'Plus Jakarta Sans',sans-serif;font-size:.8rem;color:var(--muted);font-weight:700}
+.pbtn{margin-top:10px;border:1.5px solid var(--brand);color:var(--brand);background:#fff;border-radius:999px;
+  padding:6px 14px;font-weight:700;font-size:.8rem;cursor:pointer;transition:.2s}
+.pbtn:hover{background:var(--brand);color:#fff}
+.solwrap{display:grid;grid-template-rows:0fr;transition:grid-template-rows .4s ease}
+.solwrap.open{grid-template-rows:1fr}
+.sol{overflow:hidden;min-height:0}
+.solwrap.open .sol{padding-top:10px}
+.sol ol{margin-left:20px}
+.sol li{margin:5px 0;line-height:1.6;font-size:.9rem;animation:pop .3s ease}
+.ans{display:inline-block;background:var(--green-soft);color:#14532d;border:1.5px solid #86efac;
+  padding:5px 14px;border-radius:999px;font-weight:800;font-size:.92rem;margin-top:6px;font-family:Georgia,serif}
+.ans.na{background:#f1f5f9;color:#475569;border-color:#cbd5e1}
+
+/* ---------- Refleksi & penutup ---------- */
+.moods{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.mood{border:1.5px solid #cbd5e1;background:#fff;border-radius:999px;padding:9px 16px;font-weight:700;
+  font-size:.88rem;cursor:pointer;transition:.2s}
+.mood.sel{background:#4f46e5;border-color:#4f46e5;color:#fff;transform:scale(1.04)}
+textarea{width:100%;min-height:84px;border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;
+  font-family:inherit;font-size:.92rem;resize:vertical;margin-top:8px;background:#fff}
+textarea:focus{outline:2px solid #a5b4fc}
+.sumgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}
+.sumcard{border-radius:16px;padding:14px;color:#fff;font-family:Georgia,serif}
+.sumcard h4{font-family:'Plus Jakarta Sans',sans-serif;font-size:.7rem;letter-spacing:1.5px;opacity:.9;margin-bottom:6px}
+.sumcard .f{font-weight:700;font-size:1.02rem;line-height:1.5}
+.sumcard .e{font-family:'Plus Jakarta Sans',sans-serif;font-size:.78rem;margin-top:8px;opacity:.92;line-height:1.45}
+.kunci{counter-reset:k;margin-top:12px;display:grid;gap:8px}
+.kunci div{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:10px 14px;font-size:.9rem;line-height:1.5;counter-increment:k}
+.kunci div::before{content:counter(k);display:inline-grid;place-items:center;width:24px;height:24px;
+  border-radius:50%;background:#0f172a;color:#6ee7b7;font-weight:800;font-size:.8rem;margin-right:10px}
+
+@media (max-width:820px){
+  .flipgrid,.minicards,.resep,.stagechips,.sumgrid{grid-template-columns:1fr 1fr}
+  .two{grid-template-columns:1fr}
+}
+@media (max-width:560px){
+  .flipgrid,.minicards,.resep,.stagechips,.sumgrid{grid-template-columns:1fr}
+  .slide{padding:70px 14px 92px}
+}
+</style>
+</head>
+<body>
+
+<header id="top">
+  <div class="brand"><span class="bx">x²</span> Bab 4.2 · Faktorisasi Identitas Aljabar Istimewa</div>
+  <div class="lvl8">Cambridge · Kelas 8</div>
+</header>
+<div id="bar"></div>
+
+<main id="deck">
+
+<!-- ============ 1. COVER ============ -->
+<section class="slide cover active" data-title="Cover">
+  <span class="fl" style="top:12%;left:8%;font-size:1.6rem">(a + b)²</span>
+  <span class="fl" style="top:22%;right:10%;font-size:1.4rem;animation-delay:1.2s">a² − b²</span>
+  <span class="fl" style="bottom:24%;left:12%;font-size:1.5rem;animation-delay:.6s">x² + 6x + 9</span>
+  <span class="fl" style="bottom:14%;right:16%;font-size:1.3rem;animation-delay:1.8s">(x − 3)²</span>
+  <span class="fl" style="top:52%;left:3%;font-size:1.2rem;animation-delay:2.4s">2ab</span>
+  <span class="fl" style="top:60%;right:4%;font-size:1.2rem;animation-delay:.9s">4b² + 4b + 1</span>
+  <div class="wrap">
+    <div class="kicker">CAMBRIDGE LOWER SECONDARY · MATEMATIKA KELAS 8 · BAB 4.2</div>
+    <h1>Faktorisasi dengan<br><span class="grad">Identitas Aljabar Istimewa</span></h1>
+    <p class="sub">Factorisation using Special Algebraic Identities — membaca ulang ekspansi dari arah sebaliknya!</p>
+    <div class="chips"><span>3 identitas</span><span>Lab interaktif</span><span>Exercise 4B + pembahasan langkah demi langkah</span></div>
+    <button class="cta" id="startBtn">Mulai Belajar →</button>
+    <p class="hintnav">Gunakan tombol ← → , klik navigasi di bawah, atau geser layar untuk berpindah slide</p>
+  </div>
+</section>
+
+<!-- ============ 2. REVIU: 3 IDENTITAS ============ -->
+<section class="slide" data-title="Reviu: 3 Identitas">
+  <div class="wrap">
+    <div class="s-head">
+      <span class="tag rev">REVIU MATERI LALU</span>
+      <h2>Tiga Identitas Aljabar Istimewa</h2>
+      <p>Pada pertemuan sebelumnya, kita menggunakan tiga identitas ini untuk <b>mengembangkan (expand)</b> bentuk aljabar.
+      Ingat: <b>identitas</b> adalah kesamaan yang berlaku untuk <i>semua</i> nilai variabelnya. <b>Klik setiap kartu</b> untuk melihat contohnya!</p>
+    </div>
+    <div class="flipgrid">
+      <div class="flip-card"><div class="flip-in">
+        <div class="ff i1"><div class="nm">IDENTITAS 1</div><div class="fmm">(a + b)² = a² + 2ab + b²</div><div class="hc">Kuadrat Sama Jumlah · klik ↻</div></div>
+        <div class="fb2 i1"><b>Contoh:</b><div class="ex">(x + 3)² = x² + 6x + 9</div><p>Suku tengah = 2 × x × 3 = 6x</p></div>
+      </div></div>
+      <div class="flip-card"><div class="flip-in">
+        <div class="ff i2"><div class="nm">IDENTITAS 2</div><div class="fmm">(a − b)² = a² − 2ab + b²</div><div class="hc">Kuadrat Selisih · klik ↻</div></div>
+        <div class="fb2 i2"><b>Contoh:</b><div class="ex">(x − 5)² = x² − 10x + 25</div><p>Suku tengah = −2 × x × 5 = −10x</p></div>
+      </div></div>
+      <div class="flip-card"><div class="flip-in">
+        <div class="ff i3"><div class="nm">IDENTITAS 3</div><div class="fmm">a² − b² = (a + b)(a − b)</div><div class="hc">Selisih Dua Kuadrat · klik ↻</div></div>
+        <div class="fb2 i3"><b>Contoh:</b><div class="ex">x² − 9 = (x + 3)(x − 3)</div><p>Hanya 2 suku, tanpa suku tengah!</p></div>
+      </div></div>
+    </div>
+    <div class="warn box">⚠️ <b>Awas keliru!</b> (a + b)² ≠ a² + b². Bukti cepat: (3 + 4)² = 49, tetapi 3² + 4² = 9 + 16 = 25. Suku tengah <b>2ab</b> tidak boleh hilang!</div>
+    <p class="mini">Penggunaan identitas (ekspansi): (2x + 3)² = 4x² + 12x + 9 &nbsp;·&nbsp; (3x − 1)² = 9x² − 6x + 1 &nbsp;·&nbsp; (x + 4)(x − 4) = x² − 16. Hari ini kita akan menempuh <b>jalan pulangnya</b>: dari bentuk panjang kembali ke bentuk faktor.</p>
+  </div>
+</section>
+
+<!-- ============ 3. LAB INTERAKTIF ============ -->
+<section class="slide" data-title="Reviu: Lab Interaktif">
+  <div class="wrap">
+    <div class="s-head">
+      <span class="tag rev">REVIU · INTERAKTIF</span>
+      <h2>Buktikan Sendiri: Identitas Berlaku untuk Semua Angka</h2>
+      <p>Pilih identitas, geser slider <b>a</b> dan <b>b</b>, lalu perhatikan perhitungannya. Model luas di sebelah kanan membantumu <i>melihat</i> dari mana suku tengah 2ab berasal.</p>
+    </div>
+    <div class="two">
+      <div class="lab">
+        <div class="tabs">
+          <button class="tab t1 on" data-i="1">(a + b)²</button>
+          <button class="tab t2" data-i="2">(a − b)²</button>
+          <button class="tab t3" data-i="3">a² − b²</button>
+        </div>
+        <div class="slrow">
+          <div class="sld"><label>Nilai a <b id="sav">3</b></label><input type="range" id="sa" min="1" max="9" value="3"></div>
+          <div class="sld"><label>Nilai b <b id="sbv">2</b></label><input type="range" id="sb" min="1" max="9" value="2"></div>
+        </div>
+        <div id="eqOut"></div>
+        <div id="eqChk"></div>
+      </div>
+      <div class="lab" style="text-align:center">
+        <div id="amWrap">
+          <div class="am-t">MODEL LUAS untuk (a + b)² — satu persegi besar terbagi 4 bagian</div>
+          <div class="am" id="am">
+            <div class="amc am-a2" id="cA2"></div><div class="amc am-ab" id="cAB1"></div>
+            <div class="amc am-ab" id="cAB2"></div><div class="amc am-b2" id="cB2"></div>
+          </div>
+          <p class="mini" style="text-align:left">Luas persegi besar = (a + b)². Diuraikan menjadi: persegi a² , dua persegi panjang ab, dan persegi b². Itulah asal-usul <b>a² + 2ab + b²</b>.</p>
+        </div>
+        <div id="amAlt" style="display:none;text-align:left">
+          <div class="tip box" id="amAltTxt"></div>
+        </div>
+      </div>
+    </div>
+    <div class="dirchips"><span class="d1">→ ekspansi : (a + b)² menjadi a² + 2ab + b²</span><span class="d2">← faktorisasi : a² + 2ab + b² menjadi (a + b)² · <b>Inilah materi kita!</b></span></div>
+  </div>
+</section>
+
+<!-- ============ 4. TUJUAN ============ -->
+<section class="slide" data-title="Tujuan Pembelajaran">
+  <div class="wrap">
+    <div class="s-head">
+      <span class="tag tj">TUJUAN PEMBELAJARAN</span>
+      <h2>Hari Ini Kita Akan…</h2>
+      <p>Klik setiap tujuan untuk mencentangnya. Cek ulang di akhir pelajaran: sudah berapa yang kamu kuasai?</p>
+    </div>
+    <div class="goals">
+      <div class="goal"><span class="chk"></span>📝 Menjelaskan bahwa <b>faktorisasi adalah kebalikan (invers) dari ekspansi</b> dan menyebutkan ketiga identitas aljabar istimewa.</div>
+      <div class="goal"><span class="chk"></span>🟢 Memfaktorkan bentuk <b class="mm">a² + 2ab + b² = (a + b)²</b> (kuadrat sama jumlah).</div>
+      <div class="goal"><span class="chk"></span>🟠 Memfaktorkan bentuk <b class="mm">a² − 2ab + b² = (a − b)²</b> (kuadrat selisih), termasuk setelah mengeluarkan FPB.</div>
+      <div class="goal"><span class="chk"></span>🟣 Memfaktorkan <b class="mm">selisih dua kuadrat a² − b² = (a + b)(a − b)</b>, termasuk bentuk yang melibatkan pecahan dan pangkat tinggi.</div>
+      <div class="goal"><span class="chk"></span>⚡ Menghitung selisih dua kuadrat bilangan <b>tanpa kalkulator</b> dan memecahkan masalah kontekstual (misal luas & volume kubus).</div>
+      <div class="goal"><span class="chk"></span>🧭 Menentukan kapan identitas <b>tidak dapat digunakan (N.A.)</b> dan menyelesaikan masalah dengan <b>Model Pemecahan Masalah Polya</b>.</div>
+    </div>
+    <span id="goalCount">0 / 6 tercapai</span>
+  </div>
+</section>
+
+<!-- ============ 5. KONSEP KUNCI ============ -->
+<section class="slide" data-title="Konsep: Ekspansi ⇄ Faktorisasi">
+  <div class="wrap">
+    <div class="s-head">
+      <span class="tag mt">KONSEP KUNCI · BAB 4.2</span>
+      <h2>Faktorisasi = Ekspansi yang Dibalik</h2>
+      <p>Pada Bab 4.1 kita belajar <b>mengembangkan</b> bentuk aljabar dengan ketiga identitas. Karena faktorisasi adalah <b>kebalikan ekspansi</b>, identitas yang sama kita pakai untuk <b>memfaktorkan</b>. Coba tombol di bawah untuk melihat dua arah tersebut!</p>
+    </div>
+    <div class="demo">
+      <div class="dbtns">
+        <button class="dbtn on" id="dF">Faktorisasi (hari ini)</button>
+        <button class="dbtn" id="dE">Ekspansi (bab lalu)</button>
+      </div>
+      <div id="dLine"></div>
+      <div id="dCap"></div>
+    </div>
+    <div class="two" style="margin-top:14px">
+      <div class="eqrow"><span class="pill p1">a² + 2ab + b²</span> ⇄ <span class="pill p1">(a + b)²</span></div>
+      <div class="eqrow"><span class="pill p2">a² − 2ab + b²</span> ⇄ <span class="pill p2">(a − b)²</span></div>
+    </div>
+    <div class="eqrow" style="margin-top:10px"><span class="pill p3">a² − b²</span> ⇄ <span class="pill p3">(a + b)(a − b)</span></div>
+    <h2 style="font-size:1.15rem;margin-top:18px">🧭 Resep 4 Langkah Memfaktorkan</h2>
+    <div class="resep">
+      <div class="rp"><b class="n">1</b><br><b>Keluarkan FPB</b> — jika semua suku punya faktor persekutuan, keluarkan lebih dulu.</div>
+      <div class="rp"><b class="n">2</b><br><b>Kenali pola</b> — dua ujung kuadrat sempurna? Ada suku tengah 2ab? Atau hanya 2 suku?</div>
+      <div class="rp"><b class="n">3</b><br><b>Tentukan a dan b</b>, lalu tulis faktornya menggunakan identitas yang sesuai.</div>
+      <div class="rp"><b class="n">4</b><br><b>Periksa & lengkapi</b> — cek suku tengah, faktorkan sampai tuntas, uji balik dengan ekspansi.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 6. MATERI 1 + CONTOH 7 ============ -->
+<section class="slide" data-title="Materi 1: a² + 2ab + b²">
+  <div class="wrap">
+    <div class="s-head">
+      <span class="tag mt">MATERI 1 · IDENTITAS 1</span>
+      <h2>Memfaktorkan a² + 2ab + b²</h2>
+      <div style="margin-top:8px"><span class="fx fx1">a² + 2ab + b² = (a + b)²</span></div>
+    </div>
+    <div class="anat mm">
+      <span class="t"><span style="color:#0d9488;font-size:1.25rem">a²</span><span class="lb">kuadrat suku ke-1</span></span>
+      <span class="t"><span style="color:#d97706;font-size:1.25rem">+ 2ab</span><span class="lb">2 × akar suku ke-1 × akar suku ke-3</span></span>
+      <span class="t"><span style="color:#7c3aed;font-size:1.25rem">+ b²</span><span class="lb">kuadrat suku ke-3</span></span>
+    </div>
+    <ul class="ciri">
+      <li>Suku pertama dan ketiga adalah <b>kuadrat sempurna</b>.</li>
+      <li>Suku tengah = <b>2 × a × b</b> — “dua kali akar kedua ujung”.</li>
+      <li>Semua tanda <b>positif (+)</b>.</li>
+    </ul>
+    <div class="warn box">⚠️ Jika suku tengah ≠ 2ab, pola ini <b>tidak berlaku</b> (jawabannya bisa jadi N.A. — not applicable).</div>
+    <div class="we stepsbox">
+      <span class="we-badge">CONTOH 7</span> <span class="we-t">Faktorkan tiap bentuk berikut sampai tuntas.</span>
+      <div class="we-q">(a) x² + 6x + 9</div>
+      <ol class="steps">
+        <li>Cek ujung: <b>x² = (x)²</b> dan <b>9 = 3²</b> → keduanya kuadrat sempurna.</li>
+        <li>Cek tengah: 2 · <i>x</i> · 3 = <b>6x</b> ✓ persis suku tengahnya.</li>
+        <li>Berarti <b>a = x</b> dan <b>b = 3</b>; terapkan a² + 2ab + b² = (a + b)².</li>
+        <li class="fin">x² + 6x + 9 = (x + 3)²</li>
+      </ol>
+      <button class="stepbtn">Tampilkan Langkah ▸</button>
+      <div class="we-q">(b) 16y² + 20y + <span class="fr"><span class="t">25</span><span class="b">4</span></span></div>
+      <ol class="steps">
+        <li>Cek ujung: 16y² = <b>(4y)²</b> dan <span class="mm">25/4 = (5/2)²</span>.</li>
+        <li>Cek tengah: 2 · 4y · <span class="mm">5/2</span> = <b>20y</b> ✓.</li>
+        <li>a = 4y dan b = <span class="mm">5/2</span> → tulis kuadrat binomialnya.</li>
+        <li class="fin">16y² + 20y + <span class="mm">25/4</span> = (4y + <span class="mm">5/2</span>)²</li>
+      </ol>
+      <button class="stepbtn">Tampilkan Langkah ▸</button>
+      <div class="we-q">(c) 4a² + 12ab + 9b²</div>
+      <ol class="steps">
+        <li>Cek ujung: 4a² = <b>(2a)²</b> dan 9b² = <b>(3b)²</b>.</li>
+        <li>Cek tengah: 2 · 2a · 3b = <b>12ab</b> ✓.</li>
+        <li>a = 2a dan b = 3b → (2a + 3b)².</li>
+        <li class="fin">4a² + 12ab + 9b² = (2a + 3b)²</li>
+      </ol>
+      <button class="stepbtn">Tampilkan Langkah ▸</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 7. LATIHAN CEPAT 1 ============ -->
+<section class="slide" data-title="Latihan Cepat 1">
+  <div class="wrap">
+    <div class="s-head">
+      <span class="tag lc">LATIHAN CEPAT 1 ⚡</span>
+      <h2>Identitas 1: a² + 2ab + b² = (a + b)²</h2>
+      <p>Klik salah satu jawaban. Kalau salah, baca petunjuknya dan coba lagi!</p>
+    </div>
+    <div class="mcq" data-exp="36 = 6² dan suku tengah 2·x·6 = 12x — pola Identitas 1 dengan a = x dan b = 6.">
+      <div class="mq">1. Bentuk faktor dari <span class="mm">x² + 12x + 36</span> adalah …</div>
+      <div class="opts">
+        <button class="opt" data-ok="1">(x + 6)²</button>
+        <button class="opt">(x + 36)²</button>
+        <button class="opt">(x + 6)(x − 6)</button>
+        <button class="opt">x(x + 12)</button>
+      </div><div class="fb"></div>
+    </div>
+    <div class="mcq" data-exp="25 = 5² dan suku tengahnya 2·x·5 = 10x — pas! Opsi lain punya suku tengah yang tidak cocok atau bukan kuadrat sempurna.">
+      <div class="mq">2. Manakah yang DAPAT difaktorkan dengan Identitas 1?</div>
+      <div class="opts">
+        <button class="opt" data-ok="1">x² + 10x + 25</button>
+        <button class="opt">x² + 10x + 24</button>
+        <button class="opt">x² + 5x + 25</button>
+        <button class="opt">x² + 25</button>
+      </div><div class="fb"></div>
+    </div>
+    <div class="mcq" data-exp="(3m)² + 2·3m·2 + 2² = 9m² + 12m + 4. Ingat: 9m² = (3m)² dan 4 = 2².">
+      <div class="mq">3. <span class="mm">9m² + 12m + 4</span> = …</div>
+      <div class="opts">
+        <button class="opt" data-ok="1">(3m + 2)²</button>
+        <button class="opt">(9m + 4)²</button>
+        <button class="opt">(3m + 2)(3m − 2)</button>
+        <button class="opt">(3m + 4)²</button>
+      </div><div class="fb"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 8. MATERI 2 + CONTOH 8 ============ -->
+<section class="slide" data-title="Materi 2: a² − 2ab + b²">
+  <div class="wrap">
+    <div class="s-head">
+      <span class="tag mt">MATERI 2 · IDENTITAS 2</span>
+      <h2>Memfaktorkan a² − 2ab + b²</h2>
+      <div style="margin-top:8px"><span class="fx fx2">a² − 2ab + b² = (a − b)²</span></div>
+    </div>
+    <ul class="ciri">
+      <li>Kedua ujung tetap <b>kuadrat sempurna positif</b>.</li>
+      <li>Hanya suku <b>tengah yang bertanda minus</b>: −2ab.</li>
+      <li>Karena kuadrat selalu tak-negatif: (a − b)² = (b − a)² — urutan bebas.</li>
+    </ul>
+    <div class="tip box">💡 <b>Jangan lupa FPB!</b> Jika semua suku punya faktor persekutuan, keluarkan dulu — baru kenali polanya di dalam kurung. (Lihat Contoh 8a)</div>
+    <div class="we stepsbox">
+      <span class="we-badge">CONTOH 8</span> <span class="we-t">Faktorkan tiap bentuk berikut sampai tuntas.</span>
+      <div class="we-q">(a) 2x² − 16x + 32</div>
+      <ol class="steps">
+        <li>FPB dari 2, 16, 32 adalah <b>2</b> → keluarkan: 2(x² − 8x + 16).</li>
+        <li>Di dalam kurung: x² = (x)², 16 = 4², suku tengah 2 · x · 4 = 8x ✓.</li>
+        <li>Terapkan (a − b)² dengan a = x, b = 4, lalu jangan lupa faktor 2.</li>
+        <li class="fin">2x² − 16x + 32 = 2(x − 4)²</li>
+      </ol>
+      <button class="stepbtn">Tampilkan Langkah ▸</button>
+      <div class="we-q">(b) 36 − 8y + <span class="fr"><span class="t">4y²</span><span class="b">9</span></span></div>
+      <ol class="steps">
+        <li>Cek ujung: 36 = <b>6²</b> dan <span class="mm">4y²/9 = (2y/3)²</span>.</li>
+        <li>Cek tengah: 2 · 6 · <span class="mm">2y/3</span> = <b>8y</b> ✓ (dengan tanda −).</li>
+        <li>a = 6 dan b = <span class="mm">2y/3</span> → (6 − <span class="mm">2y/3</span>)².</li>
+        <li class="fin">36 − 8y + <span class="mm">4y²/9</span> = (6 − <span class="mm">2y/3</span>)²</li>
+      </ol>
+      <button class="stepbtn">Tampilkan Langkah ▸</button>
+      <div class="we-q">(c) 81a² − 36ab + 4b²</div>
+      <ol class="steps">
+        <li>Cek ujung: 81a² = <b>(9a)²</b> dan 4b² = <b>(2b)²</b>.</li>
+        <li>Cek tengah: 2 · 9a · 2b = <b>36ab</b> ✓.</li>
+        <li>a = 9a dan b = 2b → (9a − 2b)².</li>
+        <li class="fin">81a² − 36ab + 4b² = (9a − 2b)²</li>
+      </ol>
+      <button class="stepbtn">Tampilkan Langkah ▸</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 9. LATIHAN CEPAT 2 ============ -->
+<section class="slide" data-title="Latihan Cepat 2">
+  <div class="wrap">
+    <div class="s-head">
+      <span class="tag lc">LATIHAN CEPAT 2 ⚡</span>
+      <h2>Identitas 2: a² − 2ab + b² = (a − b)²</h2>
+      <p>Perhatikan tanda minus pada suku tengah, dan FPB bila perlu!</p>
+    </div>
+    <div class="mcq" data-exp="49 = 7² dan suku tengah 2·x·7 = 14x dengan tanda − → (x − 7)².">
+      <div class="mq">1. <span class="mm">x² − 14x + 49</span> = …</div>
+      <div class="opts">
+        <button class="opt">(x + 7)²</button>
+        <button class="opt" data-ok="1">(x − 7)²</button>
+        <button class="opt">(x − 7)(x + 7)</button>
+        <button class="opt">x(x − 14)</button>
+      </div><div class="fb"></div>
+    </div>
+    <div class="mcq" data-exp="(2y)² − 2·2y·7 + 7² = 4y² − 28y + 49 → (2y − 7)².">
+      <div class="mq">2. <span class="mm">4y² − 28y + 49</span> = …</div>
+      <div class="opts">
+        <button class="opt" data-ok="1">(2y − 7)²</button>
+        <button class="opt">(2y + 7)²</button>
+        <button class="opt">(4y − 7)²</button>
+        <button class="opt">(2y − 7)(2y + 7)</button>
+      </div><div class="fb"></div>
+    </div>
+    <div class="mcq" data-exp="Susun: n² − 12n + 36 = (n − 6)², dan (6 − n)² = (n − 6)². Kuadrat selisih sama saja dibalik!">
+      <div class="mq">3. <span class="mm">36 − 12n + n²</span> = …</div>
+      <div class="opts">
+        <button class="opt" data-ok="1">(6 − n)²</button>
+        <button class="opt">(6 + n)²</button>
+        <button class="opt">(n − 6)(n + 6)</button>
+        <button class="opt">(n − 12)²</button>
+      </div><div class="fb"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 10. MATERI 3 + CONTOH 9 ============ -->
+<section class="slide" data-title="Materi 3: a² − b²">
+  <div class="wrap">
+    <div class="s-head">
+      <span class="tag mt">MATERI 3 · IDENTITAS 3</span>
+      <h2>Memfaktorkan Selisih Dua Kuadrat</h2>
+      <div style="margin-top:8px"><span class="fx fx3">a² − b² = (a + b)(a − b)</span></div>
+    </div>
+    <ul class="ciri">
+      <li>Hanya <b>dua suku</b>, dihubungkan tanda <b>minus</b>.</li>
+      <li>Keduanya <b>kuadrat sempurna</b> (boleh pecahan/pangkat tinggi, asal genap).</li>
+      <li><b>Tidak ada suku tengah</b> — itu ciri khasnya.</li>
+    </ul>
+    <div class="att box">🚫 <b>a² + b²</b> (jumlah dua kuadrat) <b>tidak bisa</b> difaktorkan dengan identitas ini → jawabannya <b>N.A.</b></div>
+    <div class="we stepsbox">
+      <span class="we-badge">CONTOH 9</span> <span class="we-t">Faktorkan tiap bentuk berikut sampai tuntas.</span>
+      <div class="we-q">(a) 9x² − 49</div>
+      <ol class="steps">
+        <li>Dua suku saja: 9x² = <b>(3x)²</b> dan 49 = <b>7²</b> → selisih dua kuadrat.</li>
+        <li>Berarti a = 3x dan b = 7; terapkan a² − b² = (a + b)(a − b).</li>
+        <li class="fin">9x² − 49 = (3x + 7)(3x − 7)</li>
+      </ol>
+      <button class="stepbtn">Tampilkan Langkah ▸</button>
+      <div class="we-q">(b) 48b² − <span class="fr"><span class="t">25</span><span class="b">3</span></span>a²</div>
+      <ol class="steps">
+        <li>Keluarkan faktor <span class="mm">1/3</span>: = <span class="mm">1/3</span>(144b² − 25a²). <i>(Karena 48 = 144/3 — trik agar 144 dan 25 menjadi kuadrat sempurna!)</i></li>
+        <li>144b² = <b>(12b)²</b> dan 25a² = <b>(5a)²</b>.</li>
+        <li>Terapkan selisih dua kuadrat, lalu bawa <span class="mm">1/3</span>-nya.</li>
+        <li class="fin">48b² − <span class="mm">25/3</span>a² = <span class="mm">1/3</span>(12b + 5a)(12b − 5a)</li>
+      </ol>
+      <button class="stepbtn">Tampilkan Langkah ▸</button>
+    </div>
+    <div class="tip box">💡 <b>Problem-solving tip:</b> Jika koefisien bukan kuadrat sempurna, cari faktor persekutuan (termasuk pecahan seperti ⅓) yang membuat kedua ujung menjadi kuadrat sempurna.</div>
+  </div>
+</section>
+
+<!-- ============ 11. LATIHAN CEPAT 3 ============ -->
+<section class="slide" data-title="Latihan Cepat 3">
+  <div class="wrap">
+    <div class="s-head">
+      <span class="tag lc">LATIHAN CEPAT 3 ⚡</span>
+      <h2>Identitas 3: a² − b² = (a + b)(a − b)</h2>
+      <p>Dua suku, tanda minus, tanpa suku tengah. Kalau tandanya plus → N.A.!</p>
+    </div>
+    <div class="mcq" data-exp="(5x)² − 7² = (5x + 7)(5x − 7).">
+      <div class="mq">1. <span class="mm">25x² − 49</span> = …</div>
+      <div class="opts">
+        <button class="opt" data-ok="1">(5x + 7)(5x − 7)</button>
+        <button class="opt">(5x − 7)²</button>
+        <button class="opt">(5x + 7)²</button>
+        <button class="opt">(25x + 7)(x − 7)</button>
+      </div><div class="fb"></div>
+    </div>
+    <div class="mcq" data-exp="9² − (2a)² = (9 + 2a)(9 − 2a). Urutan boleh dibalik, tapi nilainya sama.">
+      <div class="mq">2. <span class="mm">81 − 4a²</span> = …</div>
+      <div class="opts">
+        <button class="opt" data-ok="1">(9 + 2a)(9 − 2a)</button>
+        <button class="opt">(9 − 2a)²</button>
+        <button class="opt">(2a + 9)(2a − 9)</button>
+        <button class="opt">(9 + 2a)²</button>
+      </div><div class="fb"></div>
+    </div>
+    <div class="mcq" data-exp="x² + 36 adalah JUMLAH dua kuadrat — tidak ada identitas untuknya → N.A. Tiga pilihan lain adalah selisih dua kuadrat.">
+      <div class="mq">3. Bentuk mana yang TIDAK dapat difaktorkan dengan a² − b²?</div>
+      <div class="opts">
+        <button class="opt" data-ok="1">x² + 36</button>
+        <button class="opt">49 − y²</button>
+        <button class="opt">9m² − 1</button>
+        <button class="opt">100 − 4k⁴</button>
+      </div><div class="fb"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 12. MATERI 4 + CONTOH 10 ============ -->
+<section class="slide" data-title="Materi 4: Tanpa Kalkulator">
+  <div class="wrap">
+    <div class="s-head">
+      <span class="tag mt">MATERI 4 · APLIKASI HITUNG CEPAT</span>
+      <h2>Menghitung Selisih Kuadrat Tanpa Kalkulator</h2>
+      <p>Strategi: tulis bilangan sebagai <b class="mm">a² − b²</b>, lalu ubah menjadi <b class="mm">(a + b)(a − b)</b>. Pilihlah pasangan yang penjumlahannya “cantik” (10, 100, 1000…) supaya perkaliannya mudah dilakukan dalam hati.</p>
+    </div>
+    <div class="we stepsbox">
+      <span class="we-badge">CONTOH 10</span> <span class="we-t">Tanpa kalkulator, hitung 104² − 16.</span>
+      <ol class="steps">
+        <li>Tulis 16 sebagai kuadrat: 104² − 16 = <b>104² − 4²</b>.</li>
+        <li>Terapkan a² − b² = (a + b)(a − b), dengan a = 104 dan b = 4.</li>
+        <li>= (104 + 4)(104 − 4) = <b>108 × 100</b> — perkalian jadi super mudah!</li>
+        <li class="fin">104² − 16 = 10 800</li>
+      </ol>
+      <button class="stepbtn">Tampilkan Langkah ▸</button>
+    </div>
+    <div class="qcard" style="margin-top:14px">
+      <div class="qhead"><span class="qnum" style="background:#0d9488">Coba</span>
+        <div class="qtext">Coba sendiri: <b class="mm">103² − 9</b> tanpa kalkulator!</div></div>
+      <button class="pbtn">Lihat Pembahasan ▾</button>
+      <div class="solwrap"><div class="sol">
+        <ol>
+          <li>9 = 3² → 103² − 9 = 103² − 3².</li>
+          <li>= (103 + 3)(103 − 3) = 106 × 100.</li>
+          <li><span class="ans">103² − 9 = 10 600</span></li>
+        </ol>
+      </div></div>
+    </div>
+    <div class="info box">🔎 Perhatikan: (104 + 4) dan (104 − 4) dihitung <b>dulu</b>, baru dikalikan. Itulah kekuatan identitas — perkalian besar berubah jadi perkalian ringkas.</div>
+  </div>
+</section>
+
+<!-- ============ 13. MATERI 5 + CONTOH 11 ============ -->
+<section class="slide" data-title="Materi 5: Model Polya">
+  <div class="wrap">
+    <div class="s-head">
+      <span class="tag mt">MATERI 5 · PEMECAHAN MASALAH</span>
+      <h2>Memecahkan Masalah dengan Identitas — Model Polya</h2>
+      <div class="stagechips">
+        <div class="st"><b>1️⃣</b>Pahami masalah</div>
+        <div class="st"><b>2️⃣</b>Pikirkan rencana</div>
+        <div class="st"><b>3️⃣</b>Laksanakan rencana</div>
+        <div class="st"><b>4️⃣</b>Periksa kembali</div>
+      </div>
+    </div>
+    <div class="we stepsbox">
+      <span class="we-badge">CONTOH 11</span> <span class="we-t">(i) Faktorkan x² − 9y². &nbsp;(ii) Jika x, y bilangan bulat positif, selesaikan x² − 9y² = 13.</span>
+      <div class="we-q">(i) x² − 9y²</div>
+      <ol class="steps">
+        <li>9y² = (3y)² → x² − 9y² = <b>x² − (3y)²</b>.</li>
+        <li>Selisih dua kuadrat dengan a = x, b = 3y.</li>
+        <li class="fin">x² − 9y² = (x + 3y)(x − 3y)</li>
+      </ol>
+      <button class="stepbtn">Tampilkan Langkah ▸</button>
+      <div class="we-q">(ii) x² − 9y² = 13</div>
+      <ol class="steps">
+        <li><b>[Pahami]</b> x, y bulat positif → (x + 3y) dan (x − 3y) juga bulat positif, dan x + 3y &gt; x − 3y.</li>
+        <li><b>[Rencana]</b> Dari (i): (x + 3y)(x − 3y) = 13. Karena 13 <b>bilangan prima</b>, satu-satunya pasangan faktor bulat positif adalah 13 × 1.</li>
+        <li><b>[Laksanakan]</b> Maka x + 3y = 13 …(1) dan x − 3y = 1 …(2). Jumlahkan (1)+(2): 2x = 14 → <b>x = 7</b>. Substitusi ke (1): 7 + 3y = 13 → 3y = 6 → <b>y = 2</b>.</li>
+        <li><b>[Periksa]</b> 7² − 9(2)² = 49 − 36 = 13 = ruas kanan ✓.</li>
+        <li class="fin">x = 7 dan y = 2</li>
+      </ol>
+      <button class="stepbtn">Tampilkan Langkah ▸</button>
+    </div>
+    <div class="att box">🤔 <b>Perhatian:</b> Jika ruas kanan adalah 6 (bukan prima), apakah x + 3y = 3 dan x − 3y = 2 mungkin? Dari sana x = 5/2 — bukan bilangan bulat! Jadi untuk 6 tidak ada solusi bulat positif. Sifat <b>prima</b> sangat menentukan.</div>
+  </div>
+</section>
+
+<!-- ============ 14. LATIHAN SOAL 1 ============ -->
+<section class="slide" data-title="Latihan 4B · Soal 1">
+  <div class="wrap">
+    <div class="s-head">
+      <span class="lvl b">LEVEL DASAR</span>
+      <h2>Exercise 4B — Soal 1</h2>
+      <p><b>Faktorkan setiap bentuk berikut sampai tuntas.</b> Kerjakan dulu di buku tulismu, baru klik <b>Pembahasan</b> untuk mencocokkan langkah demi langkah.</p>
+      <div class="howto"><span>✏️ Kerjakan sendiri dulu</span><span>🔍 Cek pembahasan</span><span>✔ Cocokkan hasil akhir</span></div>
+    </div>
+    <div class="qgrid">
+      <div class="qcard"><div class="qhead"><span class="qnum">1a</span><div class="qtext mm">a² + 14a + 49</div></div>
+        <button class="pbtn">Lihat Pembahasan ▾</button>
+        <div class="solwrap"><div class="sol"><ol>
+          <li>Ujung: a² = (a)² dan 49 = 7² → kuadrat sempurna.</li>
+          <li>Tengah: 2 · a · 7 = 14a ✓ cocok.</li>
+          <li>a = a, b = 7 → terapkan (a + b)².</li></ol>
+          <span class="ans">a² + 14a + 49 = (a + 7)²</span></div></div></div>
+      <div class="qcard"><div class="qhead"><span class="qnum">1b</span><div class="qtext mm">4b² + 4b + 1</div></div>
+        <button class="pbtn">Lihat Pembahasan ▾</button>
+        <div class="solwrap"><div class="sol"><ol>
+          <li>Ujung: 4b² = (2b)² dan 1 = 1².</li>
+          <li>Tengah: 2 · 2b · 1 = 4b ✓.</li>
+          <li>a = 2b, b = 1 → (2b + 1)².</li></ol>
+          <span class="ans">4b² + 4b + 1 = (2b + 1)²</span></div></div></div>
+      <div class="qcard"><div class="qhead"><span class="qnum">1c</span><div class="qtext mm">c² + 2cd + d²</div></div>
+        <button class="pbtn">Lihat Pembahasan ▾</button>
+        <div class="solwrap"><div class="sol"><ol>
+          <li>Ujung: c² = (c)² dan d² = (d)².</li>
+          <li>Tengah: 2 · c · d = 2cd ✓.</li>
+          <li>a = c, b = d → (c + d)².</li></ol>
+          <span class="ans">c² + 2cd + d² = (c + d)²</span></div></div></div>
+      <div class="qcard"><div class="qhead"><span class="qnum">1d</span><div class="qtext mm">4h² + 20hk + 25k²</div></div>
+        <button class="pbtn">Lihat Pembahasan ▾</button>
+        <div class="solwrap"><div class="sol"><ol>
+          <li>Ujung: 4h² = (2h)² dan 25k² = (5k)².</li>
+          <li>Tengah: 2 · 2h · 5k = 20hk ✓.</li>
+          <li>a = 2h, b = 5k → (2h + 5k)².</li></ol>
+          <span class="ans">4h² + 20hk + 25k² = (2h + 5k)²</span></div></div></div>
+      <div class="qcard"><div class="qhead"><span class="qnum">1e</span><div class="qtext mm">9a² + 30ab + 25b²</div></div>
+        <button class="pbtn">Lihat Pembahasan ▾</button>
+        <div class="solwrap"><div class="sol"><ol>
+          <li>Ujung: 9a² = (3a)² dan 25b² = (5b)².</li>
+          <li>Tengah: 2 · 3a · 5b = 30ab ✓.</li>
+          <li>a = 3a, b = 5b → (3a + 5b)².</li></ol>
+          <span class="ans">9a² + 30ab + 25b² = (3a + 5b)²</span></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 15. LATIHAN SOAL 2 ============ -->
+<section class="slide" data-title="Latihan 4B · Soal 2">
+  <div class="wrap">
+    <div class="s-head">
+      <span class="lvl b">LEVEL DASAR</span>
+      <h2>Exercise 4B — Soal 2</h2>
+      <p><b>Faktorkan setiap bentuk berikut sampai tuntas.</b> Sekarang suku tengahnya bertanda minus — gunakan Identitas 2!</p>
+      <div class="howto"><span>✏️ Kerjakan sendiri dulu</span><span>🔍 Cek pembahasan</span><span>✔ Cocokkan hasil akhir</span></div>
+    </div>
+    <div class="qgrid">
+      <div class="qcard"><div class="qhead"><span class="qnum">2a</span><div class="qtext mm">m² − 10m + 25</div></div>
+        <button class="pbtn">Lihat Pembahasan ▾</button>
+        <div class="solwrap"><div class="sol"><ol>
+          <li>Ujung: m² = (m)² dan 25 = 5².</li>
+          <li>Tengah: 2 · m · 5 = 10m, bertanda − ✓.</li>
+          <li>a = m, b = 5 → (m − 5)².</li></ol>
+          <span class="ans">m² − 10m + 25 = (m − 5)²</span></div></div></div>
+      <div class="qcard"><div class="qhead"><span class="qnum">2b</span><div class="qtext mm">169n² − 52n + 4</div></div>
+        <button class="pbtn">Lihat Pembahasan ▾</button>
+        <div class="solwrap"><div class="sol"><ol>
+          <li>Ujung: 169n² = (13n)² dan 4 = 2².</li>
+          <li>Tengah: 2 · 13n · 2 = 52n, bertanda − ✓.</li>
+          <li>a = 13n, b = 2 → (13n − 2)².</li></ol>
+          <span class="ans">169n² − 52n + 4 = (13n − 2)²</span></div></div></div>
+      <div class="qcard"><div class="qhead"><span class="qnum">2c</span><div class="qtext mm">81 − 180p + 100p²</div></div>
+        <button class="pbtn">Lihat Pembahasan ▾</button>
+        <div class="solwrap"><div class="sol"><ol>
+          <li>Susun urut menurun: 100p² − 180p + 81.</li>
+          <li>Ujung: (10p)² dan 9²; tengah: 2 · 10p · 9 = 180p, bertanda − ✓.</li>
+          <li>a = 10p, b = 9 → (10p − 9)². Sama saja dengan (9 − 10p)².</li></ol>
+          <span class="ans">81 − 180p + 100p² = (10p − 9)²</span></div></div></div>
+      <div class="qcard"><div class="qhead"><span class="qnum">2d</span><div class="qtext mm">49q² − 42qr + 9r²</div></div>
+        <button class="pbtn">Lihat Pembahasan ▾</button>
+        <div class="solwrap"><div class="sol"><ol>
+          <li>Ujung: 49q² = (7q)² dan 9r² = (3r)².</li>
+          <li>Tengah: 2 · 7q · 3r = 42qr, bertanda − ✓.</li>
+          <li>a = 7q, b = 3r → (7q − 3r)².</li></ol>
+          <span class="ans">49q² − 42qr + 9r² = (7q − 3r)²</span></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 16. LATIHAN SOAL 3 & 4 ============ -->
+<section class="slide" data-title="Latihan 4B · Soal 3–4">
+  <div class="wrap">
+    <div class="s-head">
+      <span class="lvl b">LEVEL DASAR</span>
+      <h2>Exercise 4B — Soal 3 & 4</h2>
+      <p><b>Soal 3:</b> faktorkan sampai tuntas. <b>Soal 4:</b> hitung <b>tanpa kalkulator</b> memakai selisih dua kuadrat!</p>
+      <div class="howto"><span>✏️ Kerjakan sendiri dulu</span><span>🔍 Cek pembahasan</span><span>✔ Cocokkan hasil akhir</span></div>
+    </div>
+    <div class="qgrid">
+      <div class="qcard"><div class="qhead"><span class="qnum">3a</span><div class="qtext mm">s² − 144</div></div>
+        <button class="pbtn">Lihat Pembahasan ▾</button>
+        <div class="solwrap"><div class="sol"><ol>
+          <li>Dua suku: s² = (s)², 144 = 12² → selisih dua kuadrat.</li>
+          <li>a = s, b = 12 → (s + 12)(s − 12).</li></ol>
+          <span class="ans">s² − 144 = (s + 12)(s − 12)</span></div></div></div>
+      <div class="qcard"><div class="qhead"><span class="qnum">3b</span><div class="qtext mm">36t² − 25</div></div>
+        <button class="pbtn">Lihat Pembahasan ▾</button>
+        <div class="solwrap"><div class="sol"><ol>
+          <li>36t² = (6t)², 25 = 5².</li>
+          <li>a = 6t, b = 5 → (6t + 5)(6t − 5).</li></ol>
+          <span class="ans">36t² − 25 = (6t + 5)(6t − 5)</span></div></div></div>
+      <div class="qcard"><div class="qhead"><span class="qnum">3c</span><div class="qtext mm">225 − 49u²</div></div>
+        <button class="pbtn">Lihat Pembahasan ▾</button>
+        <div class="solwrap"><div class="sol"><ol>
+          <li>225 = 15², 49u² = (7u)². Bilangan besar duluan — tidak masalah!</li>
+          <li>a = 15, b = 7u → (15 + 7u)(15 − 7u).</li></ol>
+          <span class="ans">225 − 49u² = (15 + 7u)(15 − 7u)</span></div></div></div>
+      <div class="qcard"><div class="qhead"><span class="qnum">3d</span><div class="qtext mm">49w² − 81x²</div></div>
+        <button class="pbtn">Lihat Pembahasan ▾</button>
+        <div class="solwrap"><div class="sol"><ol>
+          <li>49w² = (7w)², 81x² = (9x)².</li>
+          <li>a = 7w, b = 9x → (7w + 9x)(7w − 9x).</li></ol>
+          <span class="ans">49w² − 81x² = (7w + 9x)(7w − 9x)</span></div></div></div>
+      <div class="qcard"><div class="qhead"><span class="qnum">4a</span><div class="qtext mm">59² − 41²</div></div>
+        <button class="pbtn">Lihat Pembahasan ▾</button>
+        <div class="solwrap"><div class="sol"><ol>
+          <li>= (59 + 41)(59 − 41).</li>
+          <li>= 100 × 18.</li></ol>
+          <span class="ans">59² − 41² = 1 800</span></div></div></div>
+      <div class="qcard"><div class="qhead"><span class="qnum">4b</span><div class="qtext mm">29² − 39²</div></div>
+        <button class="pbtn">Lihat Pembahasan ▾</button>
+        <div class="solwrap"><div class="sol"><ol>
+          <li>= (29 + 39)(29 − 39).</li>
+          <li>= 68 × (−10).</li></ol>
+          <span class="ans">29² − 39² = −680</span></div></div></div>
+      <div class="qcard"><div class="qhead"><span class="qnum">4c</span><div class="qtext mm">7,7² − 2,3²</div></div>
+        <button class="pbtn">Lihat Pembahasan ▾</button>
+        <div class="solwrap"><div class="sol"><ol>
+          <li>= (7,7 + 2,3)(7,7 − 2,3).</li>
+          <li>= 10 × 5,4.</li></ol>
+          <span class="ans">7,7² − 2,3² = 54</span></div></div></div>
+      <div class="qcard"><div class="qhead"><span class="qnum">4d</span><div class="qtext mm">81 − 91²</div></div>
+        <button class="pbtn">Lihat Pembahasan ▾</button>
+        <div class="solwrap"><div class="sol"><ol>
+          <li>81 = 9² → = 9² − 91².</li>
+          <li>= (9 + 91)(9 − 91) = 100 × (−82).</li></ol>
+          <span class="ans">81 − 91² = −8 200</span></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 17. LATIHAN SOAL 5 ============ -->
+<section class="slide" data-title="Latihan 4B · Soal 5">
+  <div class="wrap">
+    <div class="s-head">
+      <span class="lvl m">LEVEL MENENGAH</span>
+      <h2>Exercise 4B — Soal 5</h2>
+      <p><b>Jika mungkin, faktorkan dengan identitas aljabar. Jika tidak mungkin, tulis N.A.</b> Kuncinya: cek FPB dulu, lalu cek kuadrat sempurna dan suku tengah 2ab.</p>
+      <div class="howto"><span>✏️ Kerjakan sendiri dulu</span><span>🔍 Cek pembahasan</span><span>🚫 Hati-hati: ada jebakan N.A.</span></div>
+    </div>
+    <div class="qgrid">
+      <div class="qcard"><div class="qhead"><span class="qnum">5a</span><div class="qtext mm">3a² + 12a + 12</div></div>
+        <button class="pbtn">Lihat Pembahasan ▾</button>
+        <div class="solwrap"><div class="sol"><ol>
+          <li>FPB = 3 → 3(a² + 4a + 4). <i>Jangan langsung N.A. — cek FPB dulu!</i></li>
+          <li>Di dalam: a² = (a)², 4 = 2², tengah 2·a·2 = 4a ✓.</li></ol>
+          <span class="ans">3a² + 12a + 12 = 3(a + 2)²</span></div></div></div>
+      <div class="qcard"><div class="qhead"><span class="qnum">5b</span><div class="qtext mm">25b² + 5bc + <span class="fr"><span class="t">1</span><span class="b">4</span></span>c²</div></div>
+        <button class="pbtn">Lihat Pembahasan ▾</button>
+        <div class="solwrap"><div class="sol"><ol>
+          <li>Ujung: (5b)² dan (½c)².</li>
+          <li>Tengah: 2 · 5b · ½c = 5bc ✓.</li></ol>
+          <span class="ans">= (5b + ½c)²</span></div></div></div>
+      <div class="qcard"><div class="qhead"><span class="qnum">5c</span><div class="qtext mm">8x² + 20xy + 50y²</div></div>
+        <button class="pbtn">Lihat Pembahasan ▾</button>
+        <div class="solwrap"><div class="sol"><ol>
+          <li>FPB = 2 → 2(4x² + 10xy + 25y²).</li>
+          <li>Ujung: (2x)² dan (5y)², tetapi suku tengah seharusnya 2·2x·5y = 20xy ≠ 10xy ✗.</li></ol>
+          <span class="ans na">N.A. — tidak dapat difaktorkan dengan identitas</span></div></div></div>
+      <div class="qcard"><div class="qhead"><span class="qnum">5d</span><div class="qtext mm"><span class="fr"><span class="t">16</span><span class="b">49</span></span>w² + <span class="fr"><span class="t">8</span><span class="b">35</span></span>wv + <span class="fr"><span class="t">1</span><span class="b">25</span></span>v²</div></div>
+        <button class="pbtn">Lihat Pembahasan ▾</button>
+        <div class="solwrap"><div class="sol"><ol>
+          <li>Ujung: (⁴⁄₇w)² dan (⅕v)².</li>
+          <li>Tengah: 2 · ⁴⁄₇w · ⅕v = ⁸⁄₃₅wv ✓.</li></ol>
+          <span class="ans">= (⁴⁄₇w + ⅕v)²</span></div></div></div>
+      <div class="qcard"><div class="qhead"><span class="qnum">5e</span><div class="qtext mm">h² + 2h²k + k²</div></div>
+        <button class="pbtn">Lihat Pembahasan ▾</button>
+        <div class="solwrap"><div class="sol"><ol>
+          <li>Ujung: (h)² dan (k)² → suku tengah seharusnya 2·h·k = 2hk.</li>
+          <li>Tapi suku tengahnya 2h²k ✗ (ada h²).</li></ol>
+          <span class="ans na">N.A. — tidak dapat difaktorkan dengan identitas</span></div></div></div>
+      <div class="qcard"><div class="qhead"><span class="qnum">5f</span><div class="qtext mm">p²q² + 10pq + 100</div></div>
+        <button class="pbtn">Lihat Pembahasan ▾</button>
+        <div class="solwrap"><div class="sol"><ol>
+          <li>Ujung: (pq)² dan 10² → suku tengah seharusnya 2·pq·10 = 20pq.</li>
+          <li>Tapi suku tengahnya 10pq ✗. (Kalau 25 = 5², suku tengahnya baru pas…)</li></ol>
+          <span class="ans na">N.A. — tidak dapat difaktorkan dengan identitas</span></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 18. LATIHAN SOAL 7 ============ -->
+<section class="slide" data-title="Latihan 4B · Soal 7">
+  <div class="wrap">
+    <div class="s-head">
+      <span class="lvl m">LEVEL MENENGAH</span>
+      <h2>Exercise 4B — Soal 7</h2>
+      <p><b>Jika mungkin, faktorkan dengan identitas; jika tidak, tulis N.A.</b> Perhatikan FPB dan posisi suku!</p>
+      <div class="howto"><span>✏️ Kerjakan sendiri dulu</span><span>🔍 Cek pembahasan</span><span>🚫 Hati-hati: ada jebakan N.A.</span></div>
+    </div>
+    <div class="qgrid">
+      <div class="qcard"><div class="qhead"><span class="qnum">7a</span><div class="qtext mm">36m² − 48mn + 16n²</div></div>
+        <button class="pbtn">Lihat Pembahasan ▾</button>
+        <div class="solwrap"><div class="sol"><ol>
+          <li>FPB = 4 → 4(9m² − 12mn + 4n²).</li>
+          <li>Di dalam: (3m)² dan (2n)²; tengah 2·3m·2n = 12mn ✓.</li></ol>
+          <span class="ans">= 4(3m − 2n)²</span></div></div></div>
+      <div class="qcard"><div class="qhead"><span class="qnum">7b</span><div class="qtext mm"><span class="fr"><span class="t">1</span><span class="b">4</span></span>h² − 4hk + 4k²</div></div>
+        <button class="pbtn">Lihat Pembahasan ▾</button>
+        <div class="solwrap"><div class="sol"><ol>
+          <li>Ujung: (½h)² dan (2k)² → suku tengah seharusnya 2 · ½h · 2k = 2hk.</li>
+          <li>Tapi suku tengahnya 4hk ✗.</li></ol>
+          <span class="ans na">N.A. — tidak dapat difaktorkan dengan identitas</span></div></div></div>
+      <div class="qcard"><div class="qhead"><span class="qnum">7c</span><div class="qtext mm"><span class="fr"><span class="t">1</span><span class="b">3</span></span>p² − <span class="fr"><span class="t">2</span><span class="b">3</span></span>pq + <span class="fr"><span class="t">1</span><span class="b">3</span></span>q²</div></div>
+        <button class="pbtn">Lihat Pembahasan ▾</button>
+        <div class="solwrap"><div class="sol"><ol>
+          <li>FPB = ⅓ → ⅓(p² − 2pq + q²).</li>
+          <li>Di dalam: (p)² dan (q)²; tengah 2·p·q = 2pq ✓.</li></ol>
+          <span class="ans">= ⅓(p − q)²</span></div></div></div>
+      <div class="qcard"><div class="qhead"><span class="qnum">7d</span><div class="qtext mm">16r² − rs + <span class="fr"><span class="t">1</span><span class="b">64</span></span>s²</div></div>
+        <button class="pbtn">Lihat Pembahasan ▾</button>
+        <div class="solwrap"><div class="sol"><ol>
+          <li>Ujung: (4r)² dan (⅛s)².</li>
+          <li>Tengah: 2 · 4r · ⅛s = rs ✓ (bertanda −).</li></ol>
+          <span class="ans">= (4r − ⅛s)²</span></div></div></div>
+      <div class="qcard"><div class="qhead"><span class="qnum">7e</span><div class="qtext mm">25 − 10tu + t²u²</div></div>
+        <button class="pbtn">Lihat Pembahasan ▾</button>
+        <div class="solwrap"><div class="sol"><ol>
+          <li>Susun: t²u² − 10tu + 25 = (tu)² − 10tu + 5².</li>
+          <li>Tengah: 2 · tu · 5 = 10tu ✓ → a = tu, b = 5.</li></ol>
+          <span class="ans">= (5 − tu)²</span></div></div></div>
+      <div class="qcard"><div class="qhead"><span class="qnum">7f</span><div class="qtext mm">75w² − <span class="fr"><span class="t">1</span><span class="b">2</span></span>wz + <span class="fr"><span class="t">3</span><span class="b">16</span></span>z²</div></div>
+        <button class="pbtn">Lihat Pembahasan ▾</button>
+        <div class="solwrap"><div class="sol"><ol>
+          <li>75 bukan kuadrat sempurna; setelah FPB dicoba pun (misal 3 → 25w² − ⅙wz + 1/16 z²) suku tengah seharusnya 2·5w·¼z = 5wz/2 ≠ ⅙wz ✗.</li></ol>
+          <span class="ans na">N.A. — tidak dapat difaktorkan dengan identitas</span></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 19. LATIHAN SOAL 8 ============ -->
+<section class="slide" data-title="Latihan 4B · Soal 8">
+  <div class="wrap">
+    <div class="s-head">
+      <span class="lvl m">LEVEL MENENGAH</span>
+      <h2>Exercise 4B — Soal 8</h2>
+      <p><b>Selisih dua kuadrat:</b> jika mungkin faktorkan; jika tidak, tulis N.A. Ingat — pangkat harus <b>genap</b> agar menjadi kuadrat sempurna!</p>
+      <div class="howto"><span>✏️ Kerjakan sendiri dulu</span><span>🔍 Cek pembahasan</span><span>🚫 Ada 2 jebakan N.A.</span></div>
+    </div>
+    <div class="qgrid">
+      <div class="qcard"><div class="qhead"><span class="qnum">8a</span><div class="qtext mm">32a² − 98b²</div></div>
+        <button class="pbtn">Lihat Pembahasan ▾</button>
+        <div class="solwrap"><div class="sol"><ol>
+          <li>FPB = 2 → 2(16a² − 49b²).</li>
+          <li>16a² = (4a)², 49b² = (7b)² → selisih dua kuadrat.</li></ol>
+          <span class="ans">= 2(4a + 7b)(4a − 7b)</span></div></div></div>
+      <div class="qcard"><div class="qhead"><span class="qnum">8b</span><div class="qtext mm">c² − <span class="fr"><span class="t">1</span><span class="b">4</span></span>d²</div></div>
+        <button class="pbtn">Lihat Pembahasan ▾</button>
+        <div class="solwrap"><div class="sol"><ol>
+          <li>c² = (c)², ¼d² = (½d)².</li>
+          <li>a = c, b = ½d → (c + ½d)(c − ½d).</li></ol>
+          <span class="ans">= (c + ½d)(c − ½d)</span></div></div></div>
+      <div class="qcard"><div class="qhead"><span class="qnum">8c</span><div class="qtext mm">m² − 64n⁴</div></div>
+        <button class="pbtn">Lihat Pembahasan ▾</button>
+        <div class="solwrap"><div class="sol"><ol>
+          <li>64n⁴ = (8n²)² — pangkat 4 genap, jadi kuadrat sempurna!</li>
+          <li>a = m, b = 8n² → (m + 8n²)(m − 8n²).</li></ol>
+          <span class="ans">= (m + 8n²)(m − 8n²)</span></div></div></div>
+      <div class="qcard"><div class="qhead"><span class="qnum">8d</span><div class="qtext mm">100y⁴ − 125z²</div></div>
+        <button class="pbtn">Lihat Pembahasan ▾</button>
+        <div class="solwrap"><div class="sol"><ol>
+          <li>FPB = 25 → 25(4y⁴ − 5z²).</li>
+          <li>4y⁴ = (2y²)², tetapi 5z² bukan kuadrat sempurna ✗.</li></ol>
+          <span class="ans na">N.A. — tidak dapat difaktorkan dengan identitas</span></div></div></div>
+      <div class="qcard"><div class="qhead"><span class="qnum">8e</span><div class="qtext mm"><span class="fr"><span class="t">9h²</span><span class="b">100</span></span> − 16k³</div></div>
+        <button class="pbtn">Lihat Pembahasan ▾</button>
+        <div class="solwrap"><div class="sol"><ol>
+          <li><span class="mm">9h²/100</span> = (³⁄₁₀h)², tetapi 16k³ memiliki pangkat <b>ganjil</b> (3) → bukan kuadrat sempurna ✗.</li></ol>
+          <span class="ans na">N.A. — tidak dapat difaktorkan dengan identitas</span></div></div></div>
+      <div class="qcard"><div class="qhead"><span class="qnum">8f</span><div class="qtext mm">60p² − <span class="fr"><span class="t">15</span><span class="b">64</span></span>q²</div></div>
+        <button class="pbtn">Lihat Pembahasan ▾</button>
+        <div class="solwrap"><div class="sol"><ol>
+          <li>FPB = 15 → 15(4p² − <span class="mm">q²/64</span>).</li>
+          <li>4p² = (2p)², <span class="mm">q²/64</span> = (q/8)² → selisih dua kuadrat.</li></ol>
+          <span class="ans">= 15(2p + q/8)(2p − q/8)</span></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 20. LATIHAN SOAL 9 ============ -->
+<section class="slide" data-title="Latihan 4B · Soal 9">
+  <div class="wrap">
+    <div class="s-head">
+      <span class="lvl m">LEVEL MENENGAH</span>
+      <h2>Exercise 4B — Soal 9</h2>
+      <p><b>Faktorkan sampai tuntas.</b> Di sini “a” dan “b” bisa berupa bentuk dalam kurung — perlakukan kurung seperti satu blok!</p>
+      <div class="howto"><span>✏️ Kerjakan sendiri dulu</span><span>🔍 Cek pembahasan</span><span>🧩 Kurung = satu blok</span></div>
+    </div>
+    <div class="qgrid">
+      <div class="qcard"><div class="qhead"><span class="qnum">9a</span><div class="qtext mm">(a + 3)² − 9</div></div>
+        <button class="pbtn">Lihat Pembahasan ▾</button>
+        <div class="solwrap"><div class="sol"><ol>
+          <li>9 = 3² → (a + 3)² − 3²: selisih dua kuadrat dengan blok (a+3).</li>
+          <li>= [(a+3) + 3][(a+3) − 3] = (a + 6)(a).</li></ol>
+          <span class="ans">= a(a + 6)</span></div></div></div>
+      <div class="qcard"><div class="qhead"><span class="qnum">9b</span><div class="qtext mm">16 − 25(b + 3)²</div></div>
+        <button class="pbtn">Lihat Pembahasan ▾</button>
+        <div class="solwrap"><div class="sol"><ol>
+          <li>= 4² − [5(b + 3)]².</li>
+          <li>= [4 + 5(b+3)][4 − 5(b+3)] = (5b + 19)(−5b − 11).</li></ol>
+          <span class="ans">= −(5b + 19)(5b + 11)</span></div></div></div>
+      <div class="qcard"><div class="qhead"><span class="qnum">9c</span><div class="qtext mm">c² − (d + 2)²</div></div>
+        <button class="pbtn">Lihat Pembahasan ▾</button>
+        <div class="solwrap"><div class="sol"><ol>
+          <li>Langsung selisih dua kuadrat: a = c, b = (d + 2).</li>
+          <li>= [c + (d+2)][c − (d+2)].</li></ol>
+          <span class="ans">= (c + d + 2)(c − d − 2)</span></div></div></div>
+      <div class="qcard"><div class="qhead"><span class="qnum">9d</span><div class="qtext mm">(2h − 1)² − 4k²</div></div>
+        <button class="pbtn">Lihat Pembahasan ▾</button>
+        <div class="solwrap"><div class="sol"><ol>
+          <li>4k² = (2k)².</li>
+          <li>= [(2h − 1) + 2k][(2h − 1) − 2k].</li></ol>
+          <span class="ans">= (2h − 1 + 2k)(2h − 1 − 2k)</span></div></div></div>
+      <div class="qcard"><div class="qhead"><span class="qnum">9e</span><div class="qtext mm">(3x − 5)² − 169</div></div>
+        <button class="pbtn">Lihat Pembahasan ▾</button>
+        <div class="solwrap"><div class="sol"><ol>
+          <li>169 = 13² → = (3x − 5 + 13)(3x − 5 − 13) = (3x + 8)(3x − 18).</li>
+          <li>Faktorkan lengkap: 3x − 18 = 3(x − 6).</li></ol>
+          <span class="ans">= 3(x − 6)(3x + 8)</span></div></div></div>
+      <div class="qcard"><div class="qhead"><span class="qnum">9f</span><div class="qtext mm">(p + 1)² − (p − 1)²</div></div>
+        <button class="pbtn">Lihat Pembahasan ▾</button>
+        <div class="solwrap"><div class="sol"><ol>
+          <li>Selisih dua kuadrat dengan kedua blok: = [(p+1) + (p−1)][(p+1) − (p−1)].</li>
+          <li>= (2p)(2).</li></ol>
+          <span class="ans">= 4p</span></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 21. LATIHAN SOAL 6 & 10 ============ -->
+<section class="slide" data-title="Latihan 4B · Soal 6 & 10">
+  <div class="wrap">
+    <div class="s-head">
+      <span class="lvl m">LEVEL MENENGAH · MASALAH KONTEKSTUAL</span>
+      <h2>Exercise 4B — Soal 6 & 10</h2>
+      <div class="howto"><span>✏️ Kerjakan sendiri dulu</span><span>🔍 Cek pembahasan</span><span>🌍 Soal cerita & hitung cepat</span></div>
+    </div>
+    <div class="qgrid">
+      <div class="qcard"><div class="qhead"><span class="qnum">6</span>
+        <div class="qtext">Luas permukaan <b>setiap sisi</b> sebuah kubus adalah <span class="mm">(x² + 4x + 4)</span> cm². Tentukan:<br><span class="lbl">(i)</span> panjang sisi kubus, &nbsp;<span class="lbl">(ii)</span> volume kubus dalam bentuk yang dijabarkan (expanded form).</div></div>
+        <button class="pbtn">Lihat Pembahasan ▾</button>
+        <div class="solwrap"><div class="sol"><ol>
+          <li><b>(i)</b> Sisi kubus = akar luas sisinya: s = √(x² + 4x + 4).</li>
+          <li>Faktorkan: x² + 4x + 4 = x² + 2·x·2 + 2² = (x + 2)² → s = √(x + 2)² = (x + 2) cm.</li>
+          <li><b>(ii)</b> Volume = s³ = (x + 2)³ = (x + 2)(x + 2)² = (x + 2)(x² + 4x + 4).</li>
+          <li>Jabarkan: x³ + 4x² + 4x + 2x² + 8x + 8 = x³ + 6x² + 12x + 8.</li></ol>
+          <span class="ans">(i) sisi = (x + 2) cm &nbsp;·&nbsp; (ii) V = (x³ + 6x² + 12x + 8) cm³</span></div></div></div>
+      <div class="qcard"><div class="qhead"><span class="qnum">10</span>
+        <div class="qtext">Tanpa menggunakan kalkulator, hitung <span class="mm">5 × 88² − 720</span>.</div></div>
+        <button class="pbtn">Lihat Pembahasan ▾</button>
+        <div class="solwrap"><div class="sol"><ol>
+          <li>Ubah 720 agar “kembar”: 720 = 5 × 144 = 5 × 12².</li>
+          <li>Maka 5 × 88² − 5 × 12² = 5(88² − 12²).</li>
+          <li>Selisih dua kuadrat: 5(88 + 12)(88 − 12) = 5 × 100 × 76.</li></ol>
+          <span class="ans">5 × 88² − 720 = 38 000</span></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 22. LATIHAN SOAL 11 & 13 ============ -->
+<section class="slide" data-title="Latihan 4B · Soal 11 & 13">
+  <div class="wrap">
+    <div class="s-head">
+      <span class="lvl a">LEVEL LANJUT · TANTANGAN PRIMA</span>
+      <h2>Exercise 4B — Soal 11 & 13</h2>
+      <p>Dua soal favorit: menggabungkan faktorisasi, bilangan prima, dan Model Polya. Uji kemampuanmu!</p>
+      <div class="howto"><span>✏️ Kerjakan sendiri dulu</span><span>🔍 Cek pembahasan</span><span>🧠 Berpikir bertahap ala Polya</span></div>
+    </div>
+    <div class="qgrid">
+      <div class="qcard"><div class="qhead"><span class="qnum">11</span>
+        <div class="qtext"><span class="lbl">(i)</span> Faktorkan <span class="mm">x² − 4y²</span>.<br><span class="lbl">(ii)</span> Diketahui x dan y bilangan bulat positif, selesaikan <span class="mm">x² − 4y² = 13</span>.</div></div>
+        <button class="pbtn">Lihat Pembahasan ▾</button>
+        <div class="solwrap"><div class="sol"><ol>
+          <li><b>(i)</b> 4y² = (2y)² → x² − (2y)² = (x + 2y)(x − 2y).</li>
+          <li><b>(ii) [Pahami]</b> x, y bulat positif → (x + 2y) dan (x − 2y) bulat positif, dengan x + 2y &gt; x − 2y.</li>
+          <li><b>[Rencana]</b> (x + 2y)(x − 2y) = 13; 13 prima → hanya 13 × 1.</li>
+          <li><b>[Laksanakan]</b> x + 2y = 13 …(1), x − 2y = 1 …(2). (1)+(2): 2x = 14 → x = 7. Substitusi: 7 + 2y = 13 → y = 3.</li>
+          <li><b>[Periksa]</b> 7² − 4(3)² = 49 − 36 = 13 ✓.</li></ol>
+          <span class="ans">(i) (x + 2y)(x − 2y) &nbsp;·&nbsp; (ii) x = 7, y = 3</span></div></div></div>
+      <div class="qcard"><div class="qhead"><span class="qnum">13</span>
+        <div class="qtext"><span class="lbl">(a)</span> Faktorkan <span class="mm">x² − 121</span>.<br><span class="lbl">(b)</span> Gunakan jawaban (a) untuk mencari dua faktor dari <b>7979</b> selain 1 dan 7979.</div></div>
+        <button class="pbtn">Lihat Pembahasan ▾</button>
+        <div class="solwrap"><div class="sol"><ol>
+          <li><b>(a)</b> 121 = 11² → x² − 121 = (x + 11)(x − 11).</li>
+          <li><b>(b)</b> Cari x agar x² − 121 = 7979 → x² = 8100 → x = 90 (karena 90² = 8100).</li>
+          <li>Jadi 7979 = 90² − 11² = (90 + 11)(90 − 11) = 101 × 79.</li>
+          <li>Cek: 101 × 79 = 7979 ✓.</li></ol>
+          <span class="ans">(a) (x + 11)(x − 11) &nbsp;·&nbsp; (b) dua faktornya: 79 dan 101</span></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 23. LATIHAN SOAL 12 ============ -->
+<section class="slide" data-title="Latihan 4B · Soal 12">
+  <div class="wrap">
+    <div class="s-head">
+      <span class="lvl a">LEVEL LANJUT · PENYUSUNAN BENTUK</span>
+      <h2>Exercise 4B — Soal 12</h2>
+      <p><b>Faktorkan sampai tuntas.</b> Strategi: kelompokkan suku, bentuk kuadrat sempurna, lalu selisih dua kuadrat.</p>
+      <div class="howto"><span>✏️ Kerjakan sendiri dulu</span><span>🔍 Cek pembahasan</span><span>🧩 Susun ulang → identitas → tuntas</span></div>
+    </div>
+    <div class="qgrid">
+      <div class="qcard"><div class="qhead"><span class="qnum">12a</span><div class="qtext mm">4(x − 1)² − 81(x + 1)²</div></div>
+        <button class="pbtn">Lihat Pembahasan ▾</button>
+        <div class="solwrap"><div class="sol"><ol>
+          <li>Tulis sebagai kuadrat: [2(x−1)]² − [9(x+1)]².</li>
+          <li>Selisih dua kuadrat: [2(x−1) + 9(x+1)][2(x−1) − 9(x+1)].</li>
+          <li>Sederhanakan: (2x − 2 + 9x + 9)(2x − 2 − 9x − 9) = (11x + 7)(−7x − 11).</li></ol>
+          <span class="ans">= −(11x + 7)(7x + 11)</span></div></div></div>
+      <div class="qcard"><div class="qhead"><span class="qnum">12b</span><div class="qtext mm">16x² + 8x + 1 − 9y²</div></div>
+        <button class="pbtn">Lihat Pembahasan ▾</button>
+        <div class="solwrap"><div class="sol"><ol>
+          <li>Kelompokkan 3 suku pertama: (16x² + 8x + 1) − 9y².</li>
+          <li>Tiga suku itu kuadrat sempurna: (4x + 1)² → (4x + 1)² − (3y)².</li>
+          <li>Selisih dua kuadrat: [4x + 1 + 3y][4x + 1 − 3y].</li></ol>
+          <span class="ans">= (4x + 1 + 3y)(4x + 1 − 3y)</span></div></div></div>
+      <div class="qcard"><div class="qhead"><span class="qnum">12c</span><div class="qtext mm">4x² − y² + 4y − 4</div></div>
+        <button class="pbtn">Lihat Pembahasan ▾</button>
+        <div class="solwrap"><div class="sol"><ol>
+          <li>Kelompokkan: 4x² − (y² − 4y + 4).</li>
+          <li>Kurung dalam kuadrat sempurna: (y − 2)² → (2x)² − (y − 2)².</li>
+          <li>Selisih dua kuadrat: [2x + (y−2)][2x − (y−2)].</li></ol>
+          <span class="ans">= (2x + y − 2)(2x − y + 2)</span></div></div></div>
+      <div class="qcard"><div class="qhead"><span class="qnum">12d</span><div class="qtext mm">13x² + 26xy + 13y² − 13</div></div>
+        <button class="pbtn">Lihat Pembahasan ▾</button>
+        <div class="solwrap"><div class="sol"><ol>
+          <li>FPB 13 pada semua suku: 13(x² + 2xy + y² − 1).</li>
+          <li>Tiga suku pertama: x² + 2xy + y² = (x + y)² → 13[(x + y)² − 1²].</li>
+          <li>Selisih dua kuadrat: 13(x + y + 1)(x + y − 1).</li></ol>
+          <span class="ans">= 13(x + y + 1)(x + y − 1)</span></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 24. REFLEKSI ============ -->
+<section class="slide soft" data-title="Refleksi">
+  <div class="wrap">
+    <div class="s-head">
+      <span class="tag tj">REFLEKSI 🪞</span>
+      <h2>Saatnya Merenungkan Perjalananmu</h2>
+      <p>“What have you learnt from solving this question? If you see a similar question again, are you confident enough to solve it?” — mari jawab dengan jujur.</p>
+    </div>
+    <div class="lab">
+      <b>1. Bagaimana perasaanmu tentang materi hari ini?</b>
+      <div class="moods">
+        <button class="mood">😄 Paham mantap!</button>
+        <button class="mood">🙂 Cukup paham</button>
+        <button class="mood">😐 Perlu review</button>
+        <button class="mood">😟 Butuh bantuan</button>
+      </div>
+      <b style="display:block;margin-top:14px">2. Bagaimana kamu menjelaskan ke temanmu bahwa (a + b)² ≠ a² + b²? Berikan contoh angka!</b>
+      <textarea placeholder="Contoh jawabanku: Aku akan substitusi a = ..., b = ... sehingga terlihat hasilnya berbeda karena ada suku ..."></textarea>
+      <b style="display:block;margin-top:14px">3. Tulis satu hal yang BARU kamu pahami hari ini, dan satu hal yang masih membingungkan.</b>
+      <textarea placeholder="Hari ini aku paham bahwa ... / Yang masih membingungkan bagiku adalah ..."></textarea>
+      <div class="info box" style="margin-top:12px">💬 Diskusikan jawabanmu dengan teman sebangku: jika soal serupa muncul lagi, apakah kamu percaya diri mengerjakannya?</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 25. KESIMPULAN ============ -->
+<section class="slide" data-title="Kesimpulan">
+  <div class="wrap">
+    <div class="s-head">
+      <span class="tag tj">KESIMPULAN 📌</span>
+      <h2>Tiga Identitas, Satu Ide Besar</h2>
+      <p><b>Faktorisasi hanyalah ekspansi yang dibaca dari arah sebaliknya.</b> Kuasai tiga kartu ini, dan sebagian besar soal faktorisasi akan terbuka polanya.</p>
+    </div>
+    <div class="sumgrid">
+      <div class="sumcard" style="background:linear-gradient(135deg,#0d9488,#14b8a6)">
+        <h4>IDENTITAS 1</h4><div class="f">a² + 2ab + b² = (a + b)²</div>
+        <div class="e">Dipakai jika: 2 ujung kuadrat sempurna + suku tengah +2ab.</div>
+      </div>
+      <div class="sumcard" style="background:linear-gradient(135deg,#d97706,#f59e0b)">
+        <h4>IDENTITAS 2</h4><div class="f">a² − 2ab + b² = (a − b)²</div>
+        <div class="e">Dipakai jika: sama dengan Identitas 1, tetapi suku tengahnya −2ab.</div>
+      </div>
+      <div class="sumcard" style="background:linear-gradient(135deg,#7c3aed,#a78bfa)">
+        <h4>IDENTITAS 3</h4><div class="f">a² − b² = (a + b)(a − b)</div>
+        <div class="e">Dipakai jika: tepat 2 suku kuadrat sempurna yang dijumlah… eh, <b>dikurangi</b>!</div>
+      </div>
+    </div>
+    <h2 style="font-size:1.15rem;margin-top:18px">🔑 4 Kunci Sukses</h2>
+    <div class="kunci">
+      <div><b>Keluarkan FPB lebih dulu</b> — termasuk FPB berupa pecahan (⅓, 15, dst.) agar muncul kuadrat sempurna.</div>
+      <div><b>Selalu cek suku tengah 2ab</b> — jika tidak cocok, identitas tidak berlaku → N.A. Ingat: a² + b² (jumlah) juga N.A.</div>
+      <div><b>Faktorkan sampai tuntas</b> — cek apakah hasil faktor masih bisa difaktorkan lagi (mis. 3x − 18 = 3(x − 6)).</div>
+      <div><b>Uji balik dengan ekspansi</b> — kalau dijabarkan kembali hasilnya sama, faktorismu pasti benar. Untuk soal prima (seperti 7979), cari kuadrat terdekat!</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 26. TERIMA KASIH ============ -->
+<section class="slide cover" data-title="Terima Kasih">
+  <span class="fl" style="top:14%;left:10%;font-size:1.6rem">(a + b)(a − b)</span>
+  <span class="fl" style="top:30%;right:12%;font-size:1.4rem;animation-delay:1.1s">(2h + 5k)²</span>
+  <span class="fl" style="bottom:22%;left:14%;font-size:1.4rem;animation-delay:.7s">7979 = 101 × 79</span>
+  <span class="fl" style="bottom:12%;right:18%;font-size:1.3rem;animation-delay:2s">N.A.?</span>
+  <div class="wrap">
+    <div style="font-size:3.4rem">🎓</div>
+    <h1 style="margin-top:8px">Terima Kasih <span class="grad">untuk Hari Ini!</span></h1>
+    <p class="sub">Tetap semangat berlatih — kerjakan Exercise 4B sampai tuntas, dan ingat: setiap bentuk aljabar punya “bentuk pulang”-nya sendiri.</p>
+    <div class="chips"><span>✅ 3 identitas dikuasai</span><span>✅ Exercise 4B + pembahasan</span><span>✅ Model Polya</span></div>
+    <div class="info box" style="max-width:640px;margin:22px auto 0;text-align:left;background:rgba(238,242,255,.12);border-color:rgba(165,180,252,.4);color:#c7d2fe">
+      “Matematika adalah seni memberi nama yang sama pada hal-hal yang berbeda.” — <b>Henri Poincaré</b><br>
+      <span style="font-size:.85rem">Tiga identitas ini memang terlihat berbeda-beda, tetapi semuanya bercerita tentang hal yang sama: pola.</span>
+    </div>
+    <button class="cta" id="againBtn">🔁 Ulangi dari Awal</button>
+  </div>
+</section>
+
+</main>
+
+<!-- Navigasi -->
+<nav id="ctrl">
+  <button id="menuBtn">☰ Daftar</button>
+  <button id="prevBtn" aria-label="Sebelumnya">←</button>
+  <div id="ctr">01 / 26</div>
+  <button id="nextBtn" aria-label="Berikutnya">→</button>
+  <button id="fsBtn" aria-label="Layar penuh">⛶</button>
+</nav>
+
+<!-- Menu daftar slide -->
+<div id="menuOv">
+  <div class="mpanel">
+    <h3>📖 Daftar Slide</h3>
+    <p class="hint">Klik untuk melompat ke slide.</p>
+    <div id="menuList"></div>
+    <button class="mclose" id="menuClose">Tutup (Esc)</button>
+  </div>
+</div>
+
+<script>
+/* ================= NAVIGASI SLIDE ================= */
+const slides=[...document.querySelectorAll('.slide')];
+const N=slides.length, ctr=document.getElementById('ctr'), bar=document.getElementById('bar');
+let cur=0;
+function go(n){
+  cur=Math.max(0,Math.min(N-1,n));
+  slides.forEach((s,i)=>s.classList.toggle('active',i===cur));
+  ctr.textContent=String(cur+1).padStart(2,'0')+' / '+String(N).padStart(2,'0');
+  bar.style.width=((cur+1)/N*100)+'%';
+  [...menuList.children].forEach((b,i)=>b.classList.toggle('on',i===cur));
+  slides[cur].scrollTop=0;
+}
+document.getElementById('prevBtn').onclick=()=>go(cur-1);
+document.getElementById('nextBtn').onclick=()=>go(cur+1);
+document.getElementById('startBtn').onclick=()=>go(1);
+document.getElementById('againBtn').onclick=()=>go(0);
+
+/* Menu */
+const menuOv=document.getElementById('menuOv'), menuList=document.getElementById('menuList');
+slides.forEach((s,i)=>{
+  const b=document.createElement('button'); b.className='mi';
+  b.innerHTML='<b>'+String(i+1).padStart(2,'0')+'</b> '+(s.dataset.title||'Slide');
+  b.onclick=()=>{go(i);menuOv.classList.remove('show');};
+  menuList.appendChild(b);
+});
+document.getElementById('menuBtn').onclick=()=>menuOv.classList.add('show');
+document.getElementById('menuClose').onclick=()=>menuOv.classList.remove('show');
+menuOv.addEventListener('click',e=>{if(e.target===menuOv)menuOv.classList.remove('show');});
+
+/* Keyboard */
+document.addEventListener('keydown',e=>{
+  if(e.target.matches('input,textarea'))return;
+  if(menuOv.classList.contains('show')){if(e.key==='Escape')menuOv.classList.remove('show');return;}
+  if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){e.preventDefault();go(cur+1);}
+  else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(cur-1);}
+  else if(e.key==='Home'){go(0);}else if(e.key==='End'){go(N-1);}
+});
+
+/* Swipe */
+let tx=0,ty=0;
+document.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY;},{passive:true});
+document.addEventListener('touchend',e=>{
+  const dx=e.changedTouches[0].clientX-tx, dy=e.changedTouches[0].clientY-ty;
+  if(Math.abs(dx)>70&&Math.abs(dx)>Math.abs(dy)+20){dx<0?go(cur+1):go(cur-1);}
+},{passive:true});
+
+/* Fullscreen */
+document.getElementById('fsBtn').onclick=()=>{
+  if(!document.fullscreenElement)document.documentElement.requestFullscreen();
+  else document.exitFullscreen();
+};
+
+/* ================= KARTU FLIP ================= */
+document.querySelectorAll('.flip-card').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('flipped')));
+
+/* ================= LAB IDENTITAS ================= */
+const sa=document.getElementById('sa'),sb=document.getElementById('sb');
+const sav=document.getElementById('sav'),sbv=document.getElementById('sbv');
+const eqOut=document.getElementById('eqOut'),eqChk=document.getElementById('eqChk');
+const am=document.getElementById('am'),amWrap=document.getElementById('amWrap'),amAlt=document.getElementById('amAlt'),amAltTxt=document.getElementById('amAltTxt');
+let expI=1;
+function updExp(){
+  const a=+sa.value,b=+sb.value; sav.textContent=a; sbv.textContent=b;
+  am.style.gridTemplateColumns=(a*10)+'px '+(b*10)+'px';
+  am.style.gridTemplateRows=(a*10)+'px '+(b*10)+'px';
+  document.getElementById('cA2').textContent=a+'² = '+(a*a);
+  document.getElementById('cB2').textContent=b+'² = '+(b*b);
+  document.getElementById('cAB1').textContent='ab = '+(a*b);
+  document.getElementById('cAB2').textContent='ab = '+(a*b);
+  if(expI===1){
+    eqOut.innerHTML='('+a+' + '+b+')² = '+a+'² + 2·'+a+'·'+b+' + '+b+'²<br>= '+(a*a)+' + '+(2*a*b)+' + '+(b*b)+' = <span class="cok"><b>'+((a+b)*(a+b))+'</b></span>';
+    eqChk.innerHTML='✔ Cocok! ('+a+' + '+b+')² = '+(a+b)+'² = '+((a+b)*(a+b))+
+      '. <br>⚠️ Padahal a² + b² = '+(a*a+b*b)+' — <b>berbeda!</b> Itulah pentingnya suku tengah 2ab = '+(2*a*b)+'.';
+    amWrap.style.display=''; amAlt.style.display='none';
+  }else if(expI===2){
+    eqOut.innerHTML='('+a+' − '+b+')² = '+a+'² − 2·'+a+'·'+b+' + '+b+'²<br>= '+(a*a)+' − '+(2*a*b)+' + '+(b*b)+' = <span class="cok"><b>'+((a-b)*(a-b))+'</b></span>';
+    eqChk.innerHTML='✔ Identitas berlaku untuk <b>semua</b> nilai a dan b — bahkan jika a &lt; b sekalipun, hasilnya tetap benar karena kuadrat selalu tak-negatif.';
+    amWrap.style.display='none'; amAlt.style.display='';
+    amAltTxt.innerHTML='<b>Model luas (a − b)²:</b> mulai dari persegi besar a × a, “potong” dua persegi panjang ab… tetapi sudut b² tadi terpotong dua kali! Jadi tambahkan satu kembali:<br><br><b>a² − 2ab + b²</b> — persis Identitas 2.';
+  }else{
+    eqOut.innerHTML=a+'² − '+b+'² = '+(a*a)+' − '+(b*b)+' = <span class="cok"><b>'+(a*a-b*b)+'</b></span>';
+    eqChk.innerHTML='✔ Cek faktorisasi: (a + b)(a − b) = '+(a+b)+' × '+(a-b)+' = '+((a+b)*(a-b))+'. Sama persis!';
+    amWrap.style.display='none'; amAlt.style.display='';
+    amAltTxt.innerHTML='<b>Model luas a² − b²:</b> persegi besar a × a dikurangi persegi kecil b × b. Jika sisa kecil itu digeser dan disusun ulang, terbentuk persegi panjang bersisi <b>(a + b)</b> dan <b>(a − b)</b>. Itulah asal-usul faktor (a+b)(a−b).';
+  }
+}
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
+  t.classList.add('on'); expI=+t.dataset.i; updExp();
+}));
+sa.addEventListener('input',updExp); sb.addEventListener('input',updExp); updExp();
+
+/* ================= DEMO EKSPANSI ⇄ FAKTORISASI ================= */
+const dF=document.getElementById('dF'),dE=document.getElementById('dE');
+const dLine=document.getElementById('dLine'),dCap=document.getElementById('dCap');
+function setDemo(m){
+  if(m==='f'){
+    dF.classList.add('on');dE.classList.remove('on');
+    dLine.innerHTML='<span class="long">x² + 6x + 9</span><span class="arr">⟶</span><span class="short">(x + 3)²</span>';
+    dCap.textContent='FAKTORISASI: dari penjumlahan beberapa suku → bentuk perkalian (faktor). Inilah target kita hari ini!';
+  }else{
+    dE.classList.add('on');dF.classList.remove('on');
+    dLine.innerHTML='<span class="short">(x + 3)²</span><span class="arr">⟶</span><span class="long">x² + 6x + 9</span>';
+    dCap.textContent='EKSPANSI: dari bentuk perkalian → penjumlahan suku. Ini yang sudah kalian kuasai di Bab 4.1.';
+  }
+}
+dF.onclick=()=>setDemo('f'); dE.onclick=()=>setDemo('e'); setDemo('f');
+
+/* ================= CHECKLIST TUJUAN ================= */
+document.querySelectorAll('.goal').forEach(g=>g.addEventListener('click',()=>{
+  g.classList.toggle('done');
+  const d=document.querySelectorAll('.goal.done').length;
+  document.getElementById('goalCount').textContent=d+' / 6 tercapai';
+}));
+
+/* ================= CONTOH: LANGKAH SATU PER SATU (SUDAH DIPERBAIKI) =================
+   Setiap tombol .stepbtn kini hanya mengontrol <ol class="steps"> yang tepat
+   berada di sebelum dirinya — bagian (a), (b), (c) berfungsi mandiri. */
+document.querySelectorAll('.stepbtn').forEach(btn=>{
+  const steps=btn.previousElementSibling;   // <ol class="steps"> milik tombol ini
+  const lis=[...steps.querySelectorAll('li')];
+  const tot=lis.length;
+  const refresh=()=>{
+    const on=lis.filter(l=>l.classList.contains('on')).length;
+    btn.textContent = on===0 ? 'Tampilkan Langkah ▸'
+                    : on<tot ? 'Langkah berikutnya ▸ ('+on+'/'+tot+')'
+                    : 'Sembunyikan Langkah ▴';
+  };
+  btn.addEventListener('click',()=>{
+    const on=lis.filter(l=>l.classList.contains('on')).length;
+    if(on<tot) lis[on].classList.add('on');
+    else       lis.forEach(l=>l.classList.remove('on'));   // semua tampil → sembunyikan lagi
+    refresh();
+    btn.scrollIntoView({block:'nearest',behavior:'smooth'});
+  });
+  refresh();
+});
+
+/* ================= PEMBAHASAN LATIHAN ================= */
+document.querySelectorAll('.pbtn').forEach(b=>b.addEventListener('click',()=>{
+  const s=b.closest('.qcard').querySelector('.solwrap');
+  s.classList.toggle('open');
+  b.textContent=s.classList.contains('open')?'Sembunyikan Pembahasan ▴':'Lihat Pembahasan ▾';
+}));
+
+/* ================= KUIS PILIHAN GANDA ================= */
+document.querySelectorAll('.mcq').forEach(m=>{
+  const opts=[...m.querySelectorAll('.opt')], fb=m.querySelector('.fb'), exp=m.dataset.exp;
+  opts.forEach(o=>o.addEventListener('click',()=>{
+    if(m.querySelector('.opts').classList.contains('lock'))return;
+    if(o.dataset.ok==='1'){
+      o.classList.add('correct');
+      m.querySelector('.opts').classList.add('lock');
+      fb.className='fb ok'; fb.innerHTML='✔ Benar! '+exp;
+    }else{
+      o.classList.add('wrong'); setTimeout(()=>o.classList.remove('wrong'),450);
+      fb.className='fb no'; fb.textContent='✗ Belum tepat — perhatikan ciri polanya (kuadrat sempurna? suku tengah 2ab? tanda?), lalu coba lagi!';
+    }
+  }));
+});
+
+/* ================= MOOD REFLEKSI ================= */
+document.querySelectorAll('.mood').forEach(m=>m.addEventListener('click',()=>{
+  document.querySelectorAll('.mood').forEach(x=>x.classList.remove('sel'));
+  m.classList.add('sel');
+}));
+
+/* Init */
+go(0);
+</script>
+</body>
+</html>
