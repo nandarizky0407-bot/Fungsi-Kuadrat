@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quadratic Equations &amp; Graphs — Interactive Lesson</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500..900;1,9..144,500..900&family=Sora:wght@400..800&display=swap" rel="stylesheet">
+<style>
+/* ============ DASAR & PALET ============ */
+:root{
+  --paper:#F7F2E9; --card:#FFFDF7; --ink:#1C3A33; --soft:#4A6259;
+  --line:rgba(28,58,51,.13);
+  --teal:#0E7A6A; --teal-d:#0B5F53; --teal-t:rgba(14,122,106,.11);
+  --coral:#E4572E; --coral-t:rgba(228,87,46,.12);
+  --gold:#F0B429;  --gold-t:rgba(240,180,41,.22);
+  --ok:#2E8B57; --ok-t:rgba(46,139,87,.13);
+  --bad:#C4432F; --bad-t:rgba(196,67,47,.11);
+  --disp:'Fraunces', Georgia, serif;
+  --body:'Sora', 'Segoe UI', sans-serif;
+}
+*{box-sizing:border-box; margin:0; padding:0}
+html,body{height:100%}
+body{
+  font-family:var(--body); color:var(--ink); background-color:var(--paper);
+  background-image:
+    linear-gradient(rgba(14,122,106,.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(14,122,106,.05) 1px, transparent 1px);
+  background-size:28px 28px;
+  display:flex; flex-direction:column; height:100dvh; overflow:hidden;
+}
+::selection{background:var(--gold-t)}
+sup{font-size:.62em}
+button{font-family:inherit}
+
+/* ============ TOPBAR ============ */
+.top{display:flex; justify-content:space-between; align-items:center; gap:12px;
+  padding:10px clamp(14px,3vw,32px); border-bottom:1px solid var(--line); background:rgba(255,253,247,.75); backdrop-filter:blur(6px); z-index:5}
+.brand{display:flex; align-items:center; gap:10px; min-width:0}
+.brand b{font-family:var(--disp); font-size:1.02rem; letter-spacing:.01em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.brand svg{flex:none}
+.top-r{display:flex; align-items:center; gap:10px}
+.chip{display:inline-flex; align-items:center; gap:.45em; background:var(--card); border:1px solid var(--line);
+  border-radius:999px; padding:.4em .85em; font-size:.83rem; font-weight:600; color:var(--soft)}
+.chip svg{color:var(--teal)}
+.seg{display:inline-flex; border:1.5px solid var(--teal); border-radius:999px; overflow:hidden}
+.seg button{border:0; background:transparent; color:var(--teal); font-weight:700; font-size:.8rem; padding:.42em .95em; cursor:pointer; transition:.2s}
+.seg button.on{background:var(--teal); color:#fff}
+@media(max-width:640px){ .brand b{display:none} .chip.userchip{display:none} }
+
+/* ============ DECK & SLIDE ============ */
+main{flex:1; position:relative; overflow:hidden}
+.slide{position:absolute; inset:0; opacity:0; pointer-events:none; transform:translateY(18px);
+  transition:opacity .35s ease, transform .35s ease}
+.slide.on{opacity:1; pointer-events:auto; transform:none}
+.wrap{height:100%; overflow-y:auto; padding:26px clamp(16px,4vw,52px) 46px; max-width:1180px; margin:0 auto}
+.wrap::-webkit-scrollbar{width:10px}
+.wrap::-webkit-scrollbar-thumb{background:var(--line); border-radius:6px}
+
+/* animasi masuk bertahap */
+@keyframes rise{from{opacity:0; transform:translateY(14px)} to{opacity:1; transform:none}}
+.rev{opacity:0}
+.slide.on .rev{animation:rise .55s cubic-bezier(.2,.7,.3,1) forwards; animation-delay:calc(var(--i,0)*80ms)}
+
+/* ============ TIPOGRAFI ============ */
+.kick{font-weight:700; font-size:.76rem; letter-spacing:.16em; text-transform:uppercase; color:var(--teal);
+  display:inline-flex; align-items:center; gap:.6em}
+.kick::before{content:""; width:26px; height:3px; border-radius:2px; background:var(--coral)}
+h1.t{font-family:var(--disp); font-weight:700; font-size:clamp(1.65rem,3.4vw,2.5rem); line-height:1.12; margin:.4em 0 .35em; letter-spacing:-.01em}
+.hl{background:linear-gradient(180deg, transparent 58%, var(--gold-t) 58%); border-radius:4px; padding:0 .08em}
+.mx{font-family:var(--disp); font-style:italic; font-weight:600}
+p.lead{color:var(--soft); font-size:1.02rem; line-height:1.65; max-width:62ch}
+
+/* ============ KOMPONEN UMUM ============ */
+.card{background:var(--card); border:1px solid var(--line); border-radius:16px;
+  box-shadow:0 12px 30px rgba(28,58,51,.07)}
+.row{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
+.grid2{display:grid; grid-template-columns:repeat(auto-fit,minmax(310px,1fr)); gap:14px; margin-top:16px}
+.hint{font-size:.86rem; color:var(--soft)}
+.tb{font-size:.72rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--teal-d);
+  background:var(--teal-t); border-radius:999px; padding:.35em .8em}
+
+.btn{display:inline-flex; align-items:center; gap:.5em; border:0; cursor:pointer; color:#fff;
+  background:var(--teal); font-weight:700; font-size:.92rem; padding:.62em 1.2em; border-radius:999px;
+  box-shadow:0 5px 14px rgba(14,122,106,.28); transition:.2s}
+.btn:hover{background:var(--teal-d); transform:translateY(-1px)}
+.btn:active{transform:none}
+.btn.ghost{background:transparent; color:var(--teal); border:1.5px solid var(--teal); box-shadow:none}
+.btn.ghost:hover{background:var(--teal-t)}
+.btn.sm{padding:.45em .95em; font-size:.82rem}
+.btn:disabled{opacity:.45; cursor:not-allowed; transform:none; box-shadow:none}
+
+input.ans{font-family:var(--body); font-size:.95rem; color:var(--ink); background:#fff;
+  border:1.5px solid var(--line); border-radius:12px; padding:.55em .85em; min-width:0; flex:1; transition:.2s; outline:none}
+input.ans:focus{border-color:var(--teal); box-shadow:0 0 0 3px var(--teal-t)}
+input.ans.okb{border-color:var(--ok); box-shadow:0 0 0 3px var(--ok-t)}
+input.ans.badb{border-color:var(--bad); box-shadow:0 0 0 3px var(--bad-t)}
+input.ans.big{font-size:1.05rem; padding:.7em 1em; min-width:min(260px,60vw)}
+input[type=number]{width:86px; flex:none}
+
+@keyframes pop{from{transform:scale(.94); opacity:0} to{transform:scale(1); opacity:1}}
+.fb{font-size:.88rem; font-weight:600; padding:.55em .85em; border-radius:10px; display:inline-flex; gap:.4em; align-items:center; animation:pop .25s both; max-width:100%}
+.fb.ok{background:var(--ok-t); color:var(--ok)}
+.fb.no{background:var(--bad-t); color:var(--bad)}
+.fb.soft{background:var(--teal-t); color:var(--teal-d)}
+.fb.warn{background:var(--gold-t); color:#8a6d1a}
+.hidewrap{display:none}
+.hidewrap.show{display:inline-flex}
+
+.fr{display:inline-flex; flex-direction:column; align-items:center; vertical-align:middle; font-size:.82em; line-height:1.15; margin:0 .12em}
+.fr .n{border-bottom:1.6px solid currentColor; padding:0 .22em}
+.fr .d{padding:0 .22em}
+.meq{font-family:var(--disp); font-style:italic; font-weight:600; display:inline-block;
+  background:#FBF7EE; border:1px dashed var(--line); border-radius:12px; padding:.5em .9em; font-size:1.12rem}
+
+.note{border-left:4px solid var(--gold); background:var(--gold-t); border-radius:0 12px 12px 0; padding:.75em 1em; font-size:.93rem; margin-top:14px}
+.warnbox{border-left:4px solid var(--coral); background:var(--coral-t); border-radius:0 12px 12px 0; padding:.75em 1em; font-size:.93rem; margin-top:14px}
+
+/* langkah metode */
+ol.mst{list-style:none; counter-reset:s; margin-top:6px}
+ol.mst li{counter-increment:s; position:relative; padding:.55em 0 .55em 2.7em; font-size:.98rem; line-height:1.55}
+ol.mst li::before{content:counter(s); position:absolute; left:0; top:.55em; width:1.75em; height:1.75em; border-radius:50%;
+  background:var(--teal); color:#fff; font-weight:700; font-size:.82rem; line-height:1.75em; text-align:center}
+
+/* kartu soal latihan */
+.pq{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px 16px; display:flex; flex-direction:column; gap:10px; align-items:flex-start}
+.pq.wide{grid-column:1/-1}
+.pq-q{font-size:1rem; display:flex; align-items:center; gap:.55em; flex-wrap:wrap}
+.tag{flex:none; width:1.7em; height:1.7em; border-radius:8px; background:var(--teal-t); color:var(--teal-d);
+  font-weight:800; font-size:.85rem; line-height:1.7em; text-align:center}
+.pq-row{display:flex; gap:8px; align-items:center; width:100%}
+.pq-fb{display:flex; flex-direction:column; gap:6px}
+.solw{display:none; font-size:.9rem; color:var(--soft); background:#F6F1E6; border-radius:10px; padding:.6em .8em; width:100%}
+.solw.show{display:block; animation:pop .3s both}
+details.dsol{width:100%; font-size:.9rem}
+details.dsol summary{cursor:pointer; color:var(--teal-d); font-weight:700; list-style:none; display:inline-flex; align-items:center; gap:.4em}
+details.dsol summary::before{content:"▸"; transition:.2s}
+details.dsol[open] summary::before{transform:rotate(90deg)}
+details.dsol div{margin-top:.5em; color:var(--soft); background:#F6F1E6; border-radius:10px; padding:.6em .8em}
+
+/* pilihan ganda */
+.opts{display:flex; flex-direction:column; gap:8px; width:100%}
+.opt{display:flex; gap:.6em; align-items:flex-start; padding:.55em .75em; border:1.5px solid var(--line); border-radius:10px; cursor:pointer; font-size:.92rem; transition:.2s}
+.opt input{accent-color:var(--teal); margin-top:.18em}
+.opt:has(input:checked){border-color:var(--teal); background:var(--teal-t)}
+
+/* ============ CONTOH INTERAKTIF (STEPPER) ============ */
+.ex-card{margin-top:16px; padding:18px 20px}
+.ex-head{display:flex; align-items:center; gap:12px; flex-wrap:wrap}
+.extag{font-size:.72rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:#fff; background:var(--coral); border-radius:999px; padding:.4em .9em}
+.exq{font-size:1.25rem}
+.ex-tip{font-size:.83rem; color:var(--soft); margin-top:6px}
+.steps{list-style:none; counter-reset:st; margin-top:10px; min-height:40px}
+.step{counter-increment:st; position:relative; max-height:0; opacity:0; overflow:hidden; padding-left:2.9em;
+  font-size:.97rem; line-height:1.6; transition:max-height .5s ease, opacity .4s ease, padding .4s ease}
+.step.show{max-height:360px; opacity:1; padding-top:.5em; padding-bottom:.5em}
+.step::before{content:counter(st); position:absolute; left:0; top:.5em; width:1.8em; height:1.8em; border-radius:50%;
+  background:var(--coral); color:#fff; font-weight:700; font-size:.8rem; line-height:1.8em; text-align:center}
+.ex-bar{display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-top:14px; padding-top:12px; border-top:1px dashed var(--line)}
+.ex-count{font-size:.82rem; font-weight:700; color:var(--soft)}
+.ex-prog{flex:1; min-width:90px; max-width:220px; height:6px; background:var(--line); border-radius:3px; overflow:hidden}
+.ex-prog i{display:block; height:100%; width:0; background:var(--coral); border-radius:3px; transition:.35s}
+.ex-btns{display:flex; gap:8px; margin-left:auto; flex-wrap:wrap}
+
+/* ============ COVER ============ */
+.cov{display:grid; grid-template-columns:1.08fr .92fr; gap:34px; align-items:center; height:100%}
+.cov .t{font-size:clamp(2.1rem,4.6vw,3.4rem)}
+.cov-chips{display:flex; gap:8px; flex-wrap:wrap; margin:14px 0 22px}
+.cov-chips span{font-size:.78rem; font-weight:700; color:var(--teal-d); background:var(--card); border:1px solid var(--line); border-radius:999px; padding:.45em .9em}
+.namebox{margin-top:8px}
+.lbl{display:block; font-weight:700; font-size:.9rem; margin-bottom:.5em}
+@keyframes shake{20%,60%{transform:translateX(-6px)} 40%,80%{transform:translateX(6px)}}
+.shake{animation:shake .4s}
+.para{width:100%; max-width:460px; height:auto; display:block; margin:0 auto}
+.para .ax{stroke:var(--ink); stroke-width:2; opacity:.55}
+.para .pl{fill:none; stroke:var(--teal); stroke-width:3.6; stroke-linecap:round;
+  stroke-dasharray:620; stroke-dashoffset:620; animation:draw 1.7s .45s ease forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.para .dot{fill:var(--gold); stroke:var(--ink); stroke-width:1.5; opacity:0; animation:pop .45s 1.9s both}
+.para .vd{fill:var(--coral); opacity:0; animation:pop .45s 2.1s both}
+.para text{font-family:var(--body); font-size:12px; fill:var(--soft); opacity:0; animation:pop .45s 2.2s both}
+@media(max-width:880px){ .cov{grid-template-columns:1fr; gap:10px} .para{max-width:320px} }
+
+/* ============ ZPP ============ */
+.split{display:grid; grid-template-columns:1.05fr .95fr; gap:18px; margin-top:14px}
+@media(max-width:880px){ .split{grid-template-columns:1fr} }
+.zstmt{background:var(--teal); color:#fff; border-radius:16px; padding:22px 24px; text-align:center; box-shadow:0 14px 30px rgba(14,122,106,.3)}
+.zstmt .big{font-family:var(--disp); font-style:italic; font-weight:700; font-size:clamp(1.3rem,2.6vw,1.8rem)}
+.zstmt .sub{font-size:.9rem; opacity:.92; margin-top:.5em}
+.zppx{margin-top:14px; padding:16px 18px}
+.zpp-t{font-weight:800; font-size:.95rem; margin-bottom:10px}
+.zpp-row{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
+.zprod{font-size:1.3rem; min-width:130px}
+.gcard{padding:16px 18px}
+.gcard h3{font-family:var(--disp); font-size:1.05rem; margin-bottom:6px}
+.gcap{font-size:.85rem; color:var(--soft); margin-top:8px; line-height:1.5}
+.gwrap{background:#FBF7EE; border:1px solid var(--line); border-radius:12px; padding:8px}
+
+/* ============ HASIL ============ */
+.res-grid{display:grid; grid-template-columns:320px 1fr; gap:16px; margin-top:14px}
+@media(max-width:820px){ .res-grid{grid-template-columns:1fr} }
+.ringcard{padding:22px; display:flex; flex-direction:column; align-items:center; gap:8px; position:relative}
+.ring{width:150px; height:150px}
+.ring .rt{fill:none; stroke:var(--line); stroke-width:12}
+.ring .rp{fill:none; stroke:var(--teal); stroke-width:12; stroke-linecap:round;
+  stroke-dasharray:364.4; stroke-dashoffset:364.4; transform:rotate(-90deg); transform-origin:center;
+  transition:stroke-dashoffset 1s ease .25s}
+.ring-num{position:absolute; top:88px; left:0; right:0; text-align:center; font-family:var(--disp); font-weight:800; font-size:1.7rem}
+.ring-num-wrap{position:relative; line-height:0}
+.ring-score{font-weight:700; color:var(--soft); font-size:.95rem}
+.msgcard{padding:22px; display:flex; flex-direction:column; gap:12px; justify-content:center}
+.res-msg{font-family:var(--disp); font-weight:700; font-size:clamp(1.15rem,2.4vw,1.5rem); line-height:1.3}
+.rv{display:flex; gap:12px; align-items:flex-start; border:1px solid var(--line); border-radius:12px; padding:10px 12px; background:var(--card)}
+.rv.bad{border-color:rgba(196,67,47,.35)}
+.rvk{flex:none; width:1.9em; height:1.9em; border-radius:50%; font-weight:800; font-size:.85rem; line-height:1.9em; text-align:center}
+.rvk.ok{background:var(--ok-t); color:var(--ok)}
+.rvk.no{background:var(--bad-t); color:var(--bad)}
+.rvq{font-weight:700; font-size:.95rem}
+.rva{font-size:.85rem; color:var(--soft); margin-top:4px; line-height:1.55}
+
+/* ============ KESIMPULAN / REFLEKSI ============ */
+.zbanner{background:var(--teal); color:#fff; border-radius:16px; padding:20px 24px; text-align:center;
+  font-family:var(--disp); font-style:italic; font-weight:700; font-size:clamp(1.2rem,3vw,1.8rem);
+  box-shadow:0 14px 30px rgba(14,122,106,.3); margin-top:16px}
+.rcard{padding:16px 18px; display:flex; flex-direction:column; gap:8px}
+.rcard .rt1{font-family:var(--disp); font-weight:700; font-size:1.08rem}
+.rcard .rt2{font-size:.88rem; color:var(--soft); line-height:1.55}
+.rnum{font-family:var(--disp); font-weight:800; font-size:2.1rem; line-height:1}
+textarea{width:100%; font-family:var(--body); font-size:.95rem; color:var(--ink); background:#fff;
+  border:1.5px solid var(--line); border-radius:12px; padding:.7em .85em; resize:vertical; min-height:86px; outline:none; transition:.2s}
+textarea:focus{border-color:var(--teal); box-shadow:0 0 0 3px var(--teal-t)}
+
+/* ============ THANKS & CONFETTI ============ */
+.thanks{height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:14px}
+.thanks .t{font-size:clamp(2.2rem,5.5vw,3.6rem)}
+#cfLayer{position:fixed; inset:0; pointer-events:none; overflow:hidden; z-index:60}
+.cf{position:fixed; top:-50px; font-family:var(--disp); font-weight:800; animation:cfall linear forwards}
+@keyframes cfall{to{transform:translateY(112vh) rotate(520deg); opacity:.85}}
+
+/* ============ NAV BAWAH ============ */
+.nav{display:flex; justify-content:space-between; align-items:center; gap:14px;
+  padding:10px clamp(14px,3vw,32px); border-top:1px solid var(--line); background:rgba(255,253,247,.8); backdrop-filter:blur(6px); z-index:5}
+.nav-l{display:flex; align-items:center; gap:12px; flex:1; min-width:0}
+.cnt{font-size:.82rem; font-weight:800; color:var(--soft); white-space:nowrap}
+.pbar{flex:1; max-width:420px; height:6px; background:var(--line); border-radius:3px; overflow:hidden}
+.pbar i{display:block; height:100%; width:0; background:linear-gradient(90deg,var(--teal),var(--gold)); border-radius:3px; transition:.35s}
+.nav-r{display:flex; gap:8px}
+.navb{width:44px; height:44px; border-radius:50%; border:1.5px solid var(--teal); background:var(--card); color:var(--teal);
+  cursor:pointer; display:grid; place-items:center; transition:.2s}
+.navb:hover{background:var(--teal); color:#fff}
+.navb:disabled{opacity:.35; cursor:not-allowed}
+.navb:disabled:hover{background:var(--card); color:var(--teal)}
+</style>
+</head>
+<body>
+
+<div id="cfLayer"></div>
+
+<!-- ================= TOPBAR ================= -->
+<header class="top">
+  <div class="brand">
+    <svg width="26" height="26" viewBox="0 0 26 26"><line x1="2" y1="19" x2="24" y2="19" stroke="#F0B429" stroke-width="2.4" stroke-linecap="round"/><path d="M4 5 Q 13 29 22 5" fill="none" stroke="#0E7A6A" stroke-width="2.6" stroke-linecap="round"/></svg>
+    <b data-en="Quadratic Equations &amp; Graphs" data-id="Persamaan Kuadrat &amp; Grafik"></b>
+  </div>
+  <div class="top-r">
+    <span class="chip userchip">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"/></svg>
+      <span id="chipName">—</span>
+    </span>
+    <div class="seg" id="langseg">
+      <button data-l="en" class="on">EN</button>
+      <button data-l="id">ID</button>
+    </div>
+  </div>
+</header>
+
+<main id="deck">
+
+<!-- ============ SLIDE 1 · COVER ============ -->
+<section class="slide on" id="s-cover">
+  <div class="wrap cov">
+    <div>
+      <div class="kick rev" style="--i:0"><span data-en="Cambridge Lower Secondary · Grade 8 · Mathematics" data-id="Cambridge Lower Secondary · Kelas 8 · Matematika"></span></div>
+      <h1 class="t rev" style="--i:1"><span data-en="Quadratic <span class='hl'>Equations</span> &amp; Graphs" data-id="Persamaan <span class='hl'>Kuadrat</span> &amp; Grafik"></span></h1>
+      <p class="lead rev" style="--i:2" data-en="Solve quadratic equations by factorisation — powered by one big idea: the Zero Product Principle." data-id="Menyelesaikan persamaan kuadrat dengan faktorisasi — didorong oleh satu ide besar: Prinsip Hasil Kali Nol."></p>
+      <div class="cov-chips rev" style="--i:3">
+        <span data-en="Warm-up · 10 questions" data-id="Pemanasan · 10 soal"></span>
+        <span data-en="4 types of equations" data-id="4 tipe persamaan"></span>
+        <span data-en="4 Practice Now sets" data-id="4 set Practice Now"></span>
+        <span data-en="Exit ticket" data-id="Exit ticket"></span>
+      </div>
+      <div class="namebox rev" style="--i:4">
+        <label class="lbl" for="nameInput" data-en="Enter your name to begin" data-id="Tulis namamu untuk mulai"></label>
+        <div class="row">
+          <input id="nameInput" class="ans big" maxlength="28" autocomplete="off" data-pen="Your name…" data-pid="Namamu…">
+          <button id="btnStart" class="btn">
+            <span data-en="Start lesson" data-id="Mulai"></span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </button>
+        </div>
+        <div id="nameWarn" class="fb no hidewrap" style="margin-top:10px" data-en="Please enter your name first." data-id="Tulis namamu dulu, ya."></div>
+      </div>
+    </div>
+    <div class="rev" style="--i:3">
+      <svg class="para" viewBox="0 0 320 240" aria-hidden="true">
+        <line class="ax" x1="16" y1="170" x2="304" y2="170"/>
+        <line class="ax" x1="60" y1="14" x2="60" y2="226"/>
+        <text x="290" y="162">x</text><text x="68" y="24">y</text>
+        <path class="pl" d="M 60 50 Q 180 350 300 50"/>
+        <circle class="dot" cx="126" cy="170" r="5.5"/>
+        <circle class="dot" cx="234" cy="170" r="5.5"/>
+        <circle class="vd" cx="180" cy="200" r="4.5"/>
+        <text x="104" y="192">x = 0</text>
+        <text x="226" y="192">x = 3</text>
+        <text x="158" y="222">vertex</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 2 · PETA PEMBELAJARAN ============ -->
+<section class="slide" id="s-map">
+  <div class="wrap">
+    <div class="kick rev" style="--i:0"><span data-en="Lesson roadmap" data-id="Peta pembelajaran"></span></div>
+    <h1 class="t rev" style="--i:1" data-en="Here's today's journey" data-id="Perjalanan kita hari ini"></h1>
+    <div class="grid2">
+      <div class="card rcard rev" style="--i:2"><span class="rnum" style="color:var(--gold)">1</span><div class="rt1" data-en="Warm-up · Linear review" data-id="Pemanasan · Review linear"></div><div class="rt2" data-en="10 quick linear equations to sharpen your skills — with instant feedback." data-id="10 soal linear singkat untuk mengasah kemampuanmu — dengan umpan balik langsung."></div></div>
+      <div class="card rcard rev" style="--i:3"><span class="rnum" style="color:var(--coral)">2</span><div class="rt1" data-en="The Zero Product Principle" data-id="Prinsip Hasil Kali Nol"></div><div class="rt2" data-en="If A · B = 0, then A = 0 or B = 0. The engine behind every solution today." data-id="Jika A · B = 0, maka A = 0 atau B = 0. Mesin di balik semua solusi hari ini."></div></div>
+      <div class="card rcard rev" style="--i:4"><span class="rnum" style="color:var(--teal)">3</span><div class="rt1" data-en="Type 1 · ax² + bx = 0" data-id="Tipe 1 · ax² + bx = 0"></div><div class="rt2" data-en="Take out the common factor, then apply the principle." data-id="Keluarkan faktor yang sama, lalu terapkan prinsipnya."></div></div>
+      <div class="card rcard rev" style="--i:5"><span class="rnum" style="color:var(--teal)">4</span><div class="rt1" data-en="Type 2 · ax² + bx + c = 0" data-id="Tipe 2 · ax² + bx + c = 0"></div><div class="rt2" data-en="Factorise the full trinomial — brackets on both sides." data-id="Faktorkan trinomial penuh — kurung di kedua sisi."></div></div>
+      <div class="card rcard rev" style="--i:6"><span class="rnum" style="color:var(--teal)">5</span><div class="rt1" data-en="Type 3 · ax² + c = 0" data-id="Tipe 3 · ax² + c = 0"></div><div class="rt2" data-en="Square roots, ± signs — and when there is no real solution." data-id="Akar kuadrat, tanda ± — dan kapan tidak ada solusi real."></div></div>
+      <div class="card rcard rev" style="--i:7"><span class="rnum" style="color:var(--teal)">6</span><div class="rt1" data-en="Type 4 · ax² + bx + c = d" data-id="Tipe 4 · ax² + bx + c = d"></div><div class="rt2" data-en="Move everything to one side first, then factorise." data-id="Pindahkan semua ke satu ruas dulu, lalu faktorkan."></div></div>
+      <div class="card rcard rev" style="--i:8"><span class="rnum" style="color:var(--gold)">7</span><div class="rt1" data-en="Practice Now 1–4 &amp; Exit ticket" data-id="Practice Now 1–4 &amp; Exit ticket"></div><div class="rt2" data-en="Four practice sets with answer boxes, then a 10-question exit ticket and your results." data-id="Empat set latihan dengan kolom jawaban, lalu exit ticket 10 soal dan hasilnya."></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 3 · WARM-UP ============ -->
+<section class="slide" id="s-warm">
+  <div class="wrap">
+    <div class="kick rev" style="--i:0"><span data-en="Warm-up" data-id="Pemanasan"></span></div>
+    <h1 class="t rev" style="--i:1" data-en="Review: solve the linear equations" data-id="Review: selesaikan persamaan linear"></h1>
+    <div class="row rev" style="--i:2">
+      <span class="hint" data-en="Type your answer (numbers only), then press Check. Fractions like -3/2 are allowed." data-id="Ketik jawabanmu (angka saja), lalu tekan Cek. Pecahan seperti -3/2 diperbolehkan."></span>
+      <button id="btnWuAll" class="btn sm"><span data-en="Check all answers" data-id="Cek semua jawaban"></span></button>
+      <span id="wuScore" class="chip"></span>
+    </div>
+    <div class="grid2" id="wuList">
+      <div class="pq" data-qid="wu1"><div class="pq-q"><span class="tag">1</span><span class="mx">x + 7 = 12</span></div><div class="pq-row"><input class="ans" data-pen="x = ?" data-pid="x = ?"><button class="btn sm chk"><span data-en="Check" data-id="Cek"></span></button></div><div class="pq-fb"></div><div class="solw" data-en="Subtract 7 from both sides: x = 12 − 7 = 5." data-id="Kurangi kedua ruas dengan 7: x = 12 − 7 = 5."></div></div>
+      <div class="pq" data-qid="wu2"><div class="pq-q"><span class="tag">2</span><span class="mx">3x = 21</span></div><div class="pq-row"><input class="ans" data-pen="x = ?" data-pid="x = ?"><button class="btn sm chk"><span data-en="Check" data-id="Cek"></span></button></div><div class="pq-fb"></div><div class="solw" data-en="Divide both sides by 3: x = 7." data-id="Bagi kedua ruas dengan 3: x = 7."></div></div>
+      <div class="pq" data-qid="wu3"><div class="pq-q"><span class="tag">3</span><span class="mx">2x − 5 = 11</span></div><div class="pq-row"><input class="ans" data-pen="x = ?" data-pid="x = ?"><button class="btn sm chk"><span data-en="Check" data-id="Cek"></span></button></div><div class="pq-fb"></div><div class="solw" data-en="Add 5: 2x = 16, then divide by 2: x = 8." data-id="Tambah 5: 2x = 16, lalu bagi 2: x = 8."></div></div>
+      <div class="pq" data-qid="wu4"><div class="pq-q"><span class="tag">4</span><span class="mx">4x + 3 = 19</span></div><div class="pq-row"><input class="ans" data-pen="x = ?" data-pid="x = ?"><button class="btn sm chk"><span data-en="Check" data-id="Cek"></span></button></div><div class="pq-fb"></div><div class="solw" data-en="Subtract 3: 4x = 16, so x = 4." data-id="Kurangi 3: 4x = 16, jadi x = 4."></div></div>
+      <div class="pq" data-qid="wu5"><div class="pq-q"><span class="tag">5</span><span class="mx"><span class="fr"><span class="n">x</span><span class="d">3</span></span> = 6</span></div><div class="pq-row"><input class="ans" data-pen="x = ?" data-pid="x = ?"><button class="btn sm chk"><span data-en="Check" data-id="Cek"></span></button></div><div class="pq-fb"></div><div class="solw" data-en="Multiply both sides by 3: x = 18." data-id="Kalikan kedua ruas dengan 3: x = 18."></div></div>
+      <div class="pq" data-qid="wu6"><div class="pq-q"><span class="tag">6</span><span class="mx">5x − 2 = 3x + 10</span></div><div class="pq-row"><input class="ans" data-pen="x = ?" data-pid="x = ?"><button class="btn sm chk"><span data-en="Check" data-id="Cek"></span></button></div><div class="pq-fb"></div><div class="solw" data-en="Collect like terms: 2x = 12, so x = 6." data-id="Kumpulkan suku sejenis: 2x = 12, jadi x = 6."></div></div>
+      <div class="pq" data-qid="wu7"><div class="pq-q"><span class="tag">7</span><span class="mx">7 − 2x = 1</span></div><div class="pq-row"><input class="ans" data-pen="x = ?" data-pid="x = ?"><button class="btn sm chk"><span data-en="Check" data-id="Cek"></span></button></div><div class="pq-fb"></div><div class="solw" data-en="−2x = −6, so x = 3." data-id="−2x = −6, jadi x = 3."></div></div>
+      <div class="pq" data-qid="wu8"><div class="pq-q"><span class="tag">8</span><span class="mx">3(x + 4) = 21</span></div><div class="pq-row"><input class="ans" data-pen="x = ?" data-pid="x = ?"><button class="btn sm chk"><span data-en="Check" data-id="Cek"></span></button></div><div class="pq-fb"></div><div class="solw" data-en="Divide by 3: x + 4 = 7, so x = 3." data-id="Bagi dengan 3: x + 4 = 7, jadi x = 3."></div></div>
+      <div class="pq" data-qid="wu9"><div class="pq-q"><span class="tag">9</span><span class="mx"><span class="fr"><span class="n">2x</span><span class="d">5</span></span> = 6</span></div><div class="pq-row"><input class="ans" data-pen="x = ?" data-pid="x = ?"><button class="btn sm chk"><span data-en="Check" data-id="Cek"></span></button></div><div class="pq-fb"></div><div class="solw" data-en="Multiply by 5: 2x = 30, so x = 15." data-id="Kalikan 5: 2x = 30, jadi x = 15."></div></div>
+      <div class="pq" data-qid="wu10"><div class="pq-q"><span class="tag">10</span><span class="mx">6x − 8 = 4x + 6</span></div><div class="pq-row"><input class="ans" data-pen="x = ?" data-pid="x = ?"><button class="btn sm chk"><span data-en="Check" data-id="Cek"></span></button></div><div class="pq-fb"></div><div class="solw" data-en="Collect like terms: 2x = 14, so x = 7." data-id="Kumpulkan suku sejenis: 2x = 14, jadi x = 7."></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 4 · ZERO PRODUCT PRINCIPLE ============ -->
+<section class="slide" id="s-zpp">
+  <div class="wrap">
+    <div class="kick rev" style="--i:0"><span data-en="The big idea" data-id="Ide besar"></span></div>
+    <h1 class="t rev" style="--i:1" data-en="The <span class='hl'>Zero Product</span> Principle" data-id="Prinsip <span class='hl'>Hasil Kali Nol</span>"></h1>
+    <div class="split">
+      <div>
+        <div class="zstmt rev" style="--i:2">
+          <div class="big" data-en="If A · B = 0, then A = 0 or B = 0." data-id="Jika A · B = 0, maka A = 0 atau B = 0."></div>
+          <div class="sub" data-en="When two numbers multiply to give zero, at least one of them must be zero. Zero is special!" data-id="Jika dua bilangan dikalikan hasilnya nol, minimal salah satunya harus nol. Nol itu istimewa!"></div>
+        </div>
+        <div class="card zppx rev" style="--i:3">
+          <div class="zpp-t" data-en="Try it — make the product zero" data-id="Coba — buat hasil kalinya nol"></div>
+          <div class="zpp-row">
+            <span class="mx">a =</span><input type="number" id="za" value="3">
+            <span class="mx" style="font-size:1.2rem">×</span>
+            <span class="mx">b =</span><input type="number" id="zb" value="4">
+            <span class="zprod mx" id="zprod">3 × 4 = 12</span>
+          </div>
+          <div id="zmsg" class="fb soft" style="margin-top:10px"></div>
+        </div>
+        <div class="warnbox rev" style="--i:4" data-en="2 · 3 = 6 ≠ 0 — so neither factor has to be zero. The rule only works for 0!" data-id="2 · 3 = 6 ≠ 0 — jadi tak ada faktor yang harus nol. Aturan ini hanya berlaku untuk 0!"></div>
+      </div>
+      <div class="card gcard rev" style="--i:3">
+        <h3 data-en="The graph view" data-id="Pandangan grafik"></h3>
+        <div class="gwrap">
+          <svg viewBox="0 0 320 230" style="width:100%;display:block">
+            <line x1="16" y1="160" x2="304" y2="160" stroke="#1C3A33" stroke-width="1.8" opacity=".5"/>
+            <path d="M 60 45 Q 180 335 300 45" fill="none" stroke="#0E7A6A" stroke-width="3.4" stroke-linecap="round"/>
+            <circle cx="126" cy="160" r="5.5" fill="#F0B429" stroke="#1C3A33" stroke-width="1.5"/>
+            <circle cx="234" cy="160" r="5.5" fill="#F0B429" stroke="#1C3A33" stroke-width="1.5"/>
+            <text x="103" y="182" font-size="12" fill="#4A6259" font-family="Sora">x = 0</text>
+            <text x="226" y="182" font-size="12" fill="#4A6259" font-family="Sora">x = 3</text>
+          </svg>
+        </div>
+        <div class="gcap" data-en="y = x(x − 3). The curve is exactly 0 at the roots x = 0 and x = 3 — the solutions of the quadratic equation." data-id="y = x(x − 3). Kurva bernilai tepat 0 di akar x = 0 dan x = 3 — solusi dari persamaan kuadrat itu."></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 5 · METODE TIPE 1 ============ -->
+<section class="slide" id="s-m1">
+  <div class="wrap">
+    <div class="kick rev" style="--i:0"><span data-en="Type 1 · ax² + bx = 0 (b ≠ 0)" data-id="Tipe 1 · ax² + bx = 0 (b ≠ 0)"></span></div>
+    <h1 class="t rev" style="--i:1" data-en="Solving ax² + bx = 0" data-id="Menyelesaikan ax² + bx = 0"></h1>
+    <div class="card rev" style="--i:2; padding:20px 22px; max-width:760px">
+      <ol class="mst">
+        <li data-en="Factor out the common factor — usually x: &nbsp;<b>ax² + bx = x(ax + b)</b>." data-id="Faktorkan faktor yang sama — biasanya x: &nbsp;<b>ax² + bx = x(ax + b)</b>."></li>
+        <li data-en="Apply the Zero Product Principle: each factor can be equal to zero." data-id="Terapkan Prinsip Hasil Kali Nol: setiap faktor boleh bernilai nol."></li>
+        <li data-en="One solution is always <b>x = 0</b>; the other comes from the bracket." data-id="Salah satu solusi selalu <b>x = 0</b>; solusi lainnya berasal dari dalam kurung."></li>
+      </ol>
+      <div class="note" data-en="Every equation of this form has x = 0 as one of its solutions." data-id="Setiap persamaan berbentuk ini selalu punya x = 0 sebagai salah satu solusinya."></div>
+      <div style="margin-top:14px"><span class="meq">5x² − 10x = 0 → 5x(x − 2) = 0 → x = 0 <span style="font-style:normal">or</span> x = 2</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 6 · CONTOH 1 ============ -->
+<section class="slide" id="s-ex1">
+  <div class="wrap">
+    <div class="kick rev" style="--i:0"><span data-en="Worked example · Type 1" data-id="Contoh soal · Tipe 1"></span></div>
+    <div class="card ex-card rev" style="--i:1">
+      <div class="ex-head"><span class="extag" data-en="Example 1" data-id="Contoh 1"></span><span class="mx exq">x(x − 3) = 0</span></div>
+      <div class="ex-tip" data-en="Press Next step to reveal the solution gradually." data-id="Tekan Langkah berikutnya untuk melihat solusi sedikit demi sedikit."></div>
+      <ol class="steps">
+        <li class="step" data-en="The left side is already a product of two factors: x and (x − 3). The product equals 0." data-id="Ruas kiri sudah berupa perkalian dua faktor: x dan (x − 3). Hasil kalinya 0."></li>
+        <li class="step" data-en="Zero Product Principle: <b>x = 0</b> or <b>x − 3 = 0</b>." data-id="Prinsip Hasil Kali Nol: <b>x = 0</b> atau <b>x − 3 = 0</b>."></li>
+        <li class="step" data-en="Solve the second equation: x − 3 = 0, so <b>x = 3</b>." data-id="Selesaikan persamaan kedua: x − 3 = 0, jadi <b>x = 3</b>."></li>
+        <li class="step" data-en="Check: x = 0 → 0 · (0 − 3) = 0 ✓ &nbsp;and&nbsp; x = 3 → 3 · (3 − 3) = 0 ✓" data-id="Cek: x = 0 → 0 · (0 − 3) = 0 ✓ &nbsp;dan&nbsp; x = 3 → 3 · (3 − 3) = 0 ✓"></li>
+        <li class="step" data-en="Solution: <b>x = 0 or x = 3</b>." data-id="Solusi: <b>x = 0 atau x = 3</b>."></li>
+      </ol>
+      <div class="ex-bar">
+        <span class="ex-count"></span><div class="ex-prog"><i></i></div>
+        <div class="ex-btns">
+          <button class="btn ghost sm" data-act="reset"><span data-en="Reset" data-id="Ulangi"></span></button>
+          <button class="btn ghost sm" data-act="all"><span data-en="Show all" data-id="Tampilkan semua"></span></button>
+          <button class="btn sm" data-act="next"><span data-en="Next step" data-id="Langkah berikutnya"></span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 7 · CONTOH 2 ============ -->
+<section class="slide" id="s-ex2">
+  <div class="wrap">
+    <div class="kick rev" style="--i:0"><span data-en="Worked example · Type 1" data-id="Contoh soal · Tipe 1"></span></div>
+    <div class="card ex-card rev" style="--i:1">
+      <div class="ex-head"><span class="extag" data-en="Example 2" data-id="Contoh 2"></span><span class="mx exq">4x² + 6x = 0</span></div>
+      <div class="ex-tip" data-en="Press Next step to reveal the solution gradually." data-id="Tekan Langkah berikutnya untuk melihat solusi sedikit demi sedikit."></div>
+      <ol class="steps">
+        <li class="step" data-en="Both terms share the factor 2x — take it out: <b>4x² + 6x = 2x(2x + 3)</b>." data-id="Kedua suku memiliki faktor yang sama 2x — keluarkan: <b>4x² + 6x = 2x(2x + 3)</b>."></li>
+        <li class="step" data-en="The equation becomes 2x(2x + 3) = 0. Zero Product Principle: <b>2x = 0</b> or <b>2x + 3 = 0</b>." data-id="Persamaan menjadi 2x(2x + 3) = 0. Prinsip Hasil Kali Nol: <b>2x = 0</b> atau <b>2x + 3 = 0</b>."></li>
+        <li class="step" data-en="2x = 0 gives x = 0. From 2x + 3 = 0 we get 2x = −3, so <b>x = −<span class='fr'><span class='n'>3</span><span class='d'>2</span></span></b>." data-id="2x = 0 memberi x = 0. Dari 2x + 3 = 0 diperoleh 2x = −3, jadi <b>x = −<span class='fr'><span class='n'>3</span><span class='d'>2</span></span></b>."></li>
+        <li class="step" data-en="Check x = −3/2: 4 · (9/4) + 6 · (−3/2) = 9 − 9 = 0 ✓" data-id="Cek x = −3/2: 4 · (9/4) + 6 · (−3/2) = 9 − 9 = 0 ✓"></li>
+        <li class="step" data-en="Solution: <b>x = 0 or x = −3/2</b>." data-id="Solusi: <b>x = 0 atau x = −3/2</b>."></li>
+      </ol>
+      <div class="ex-bar">
+        <span class="ex-count"></span><div class="ex-prog"><i></i></div>
+        <div class="ex-btns">
+          <button class="btn ghost sm" data-act="reset"><span data-en="Reset" data-id="Ulangi"></span></button>
+          <button class="btn ghost sm" data-act="all"><span data-en="Show all" data-id="Tampilkan semua"></span></button>
+          <button class="btn sm" data-act="next"><span data-en="Next step" data-id="Langkah berikutnya"></span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 8 · PRACTICE NOW 1 ============ -->
+<section class="slide" id="s-pn1">
+  <div class="wrap">
+    <div class="kick rev" style="--i:0"><span data-en="Practice Now 1" data-id="Practice Now 1"></span></div>
+    <h1 class="t rev" style="--i:1" data-en="Solve the following quadratic equations" data-id="Selesaikan persamaan kuadrat berikut"></h1>
+    <div class="row rev" style="--i:2">
+      <span class="hint" data-en="Type both solutions, e.g. x = 0 or x = 2 — then press Check." data-id="Tulis kedua solusi, mis. x = 0 atau x = 2 — lalu tekan Cek."></span>
+      <span class="tb" data-en="Textbook: Exercise 5A" data-id="Buku: Exercise 5A"></span>
+      <button class="btn ghost sm chkAll" data-list="#pn1List"><span data-en="Check all" data-id="Cek semua"></span></button>
+    </div>
+    <div class="grid2" id="pn1List">
+      <div class="pq" data-qid="pn1a"><div class="pq-q"><span class="tag">a</span><span class="mx">x(x − 2) = 0</span></div><div class="pq-row"><input class="ans" data-pen="x = ? or x = ?" data-pid="x = ? atau x = ?"><button class="btn sm chk"><span data-en="Check" data-id="Cek"></span></button></div><div class="pq-fb"></div><details class="dsol"><summary data-en="Show solution" data-id="Lihat pembahasan"></summary><div data-en="Zero Product Principle: x = 0 or x − 2 = 0, so x = 0 or x = 2." data-id="Prinsip Hasil Kali Nol: x = 0 atau x − 2 = 0, jadi x = 0 atau x = 2."></div></details></div>
+      <div class="pq" data-qid="pn1b"><div class="pq-q"><span class="tag">b</span><span class="mx">4x(x + 1) = 0</span></div><div class="pq-row"><input class="ans" data-pen="x = ? or x = ?" data-pid="x = ? atau x = ?"><button class="btn sm chk"><span data-en="Check" data-id="Cek"></span></button></div><div class="pq-fb"></div><details class="dsol"><summary data-en="Show solution" data-id="Lihat pembahasan"></summary><div data-en="4x = 0 → x = 0; and x + 1 = 0 → x = −1." data-id="4x = 0 → x = 0; dan x + 1 = 0 → x = −1."></div></details></div>
+      <div class="pq" data-qid="pn1c"><div class="pq-q"><span class="tag">c</span><span class="mx">3x² + 18x = 0</span></div><div class="pq-row"><input class="ans" data-pen="x = ? or x = ?" data-pid="x = ? atau x = ?"><button class="btn sm chk"><span data-en="Check" data-id="Cek"></span></button></div><div class="pq-fb"></div><details class="dsol"><summary data-en="Show solution" data-id="Lihat pembahasan"></summary><div data-en="Factorise: 3x(x + 6) = 0 → x = 0 or x = −6." data-id="Faktorkan: 3x(x + 6) = 0 → x = 0 atau x = −6."></div></details></div>
+      <div class="pq" data-qid="pn1d"><div class="pq-q"><span class="tag">d</span><span class="mx">−<span class="fr"><span class="n">2</span><span class="d">3</span></span>x² + 5x = 0</span></div><div class="pq-row"><input class="ans" data-pen="x = ? or x = ?" data-pid="x = ? atau x = ?"><button class="btn sm chk"><span data-en="Check" data-id="Cek"></span></button></div><div class="pq-fb"></div><details class="dsol"><summary data-en="Show solution" data-id="Lihat pembahasan"></summary><div data-en="x(−2/3 x + 5) = 0 → x = 0, or −2/3 x = −5 → x = 15/2." data-id="x(−2/3 x + 5) = 0 → x = 0, atau −2/3 x = −5 → x = 15/2."></div></details></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 9 · METODE TIPE 2 ============ -->
+<section class="slide" id="s-m2">
+  <div class="wrap">
+    <div class="kick rev" style="--i:0"><span data-en="Type 2 · ax² + bx + c = 0 (b ≠ 0, c ≠ 0)" data-id="Tipe 2 · ax² + bx + c = 0 (b ≠ 0, c ≠ 0)"></span></div>
+    <h1 class="t rev" style="--i:1" data-en="Solving ax² + bx + c = 0" data-id="Menyelesaikan ax² + bx + c = 0"></h1>
+    <div class="card rev" style="--i:2; padding:20px 22px; max-width:780px">
+      <ol class="mst">
+        <li data-en="If it is already factorised, like <b>(3x + 7)(x − 4) = 0</b> — go straight to the Zero Product Principle." data-id="Jika sudah terfaktorkan, seperti <b>(3x + 7)(x − 4) = 0</b> — langsung terapkan Prinsip Hasil Kali Nol."></li>
+        <li data-en="If not, factorise the quadratic: find two numbers with product <b>a · c</b> and sum <b>b</b>, then split the middle term." data-id="Jika belum, faktorkan kuadratnya: cari dua bilangan dengan hasil kali <b>a · c</b> dan jumlah <b>b</b>, lalu pecah suku tengah."></li>
+        <li data-en="Some quadratics are perfect squares: <b>(px + q)² = 0</b> gives one repeated solution." data-id="Beberapa kuadrat adalah kuadrat sempurna: <b>(px + q)² = 0</b> memberikan satu solusi berulang."></li>
+      </ol>
+      <div class="note" data-en="Not every quadratic factorises with integers — later you will meet the quadratic formula for those." data-id="Tidak semua kuadrat bisa difaktorkan dengan bilangan bulat — nanti kamu akan berkenalan dengan rumus kuadrat untuk kasus itu."></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 10 · CONTOH 3 ============ -->
+<section class="slide" id="s-ex3">
+  <div class="wrap">
+    <div class="kick rev" style="--i:0"><span data-en="Worked example · Type 2" data-id="Contoh soal · Tipe 2"></span></div>
+    <div class="card ex-card rev" style="--i:1">
+      <div class="ex-head"><span class="extag" data-en="Example 3" data-id="Contoh 3"></span><span class="mx exq">(3x + 7)(x − 4) = 0</span></div>
+      <div class="ex-tip" data-en="Press Next step to reveal the solution gradually." data-id="Tekan Langkah berikutnya untuk melihat solusi sedikit demi sedikit."></div>
+      <ol class="steps">
+        <li class="step" data-en="Two brackets multiplied give 0 — perfect for the Zero Product Principle." data-id="Dua kurung dikalikan hasilnya 0 — sempurna untuk Prinsip Hasil Kali Nol."></li>
+        <li class="step" data-en="Set each bracket to zero: <b>3x + 7 = 0</b> or <b>x − 4 = 0</b>." data-id="Samakan setiap kurung dengan nol: <b>3x + 7 = 0</b> atau <b>x − 4 = 0</b>."></li>
+        <li class="step" data-en="3x + 7 = 0 → 3x = −7 → <b>x = −<span class='fr'><span class='n'>7</span><span class='d'>3</span></span></b>." data-id="3x + 7 = 0 → 3x = −7 → <b>x = −<span class='fr'><span class='n'>7</span><span class='d'>3</span></span></b>."></li>
+        <li class="step" data-en="x − 4 = 0 → <b>x = 4</b>." data-id="x − 4 = 0 → <b>x = 4</b>."></li>
+        <li class="step" data-en="Solution: <b>x = −7/3 or x = 4</b>." data-id="Solusi: <b>x = −7/3 atau x = 4</b>."></li>
+      </ol>
+      <div class="ex-bar">
+        <span class="ex-count"></span><div class="ex-prog"><i></i></div>
+        <div class="ex-btns">
+          <button class="btn ghost sm" data-act="reset"><span data-en="Reset" data-id="Ulangi"></span></button>
+          <button class="btn ghost sm" data-act="all"><span data-en="Show all" data-id="Tampilkan semua"></span></button>
+          <button class="btn sm" data-act="next"><span data-en="Next step" data-id="Langkah berikutnya"></span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 11 · CONTOH 4 ============ -->
+<section class="slide" id="s-ex4">
+  <div class="wrap">
+    <div class="kick rev" style="--i:0"><span data-en="Worked example · Type 2" data-id="Contoh soal · Tipe 2"></span></div>
+    <div class="card ex-card rev" style="--i:1">
+      <div class="ex-head"><span class="extag" data-en="Example 4" data-id="Contoh 4"></span><span class="mx exq">2y² + 7y − 15 = 0</span></div>
+      <div class="ex-tip" data-en="Press Next step to reveal the solution gradually." data-id="Tekan Langkah berikutnya untuk melihat solusi sedikit demi sedikit."></div>
+      <ol class="steps">
+        <li class="step" data-en="Multiply a · c = 2 · (−15) = −30. Find two numbers with product −30 and sum 7: they are <b>+10 and −3</b>." data-id="Kalikan a · c = 2 · (−15) = −30. Cari dua bilangan dengan hasil kali −30 dan jumlah 7: yaitu <b>+10 dan −3</b>."></li>
+        <li class="step" data-en="Split the middle term: <b>2y² + 10y − 3y − 15 = 0</b>." data-id="Pecah suku tengah: <b>2y² + 10y − 3y − 15 = 0</b>."></li>
+        <li class="step" data-en="Factor in pairs: 2y(y + 5) − 3(y + 5) = 0, which becomes <b>(y + 5)(2y − 3) = 0</b>." data-id="Faktorkan berpasangan: 2y(y + 5) − 3(y + 5) = 0, menjadi <b>(y + 5)(2y − 3) = 0</b>."></li>
+        <li class="step" data-en="Zero Product Principle: <b>y + 5 = 0</b> or <b>2y − 3 = 0</b>." data-id="Prinsip Hasil Kali Nol: <b>y + 5 = 0</b> atau <b>2y − 3 = 0</b>."></li>
+        <li class="step" data-en="Solution: <b>y = −5 or y = 3/2</b>." data-id="Solusi: <b>y = −5 atau y = 3/2</b>."></li>
+      </ol>
+      <div class="ex-bar">
+        <span class="ex-count"></span><div class="ex-prog"><i></i></div>
+        <div class="ex-btns">
+          <button class="btn ghost sm" data-act="reset"><span data-en="Reset" data-id="Ulangi"></span></button>
+          <button class="btn ghost sm" data-act="all"><span data-en="Show all" data-id="Tampilkan semua"></span></button>
+          <button class="btn sm" data-act="next"><span data-en="Next step" data-id="Langkah berikutnya"></span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 12 · CONTOH 5 ============ -->
+<section class="slide" id="s-ex5">
+  <div class="wrap">
+    <div class="kick rev" style="--i:0"><span data-en="Worked example · Type 2 · Perfect square" data-id="Contoh soal · Tipe 2 · Kuadrat sempurna"></span></div>
+    <div class="card ex-card rev" style="--i:1">
+      <div class="ex-head"><span class="extag" data-en="Example 5" data-id="Contoh 5"></span><span class="mx exq">9n² − 12n + 4 = 0</span></div>
+      <div class="ex-tip" data-en="Press Next step to reveal the solution gradually." data-id="Tekan Langkah berikutnya untuk melihat solusi sedikit demi sedikit."></div>
+      <ol class="steps">
+        <li class="step" data-en="Spot the pattern: 9n² = (3n)² and 4 = 2². The middle term is 2 · 3n · 2 = 12n — a perfect square!" data-id="Perhatikan polanya: 9n² = (3n)² dan 4 = 2². Suku tengahnya 2 · 3n · 2 = 12n — ini kuadrat sempurna!"></li>
+        <li class="step" data-en="So 9n² − 12n + 4 = <b>(3n − 2)²</b>, and the equation becomes (3n − 2)² = 0." data-id="Jadi 9n² − 12n + 4 = <b>(3n − 2)²</b>, dan persamaannya menjadi (3n − 2)² = 0."></li>
+        <li class="step" data-en="A square is 0 only when the inside is 0: 3n − 2 = 0, so <b>n = 2/3</b>." data-id="Kuadrat bernilai 0 hanya jika isinya 0: 3n − 2 = 0, jadi <b>n = 2/3</b>."></li>
+        <li class="step" data-en="This is a <b>double root</b> — both factors are (3n − 2), so the equation has one repeated solution." data-id="Ini <b>akar kembar</b> — kedua faktornya (3n − 2), jadi persamaan punya satu solusi berulang."></li>
+      </ol>
+      <div class="ex-bar">
+        <span class="ex-count"></span><div class="ex-prog"><i></i></div>
+        <div class="ex-btns">
+          <button class="btn ghost sm" data-act="reset"><span data-en="Reset" data-id="Ulangi"></span></button>
+          <button class="btn ghost sm" data-act="all"><span data-en="Show all" data-id="Tampilkan semua"></span></button>
+          <button class="btn sm" data-act="next"><span data-en="Next step" data-id="Langkah berikutnya"></span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 13 · PRACTICE NOW 2 (BAGIAN 1) ============ -->
+<section class="slide" id="s-pn2a">
+  <div class="wrap">
+    <div class="kick rev" style="--i:0"><span data-en="Practice Now 2 · Question 1" data-id="Practice Now 2 · Soal 1"></span></div>
+    <h1 class="t rev" style="--i:1" data-en="Solve the following quadratic equations" data-id="Selesaikan persamaan kuadrat berikut"></h1>
+    <div class="row rev" style="--i:2">
+      <span class="hint" data-en="Repeated roots only need one value, e.g. w = -4." data-id="Akar berulang cukup satu nilai, mis. w = -4."></span>
+      <span class="tb" data-en="Textbook: Exercise 5A" data-id="Buku: Exercise 5A"></span>
+      <button class="btn ghost sm chkAll" data-list="#pn2aList"><span data-en="Check all" data-id="Cek semua"></span></button>
+    </div>
+    <div class="grid2" id="pn2aList">
+      <div class="pq" data-qid="pn2a"><div class="pq-q"><span class="tag">a</span><span class="mx">(x + 5)(x − 7) = 0</span></div><div class="pq-row"><input class="ans" data-pen="x = ? or x = ?" data-pid="x = ? atau x = ?"><button class="btn sm chk"><span data-en="Check" data-id="Cek"></span></button></div><div class="pq-fb"></div><details class="dsol"><summary data-en="Show solution" data-id="Lihat pembahasan"></summary><div data-en="x + 5 = 0 → x = −5; and x − 7 = 0 → x = 7." data-id="x + 5 = 0 → x = −5; dan x − 7 = 0 → x = 7."></div></details></div>
+      <div class="pq" data-qid="pn2b"><div class="pq-q"><span class="tag">b</span><span class="mx">(3y + 2)(4y − 5) = 0</span></div><div class="pq-row"><input class="ans" data-pen="y = ? or y = ?" data-pid="y = ? atau y = ?"><button class="btn sm chk"><span data-en="Check" data-id="Cek"></span></button></div><div class="pq-fb"></div><details class="dsol"><summary data-en="Show solution" data-id="Lihat pembahasan"></summary><div data-en="3y + 2 = 0 → y = −2/3; and 4y − 5 = 0 → y = 5/4." data-id="3y + 2 = 0 → y = −2/3; dan 4y − 5 = 0 → y = 5/4."></div></details></div>
+      <div class="pq" data-qid="pn2c"><div class="pq-q"><span class="tag">c</span><span class="mx">w² + 8w + 16 = 0</span></div><div class="pq-row"><input class="ans" data-pen="w = ?" data-pid="w = ?"><button class="btn sm chk"><span data-en="Check" data-id="Cek"></span></button></div><div class="pq-fb"></div><details class="dsol"><summary data-en="Show solution" data-id="Lihat pembahasan"></summary><div data-en="Perfect square: (w + 4)² = 0 → w = −4 (repeated)." data-id="Kuadrat sempurna: (w + 4)² = 0 → w = −4 (berulang)."></div></details></div>
+      <div class="pq" data-qid="pn2d"><div class="pq-q"><span class="tag">d</span><span class="mx"><span class="fr"><span class="n">3</span><span class="d">2</span></span>z² − 5z + 4 = 0</span></div><div class="pq-row"><input class="ans" data-pen="z = ? or z = ?" data-pid="z = ? atau z = ?"><button class="btn sm chk"><span data-en="Check" data-id="Cek"></span></button></div><div class="pq-fb"></div><details class="dsol"><summary data-en="Show solution" data-id="Lihat pembahasan"></summary><div data-en="Multiply by 2: 3z² − 10z + 8 = 0 → (3z − 4)(z − 2) = 0 → z = 4/3 or z = 2." data-id="Kalikan 2: 3z² − 10z + 8 = 0 → (3z − 4)(z − 2) = 0 → z = 4/3 atau z = 2."></div></details></div>
+      <div class="pq" data-qid="pn2e"><div class="pq-q"><span class="tag">e</span><span class="mx">4h² − 20h + 25 = 0</span></div><div class="pq-row"><input class="ans" data-pen="h = ?" data-pid="h = ?"><button class="btn sm chk"><span data-en="Check" data-id="Cek"></span></button></div><div class="pq-fb"></div><details class="dsol"><summary data-en="Show solution" data-id="Lihat pembahasan"></summary><div data-en="Perfect square: (2h − 5)² = 0 → h = 5/2 (repeated)." data-id="Kuadrat sempurna: (2h − 5)² = 0 → h = 5/2 (berulang)."></div></details></div>
+      <div class="pq" data-qid="pn2f"><div class="pq-q"><span class="tag">f</span><span class="mx">3k² + 30k + 48 = 0</span></div><div class="pq-row"><input class="ans" data-pen="k = ? or k = ?" data-pid="k = ? atau k = ?"><button class="btn sm chk"><span data-en="Check" data-id="Cek"></span></button></div><div class="pq-fb"></div><details class="dsol"><summary data-en="Show solution" data-id="Lihat pembahasan"></summary><div data-en="Take out 3: 3(k² + 10k + 16) = 0 → 3(k + 2)(k + 8) = 0 → k = −2 or k = −8." data-id="Keluarkan 3: 3(k² + 10k + 16) = 0 → 3(k + 2)(k + 8) = 0 → k = −2 atau k = −8."></div></details></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 14 · PRACTICE NOW 2 (BAGIAN 2) ============ -->
+<section class="slide" id="s-pn2b">
+  <div class="wrap">
+    <div class="kick rev" style="--i:0"><span data-en="Practice Now 2 · Questions 2 &amp; 3" data-id="Practice Now 2 · Soal 2 &amp; 3"></span></div>
+    <h1 class="t rev" style="--i:1" data-en="Think further — the &#39;hence&#39; questions" data-id="Berpikir lebih jauh — soal &#39;hence&#39;"></h1>
+    <div class="row rev" style="--i:2">
+      <span class="hint" data-en="Use your answer from part (i) to help with part (ii)." data-id="Gunakan jawabanmu dari bagian (i) untuk membantu bagian (ii)."></span>
+      <span class="tb" data-en="Textbook: Exercise 5A" data-id="Buku: Exercise 5A"></span>
+      <button class="btn ghost sm chkAll" data-list="#pn2bList"><span data-en="Check all" data-id="Cek semua"></span></button>
+    </div>
+    <div class="grid2" id="pn2bList">
+      <div class="pq" data-qid="pn2i1"><div class="pq-q"><span class="tag">2 i</span><span data-en="Solve the equation <span class='mx'>3x² − 10x + 8 = 0</span>" data-id="Selesaikan persamaan <span class='mx'>3x² − 10x + 8 = 0</span>"></span></div><div class="pq-row"><input class="ans" data-pen="x = ? or x = ?" data-pid="x = ? atau x = ?"><button class="btn sm chk"><span data-en="Check" data-id="Cek"></span></button></div><div class="pq-fb"></div><details class="dsol"><summary data-en="Show solution" data-id="Lihat pembahasan"></summary><div data-en="Factorise: (3x − 4)(x − 2) = 0 → x = 4/3 or x = 2." data-id="Faktorkan: (3x − 4)(x − 2) = 0 → x = 4/3 atau x = 2."></div></details></div>
+      <div class="pq" data-qid="pn2i2"><div class="pq-q"><span class="tag">2 ii</span><span data-en="Hence, solve <span class='mx'>3(y + 1)² − 10(y + 1) + 8 = 0</span>" data-id="Dengan itu, selesaikan <span class='mx'>3(y + 1)² − 10(y + 1) + 8 = 0</span>"></span></div><div class="pq-row"><input class="ans" data-pen="y = ? or y = ?" data-pid="y = ? atau y = ?"><button class="btn sm chk"><span data-en="Check" data-id="Cek"></span></button></div><div class="pq-fb"></div><details class="dsol"><summary data-en="Show solution" data-id="Lihat pembahasan"></summary><div data-en="Let (y + 1) play the role of x: y + 1 = 4/3 → y = 1/3, or y + 1 = 2 → y = 1." data-id="Misalkan (y + 1) berperan sebagai x: y + 1 = 4/3 → y = 1/3, atau y + 1 = 2 → y = 1."></div></details></div>
+      <div class="pq" data-qid="pn3i1"><div class="pq-q"><span class="tag">3 i</span><span data-en="If <span class='mx'>x = −2</span> is a solution of <span class='mx'>x² + px + 8 = 0</span>, find the value of p." data-id="Jika <span class='mx'>x = −2</span> adalah solusi dari <span class='mx'>x² + px + 8 = 0</span>, cari nilai p."></span></div><div class="pq-row"><input class="ans" data-pen="p = ?" data-pid="p = ?"><button class="btn sm chk"><span data-en="Check" data-id="Cek"></span></button></div><div class="pq-fb"></div><details class="dsol"><summary data-en="Show solution" data-id="Lihat pembahasan"></summary><div data-en="Substitute x = −2: 4 − 2p + 8 = 0 → 12 = 2p → p = 6." data-id="Substitusi x = −2: 4 − 2p + 8 = 0 → 12 = 2p → p = 6."></div></details></div>
+      <div class="pq" data-qid="pn3i2"><div class="pq-q"><span class="tag">3 ii</span><span data-en="Hence, find the other solution of the equation." data-id="Dengan itu, cari solusi lain dari persamaan tersebut."></span></div><div class="pq-row"><input class="ans" data-pen="x = ?" data-pid="x = ?"><button class="btn sm chk"><span data-en="Check" data-id="Cek"></span></button></div><div class="pq-fb"></div><details class="dsol"><summary data-en="Show solution" data-id="Lihat pembahasan"></summary><div data-en="With p = 6: x² + 6x + 8 = (x + 2)(x + 4) = 0 → the other solution is x = −4." data-id="Dengan p = 6: x² + 6x + 8 = (x + 2)(x + 4) = 0 → solusi lainnya adalah x = −4."></div></details></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 15 · METODE TIPE 3 ============ -->
+<section class="slide" id="s-m3">
+  <div class="wrap">
+    <div class="kick rev" style="--i:0"><span data-en="Type 3 · ax² + c = 0 (c ≠ 0)" data-id="Tipe 3 · ax² + c = 0 (c ≠ 0)"></span></div>
+    <h1 class="t rev" style="--i:1" data-en="Solving ax² + c = 0" data-id="Menyelesaikan ax² + c = 0"></h1>
+    <div class="card rev" style="--i:2; padding:20px 22px; max-width:780px">
+      <ol class="mst">
+        <li data-en="Move the constant across: <b>ax² = −c</b>." data-id="Pindahkan konstanta ke ruas lain: <b>ax² = −c</b>."></li>
+        <li data-en="Divide by a: <b>x² = −c/a</b>." data-id="Bagi dengan a: <b>x² = −c/a</b>."></li>
+        <li data-en="If −c/a &gt; 0, take square roots of both sides — and remember <b>both signs</b>: x = ±√(−c/a)." data-id="Jika −c/a &gt; 0, tarik akar kuadrat kedua ruas — dan ingat <b>kedua tanda</b>: x = ±√(−c/a)."></li>
+        <li data-en="If −c/a &lt; 0, no real number has a negative square → <b>no real solutions</b>." data-id="Jika −c/a &lt; 0, tidak ada bilangan real yang kuadratnya negatif → <b>tidak ada solusi real</b>."></li>
+      </ol>
+      <div class="note" data-en="x² = 9 → x = ±3, because 3² = 9 and (−3)² = 9." data-id="x² = 9 → x = ±3, karena 3² = 9 dan (−3)² = 9."></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 16 · CONTOH 6 ============ -->
+<section class="slide" id="s-ex6">
+  <div class="wrap">
+    <div class="kick rev" style="--i:0"><span data-en="Worked example · Type 3" data-id="Contoh soal · Tipe 3"></span></div>
+    <div class="card ex-card rev" style="--i:1">
+      <div class="ex-head"><span class="extag" data-en="Example 6" data-id="Contoh 6"></span><span class="mx exq">25x² − 9 = 0</span></div>
+      <div class="ex-tip" data-en="Press Next step to reveal the solution gradually." data-id="Tekan Langkah berikutnya untuk melihat solusi sedikit demi sedikit."></div>
+      <ol class="steps">
+        <li class="step" data-en="Method A — square roots: move 9 across: <b>25x² = 9</b>." data-id="Cara A — akar kuadrat: pindahkan 9: <b>25x² = 9</b>."></li>
+        <li class="step" data-en="Divide by 25: <b>x² = 9/25</b>." data-id="Bagi dengan 25: <b>x² = 9/25</b>."></li>
+        <li class="step" data-en="Take the square root of both sides — remember both signs: <b>x = ±3/5</b>." data-id="Tarik akar kuadrat kedua ruas — ingat kedua tanda: <b>x = ±3/5</b>."></li>
+        <li class="step" data-en="Method B — difference of two squares: 25x² − 9 = (5x − 3)(5x + 3) = 0, giving the same answers." data-id="Cara B — selisih dua kuadrat: 25x² − 9 = (5x − 3)(5x + 3) = 0, memberikan jawaban yang sama."></li>
+        <li class="step" data-en="Solution: <b>x = 3/5 or x = −3/5</b>." data-id="Solusi: <b>x = 3/5 atau x = −3/5</b>."></li>
+      </ol>
+      <div class="ex-bar">
+        <span class="ex-count"></span><div class="ex-prog"><i></i></div>
+        <div class="ex-btns">
+          <button class="btn ghost sm" data-act="reset"><span data-en="Reset" data-id="Ulangi"></span></button>
+          <button class="btn ghost sm" data-act="all"><span data-en="Show all" data-id="Tampilkan semua"></span></button>
+          <button class="btn sm" data-act="next"><span data-en="Next step" data-id="Langkah berikutnya"></span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 17 · CONTOH 7 ============ -->
+<section class="slide" id="s-ex7">
+  <div class="wrap">
+    <div class="kick rev" style="--i:0"><span data-en="Worked example · Type 3 · No real solutions" data-id="Contoh soal · Tipe 3 · Tanpa solusi real"></span></div>
+    <div class="card ex-card rev" style="--i:1">
+      <div class="ex-head"><span class="extag" data-en="Example 7" data-id="Contoh 7"></span><span class="mx exq">Why does 25x² + 9 = 0 have no real solutions?</span></div>
+      <div class="ex-tip" data-en="Press Next step to reveal the reasoning." data-id="Tekan Langkah berikutnya untuk melihat penalarannya."></div>
+      <ol class="steps">
+        <li class="step" data-en="Try to rearrange: 25x² = −9, then <b>x² = −9/25</b>." data-id="Coba pindahkan: 25x² = −9, lalu <b>x² = −9/25</b>."></li>
+        <li class="step" data-en="But the square of every real number is zero or positive: <b>x² ≥ 0</b> for all real x." data-id="Tapi kuadrat setiap bilangan real selalu nol atau positif: <b>x² ≥ 0</b> untuk semua x real."></li>
+        <li class="step" data-en="A negative number has no real square root, so no real x can satisfy the equation." data-id="Bilangan negatif tidak memiliki akar kuadrat real, jadi tidak ada x real yang memenuhi persamaan itu."></li>
+        <li class="step" data-en="Conclusion: <b>25x² + 9 = 0 has no real solutions</b>." data-id="Kesimpulan: <b>25x² + 9 = 0 tidak memiliki solusi real</b>."></li>
+      </ol>
+      <div class="ex-bar">
+        <span class="ex-count"></span><div class="ex-prog"><i></i></div>
+        <div class="ex-btns">
+          <button class="btn ghost sm" data-act="reset"><span data-en="Reset" data-id="Ulangi"></span></button>
+          <button class="btn ghost sm" data-act="all"><span data-en="Show all" data-id="Tampilkan semua"></span></button>
+          <button class="btn sm" data-act="next"><span data-en="Next step" data-id="Langkah berikutnya"></span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 18 · PRACTICE NOW 3 ============ -->
+<section class="slide" id="s-pn3">
+  <div class="wrap">
+    <div class="kick rev" style="--i:0"><span data-en="Practice Now 3" data-id="Practice Now 3"></span></div>
+    <h1 class="t rev" style="--i:1" data-en="Square roots — and when nothing works" data-id="Akar kuadrat — dan kapan tidak ada yang cocok"></h1>
+    <div class="row rev" style="--i:2">
+      <span class="hint" data-en="For ± answers, type both values, e.g. 2/3 or -2/3." data-id="Untuk jawaban ±, tulis kedua nilainya, mis. 2/3 atau -2/3."></span>
+      <span class="tb" data-en="Textbook: Exercise 5A" data-id="Buku: Exercise 5A"></span>
+      <button class="btn ghost sm chkAll" data-list="#pn3List"><span data-en="Check all" data-id="Cek semua"></span></button>
+    </div>
+    <div class="grid2" id="pn3List">
+      <div class="pq" data-qid="pn3a"><div class="pq-q"><span class="tag">1a</span><span class="mx">9x² − 4 = 0</span></div><div class="pq-row"><input class="ans" data-pen="x = ? or x = ?" data-pid="x = ? atau x = ?"><button class="btn sm chk"><span data-en="Check" data-id="Cek"></span></button></div><div class="pq-fb"></div><details class="dsol"><summary data-en="Show solution" data-id="Lihat pembahasan"></summary><div data-en="x² = 4/9 → x = ±2/3. Or (3x − 2)(3x + 2) = 0." data-id="x² = 4/9 → x = ±2/3. Atau (3x − 2)(3x + 2) = 0."></div></details></div>
+      <div class="pq" data-qid="pn3b"><div class="pq-q"><span class="tag">1b</span><span class="mx">100y² − 25 = 0</span></div><div class="pq-row"><input class="ans" data-pen="y = ? or y = ?" data-pid="y = ? atau y = ?"><button class="btn sm chk"><span data-en="Check" data-id="Cek"></span></button></div><div class="pq-fb"></div><details class="dsol"><summary data-en="Show solution" data-id="Lihat pembahasan"></summary><div data-en="100y² = 25 → y² = 1/4 → y = ±1/2." data-id="100y² = 25 → y² = 1/4 → y = ±1/2."></div></details></div>
+      <div class="pq" data-qid="pn3c"><div class="pq-q"><span class="tag">1c</span><span class="mx">36m² = 1</span></div><div class="pq-row"><input class="ans" data-pen="m = ? or m = ?" data-pid="m = ? atau m = ?"><button class="btn sm chk"><span data-en="Check" data-id="Cek"></span></button></div><div class="pq-fb"></div><details class="dsol"><summary data-en="Show solution" data-id="Lihat pembahasan"></summary><div data-en="m² = 1/36 → m = ±1/6." data-id="m² = 1/36 → m = ±1/6."></div></details></div>
+      <div class="pq" data-qid="pn3d"><div class="pq-q"><span class="tag">1d</span><span class="mx"><span class="fr"><span class="n">1</span><span class="d">4</span></span>n² − 4 = 0</span></div><div class="pq-row"><input class="ans" data-pen="n = ? or n = ?" data-pid="n = ? atau n = ?"><button class="btn sm chk"><span data-en="Check" data-id="Cek"></span></button></div><div class="pq-fb"></div><details class="dsol"><summary data-en="Show solution" data-id="Lihat pembahasan"></summary><div data-en="n²/4 = 4 → n² = 16 → n = ±4." data-id="n²/4 = 4 → n² = 16 → n = ±4."></div></details></div>
+      <div class="pq wide" data-qid="pn3x">
+        <div class="pq-q"><span class="tag">2</span><span data-en="Explain why <span class='mx'>16x² + 49 = 0</span> has no real solutions." data-id="Jelaskan mengapa <span class='mx'>16x² + 49 = 0</span> tidak memiliki solusi real."></span></div>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="pn3x" value="A"><span data-en="Because x = ±7/4 makes the equation true." data-id="Karena x = ±7/4 membuat persamaan itu benar."></span></label>
+          <label class="opt"><input type="radio" name="pn3x" value="B"><span data-en="Because 16x² = −49 and the square of a real number is never negative." data-id="Karena 16x² = −49 dan kuadrat bilangan real tidak pernah negatif."></span></label>
+          <label class="opt"><input type="radio" name="pn3x" value="C"><span data-en="Because the equation has only one solution." data-id="Karena persamaan itu hanya memiliki satu solusi."></span></label>
+          <label class="opt"><input type="radio" name="pn3x" value="D"><span data-en="Because 49 is an odd number." data-id="Karena 49 adalah bilangan ganjil."></span></label>
+        </div>
+        <div class="pq-row"><button class="btn sm chk"><span data-en="Check" data-id="Cek"></span></button></div>
+        <div class="pq-fb"></div>
+        <details class="dsol"><summary data-en="Show solution" data-id="Lihat pembahasan"></summary><div data-en="16x² = −49 → x² = −49/16 &lt; 0 — impossible for real numbers, so there are no real solutions." data-id="16x² = −49 → x² = −49/16 &lt; 0 — mustahil untuk bilangan real, jadi tidak ada solusi real."></div></details>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 19 · METODE TIPE 4 ============ -->
+<section class="slide" id="s-m4">
+  <div class="wrap">
+    <div class="kick rev" style="--i:0"><span data-en="Type 4 · ax² + bx + c = d" data-id="Tipe 4 · ax² + bx + c = d"></span></div>
+    <h1 class="t rev" style="--i:1" data-en="When the equation does not equal 0" data-id="Ketika persamaan tidak sama dengan 0"></h1>
+    <div class="card rev" style="--i:2; padding:20px 22px; max-width:780px">
+      <ol class="mst">
+        <li data-en="Expand any brackets and simplify both sides." data-id="Ekspansi semua kurung dan sederhanakan kedua ruas."></li>
+        <li data-en="Move everything to one side so the equation <b>equals 0</b> (subtract d from both sides)." data-id="Pindahkan semuanya ke satu ruas agar persamaan <b>sama dengan 0</b> (kurangi d dari kedua ruas)."></li>
+        <li data-en="Factorise and apply the Zero Product Principle as before." data-id="Faktorkan dan terapkan Prinsip Hasil Kali Nol seperti sebelumnya."></li>
+      </ol>
+      <div class="warnbox" data-en="Do not divide both sides by x — you would lose one solution!" data-id="Jangan membagi kedua ruas dengan x — kamu akan kehilangan satu solusi!"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 20 · CONTOH 8 ============ -->
+<section class="slide" id="s-ex8">
+  <div class="wrap">
+    <div class="kick rev" style="--i:0"><span data-en="Worked example · Type 4" data-id="Contoh soal · Tipe 4"></span></div>
+    <div class="card ex-card rev" style="--i:1">
+      <div class="ex-head"><span class="extag" data-en="Example 8" data-id="Contoh 8"></span><span class="mx exq">x(x + 1) = 6</span></div>
+      <div class="ex-tip" data-en="Press Next step to reveal the solution gradually." data-id="Tekan Langkah berikutnya untuk melihat solusi sedikit demi sedikit."></div>
+      <ol class="steps">
+        <li class="step" data-en="Expand first: <b>x² + x = 6</b>." data-id="Ekspansi dulu: <b>x² + x = 6</b>."></li>
+        <li class="step" data-en="One side must be 0 before factorising — subtract 6: <b>x² + x − 6 = 0</b>." data-id="Salah satu ruas harus 0 sebelum memfaktorkan — kurangi 6: <b>x² + x − 6 = 0</b>."></li>
+        <li class="step" data-en="Two numbers with product −6 and sum +1: +3 and −2. Factorise: <b>(x + 3)(x − 2) = 0</b>." data-id="Dua bilangan dengan hasil kali −6 dan jumlah +1: +3 dan −2. Faktorkan: <b>(x + 3)(x − 2) = 0</b>."></li>
+        <li class="step" data-en="Zero Product Principle: <b>x = −3 or x = 2</b>." data-id="Prinsip Hasil Kali Nol: <b>x = −3 atau x = 2</b>."></li>
+        <li class="step" data-en="Check x = 2: 2 · 3 = 6 ✓ &nbsp; Check x = −3: −3 · (−2) = 6 ✓" data-id="Cek x = 2: 2 · 3 = 6 ✓ &nbsp; Cek x = −3: −3 · (−2) = 6 ✓"></li>
+      </ol>
+      <div class="ex-bar">
+        <span class="ex-count"></span><div class="ex-prog"><i></i></div>
+        <div class="ex-btns">
+          <button class="btn ghost sm" data-act="reset"><span data-en="Reset" data-id="Ulangi"></span></button>
+          <button class="btn ghost sm" data-act="all"><span data-en="Show all" data-id="Tampilkan semua"></span></button>
+          <button class="btn sm" data-act="next"><span data-en="Next step" data-id="Langkah berikutnya"></span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 21 · CONTOH 9 ============ -->
+<section class="slide" id="s-ex9">
+  <div class="wrap">
+    <div class="kick rev" style="--i:0"><span data-en="Worked example · Type 4" data-id="Contoh soal · Tipe 4"></span></div>
+    <div class="card ex-card rev" style="--i:1">
+      <div class="ex-head"><span class="extag" data-en="Example 9" data-id="Contoh 9"></span><span class="mx exq">(2y − 1)(y − 4) = 9</span></div>
+      <div class="ex-tip" data-en="Press Next step to reveal the solution gradually." data-id="Tekan Langkah berikutnya untuk melihat solusi sedikit demi sedikit."></div>
+      <ol class="steps">
+        <li class="step" data-en="Expand the left side: 2y² − 8y − y + 4 = 2y² − 9y + 4, so <b>2y² − 9y + 4 = 9</b>." data-id="Ekspansi ruas kiri: 2y² − 8y − y + 4 = 2y² − 9y + 4, jadi <b>2y² − 9y + 4 = 9</b>."></li>
+        <li class="step" data-en="Move 9 to the left: <b>2y² − 9y − 5 = 0</b>." data-id="Pindahkan 9 ke kiri: <b>2y² − 9y − 5 = 0</b>."></li>
+        <li class="step" data-en="a · c = 2 · (−5) = −10; two numbers with product −10 and sum −9: <b>−10 and +1</b>." data-id="a · c = 2 · (−5) = −10; dua bilangan dengan hasil kali −10 dan jumlah −9: <b>−10 dan +1</b>."></li>
+        <li class="step" data-en="Split and factor: 2y² − 10y + y − 5 = 2y(y − 5) + 1(y − 5) = <b>(y − 5)(2y + 1) = 0</b>." data-id="Pecah dan faktorkan: 2y² − 10y + y − 5 = 2y(y − 5) + 1(y − 5) = <b>(y − 5)(2y + 1) = 0</b>."></li>
+        <li class="step" data-en="Solution: <b>y = 5 or y = −1/2</b>." data-id="Solusi: <b>y = 5 atau y = −1/2</b>."></li>
+      </ol>
+      <div class="ex-bar">
+        <span class="ex-count"></span><div class="ex-prog"><i></i></div>
+        <div class="ex-btns">
+          <button class="btn ghost sm" data-act="reset"><span data-en="Reset" data-id="Ulangi"></span></button>
+          <button class="btn ghost sm" data-act="all"><span data-en="Show all" data-id="Tampilkan semua"></span></button>
+          <button class="btn sm" data-act="next"><span data-en="Next step" data-id="Langkah berikutnya"></span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 22 · PRACTICE NOW 4 ============ -->
+<section class="slide" id="s-pn4">
+  <div class="wrap">
+    <div class="kick rev" style="--i:0"><span data-en="Practice Now 4" data-id="Practice Now 4"></span></div>
+    <h1 class="t rev" style="--i:1" data-en="Solve each of the following equations" data-id="Selesaikan setiap persamaan berikut"></h1>
+    <div class="row rev" style="--i:2">
+      <span class="hint" data-en="Remember: make one side equal to 0 first." data-id="Ingat: jadikan satu ruas sama dengan 0 dulu."></span>
+      <span class="tb" data-en="Textbook: Exercise 5A" data-id="Buku: Exercise 5A"></span>
+      <button class="btn ghost sm chkAll" data-list="#pn4List"><span data-en="Check all" data-id="Cek semua"></span></button>
+    </div>
+    <div class="grid2" id="pn4List">
+      <div class="pq" data-qid="pn4a"><div class="pq-q"><span class="tag">a</span><span class="mx">x(x + 6) = −5</span></div><div class="pq-row"><input class="ans" data-pen="x = ? or x = ?" data-pid="x = ? atau x = ?"><button class="btn sm chk"><span data-en="Check" data-id="Cek"></span></button></div><div class="pq-fb"></div><details class="dsol"><summary data-en="Show solution" data-id="Lihat pembahasan"></summary><div data-en="x² + 6x + 5 = 0 → (x + 1)(x + 5) = 0 → x = −1 or x = −5." data-id="x² + 6x + 5 = 0 → (x + 1)(x + 5) = 0 → x = −1 atau x = −5."></div></details></div>
+      <div class="pq" data-qid="pn4b"><div class="pq-q"><span class="tag">b</span><span class="mx">9y(1 − y) = 2</span></div><div class="pq-row"><input class="ans" data-pen="y = ? or y = ?" data-pid="y = ? atau y = ?"><button class="btn sm chk"><span data-en="Check" data-id="Cek"></span></button></div><div class="pq-fb"></div><details class="dsol"><summary data-en="Show solution" data-id="Lihat pembahasan"></summary><div data-en="9y − 9y² = 2 → 9y² − 9y + 2 = 0 → (3y − 1)(3y − 2) = 0 → y = 1/3 or y = 2/3." data-id="9y − 9y² = 2 → 9y² − 9y + 2 = 0 → (3y − 1)(3y − 2) = 0 → y = 1/3 atau y = 2/3."></div></details></div>
+      <div class="pq" data-qid="pn4c"><div class="pq-q"><span class="tag">c</span><span class="mx">(3t + 5)(t − 2) = −6</span></div><div class="pq-row"><input class="ans" data-pen="t = ? or t = ?" data-pid="t = ? atau t = ?"><button class="btn sm chk"><span data-en="Check" data-id="Cek"></span></button></div><div class="pq-fb"></div><details class="dsol"><summary data-en="Show solution" data-id="Lihat pembahasan"></summary><div data-en="3t² − t − 10 = −6 → 3t² − t − 4 = 0 → (3t − 4)(t + 1) = 0 → t = 4/3 or t = −1." data-id="3t² − t − 10 = −6 → 3t² − t − 4 = 0 → (3t − 4)(t + 1) = 0 → t = 4/3 atau t = −1."></div></details></div>
+      <div class="pq" data-qid="pn4d"><div class="pq-q"><span class="tag">d</span><span class="mx">(2v + 1)² = <span class="fr"><span class="n">1</span><span class="d">5</span></span>(v + 2)</span></div><div class="pq-row"><input class="ans" data-pen="v = ? or v = ?" data-pid="v = ? atau v = ?"><button class="btn sm chk"><span data-en="Check" data-id="Cek"></span></button></div><div class="pq-fb"></div><details class="dsol"><summary data-en="Show solution" data-id="Lihat pembahasan"></summary><div data-en="Multiply by 5: 20v² + 20v + 5 = v + 2 → 20v² + 19v + 3 = 0 → (4v + 3)(5v + 1) = 0 → v = −3/4 or v = −1/5." data-id="Kalikan 5: 20v² + 20v + 5 = v + 2 → 20v² + 19v + 3 = 0 → (4v + 3)(5v + 1) = 0 → v = −3/4 atau v = −1/5."></div></details></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 23 · EXIT TICKET ============ -->
+<section class="slide" id="s-exit">
+  <div class="wrap">
+    <div class="kick rev" style="--i:0"><span data-en="Exit ticket" data-id="Exit ticket"></span></div>
+    <h1 class="t rev" style="--i:1" data-en="Show what you know — 10 questions" data-id="Tunjukkan kemampuanmu — 10 soal"></h1>
+    <div class="row rev" style="--i:2">
+      <span class="hint" data-en="Write the answer values only — e.g. 1 or -2 (fractions like 2/3 are allowed). There is no Check button — press Submit at the end." data-id="Tulis nilainya saja — mis. 1 atau -2 (pecahan seperti 2/3 diperbolehkan). Tidak ada tombol Cek — tekan Kirim di akhir."></span>
+    </div>
+    <div class="grid2" id="eqList">
+      <div class="pq" data-qid="eq1"><div class="pq-q"><span class="tag">1</span><span class="mx">(x − 3)(x + 8) = 0</span></div><div class="pq-row"><input class="ans" data-pen="e.g. 1 or -2" data-pid="mis. 1 atau -2"></div></div>
+      <div class="pq" data-qid="eq2"><div class="pq-q"><span class="tag">2</span><span class="mx">7x² + 21x = 0</span></div><div class="pq-row"><input class="ans" data-pen="e.g. 1 or -2" data-pid="mis. 1 atau -2"></div></div>
+      <div class="pq" data-qid="eq3"><div class="pq-q"><span class="tag">3</span><span class="mx">5x² − 45 = 0</span></div><div class="pq-row"><input class="ans" data-pen="e.g. 1 or -2" data-pid="mis. 1 atau -2"></div></div>
+      <div class="pq" data-qid="eq4"><div class="pq-q"><span class="tag">4</span><span class="mx">(2x + 1)(3x − 4) = 0</span></div><div class="pq-row"><input class="ans" data-pen="e.g. 2/3 or 5" data-pid="mis. 2/3 atau 5"></div></div>
+      <div class="pq" data-qid="eq5"><div class="pq-q"><span class="tag">5</span><span class="mx">x² + 9x + 18 = 0</span></div><div class="pq-row"><input class="ans" data-pen="e.g. 1 or -2" data-pid="mis. 1 atau -2"></div></div>
+      <div class="pq" data-qid="eq6"><div class="pq-q"><span class="tag">6</span><span class="mx">4x² − 16x = 0</span></div><div class="pq-row"><input class="ans" data-pen="e.g. 1 or -2" data-pid="mis. 1 atau -2"></div></div>
+      <div class="pq wide" data-qid="eq7">
+        <div class="pq-q"><span class="tag">7</span><span data-en="Choose the correct statement about <span class='mx'>x² + 25 = 0</span>." data-id="Pilih pernyataan yang benar tentang <span class='mx'>x² + 25 = 0</span>."></span></div>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="eq7" value="A"><span data-en="x = ±5" data-id="x = ±5"></span></label>
+          <label class="opt"><input type="radio" name="eq7" value="B"><span data-en="x = 5" data-id="x = 5"></span></label>
+          <label class="opt"><input type="radio" name="eq7" value="C"><span data-en="x = ±25" data-id="x = ±25"></span></label>
+          <label class="opt"><input type="radio" name="eq7" value="D"><span data-en="No real solutions" data-id="Tidak ada solusi real"></span></label>
+        </div>
+      </div>
+      <div class="pq" data-qid="eq8"><div class="pq-q"><span class="tag">8</span><span class="mx">2x² + 9x + 9 = 0</span></div><div class="pq-row"><input class="ans" data-pen="e.g. 2/3 or 5" data-pid="mis. 2/3 atau 5"></div></div>
+      <div class="pq" data-qid="eq9"><div class="pq-q"><span class="tag">9</span><span class="mx">m² = 64</span></div><div class="pq-row"><input class="ans" data-pen="e.g. 1 or -2" data-pid="mis. 1 atau -2"></div></div>
+      <div class="pq" data-qid="eq10"><div class="pq-q"><span class="tag">10</span><span class="mx">x² + 4x + 4 = 0</span></div><div class="pq-row"><input class="ans" data-pen="e.g. 5" data-pid="mis. 5"></div></div>
+    </div>
+    <div class="row" style="margin-top:18px">
+      <button id="btnSubmit" class="btn">
+        <span data-en="Submit answers" data-id="Kirim jawaban"></span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+      <div id="exitWarn" class="fb warn hidewrap" data-en="Please fill in all answers before submitting." data-id="Isi semua jawaban dulu sebelum dikirim."></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 24 · HASIL ============ -->
+<section class="slide" id="s-results">
+  <div class="wrap">
+    <div class="kick rev" style="--i:0"><span data-en="Exit ticket results" data-id="Hasil exit ticket"></span></div>
+    <h1 class="t rev" style="--i:1" data-en="Your results" data-id="Hasilmu"></h1>
+    <div class="res-grid rev" style="--i:2">
+      <div class="card ringcard">
+        <div class="ring-num-wrap">
+          <svg class="ring" viewBox="0 0 140 140">
+            <circle class="rt" cx="70" cy="70" r="58"/>
+            <circle class="rp" id="ringP" cx="70" cy="70" r="58"/>
+          </svg>
+          <div class="ring-num" id="ringNum">0%</div>
+        </div>
+        <div class="ring-score" id="ringScore" data-en="0 / 10 correct" data-id="0 / 10 benar"></div>
+        <div style="font-size:.9rem;color:var(--soft)"><span data-en="Student" data-id="Siswa"></span>: <b class="uname" style="color:var(--ink)">—</b></div>
+      </div>
+      <div class="card msgcard">
+        <div id="resMsg" class="res-msg"></div>
+        <div class="row">
+          <button id="btnRetry" class="btn ghost"><span data-en="Try again" data-id="Coba lagi"></span></button>
+        </div>
+      </div>
+    </div>
+    <div id="resEmpty" class="note" data-en="Submit your exit ticket first — go back one slide." data-id="Kumpulkan exit ticketmu dulu — kembali satu slide."></div>
+    <div id="rvList" class="grid2" style="margin-top:16px"></div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 25 · KESIMPULAN ============ -->
+<section class="slide" id="s-concl">
+  <div class="wrap">
+    <div class="kick rev" style="--i:0"><span data-en="Conclusion" data-id="Kesimpulan"></span></div>
+    <h1 class="t rev" style="--i:1" data-en="Key takeaways" data-id="Poin-poin penting"></h1>
+    <div class="zbanner rev" style="--i:2" data-en="A · B = 0 &nbsp;⇒&nbsp; A = 0 or B = 0" data-id="A · B = 0 &nbsp;⇒&nbsp; A = 0 atau B = 0"></div>
+    <div class="grid2">
+      <div class="card rcard rev" style="--i:3"><div class="rt1 mx">ax² + bx = 0</div><div class="rt2" data-en="Factor out x → x = 0 or ax + b = 0. One root is always 0." data-id="Faktorkan x → x = 0 atau ax + b = 0. Satu akar selalu 0."></div></div>
+      <div class="card rcard rev" style="--i:4"><div class="rt1 mx">ax² + bx + c = 0</div><div class="rt2" data-en="Factorise fully → set each bracket to 0. Watch for perfect squares (repeated root)." data-id="Faktorkan penuh → samakan setiap kurung dengan 0. Waspadai kuadrat sempurna (akar berulang)."></div></div>
+      <div class="card rcard rev" style="--i:5"><div class="rt1 mx">ax² + c = 0</div><div class="rt2" data-en="Isolate x² → x = ±√(−c/a), or no real solutions when −c/a &lt; 0." data-id="Kanalkan x² → x = ±√(−c/a), atau tidak ada solusi real saat −c/a &lt; 0."></div></div>
+      <div class="card rcard rev" style="--i:6"><div class="rt1 mx">ax² + bx + c = d</div><div class="rt2" data-en="Move d over first so one side equals 0, then factorise. Never divide by the variable." data-id="Pindahkan d dulu agar satu ruas bernilai 0, lalu faktorkan. Jangan pernah membagi dengan variabel."></div></div>
+    </div>
+    <div class="note rev" style="--i:7" data-en="On a graph, the real solutions are exactly where the parabola crosses the x-axis." data-id="Pada grafik, solusi real adalah tepat di titik potong parabola dengan sumbu-x."></div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 26 · REFLEKSI ============ -->
+<section class="slide" id="s-refl">
+  <div class="wrap">
+    <div class="kick rev" style="--i:0"><span data-en="Reflection" data-id="Refleksi"></span></div>
+    <h1 class="t rev" style="--i:1" data-en="Reflect on your learning" data-id="Refleksi pembelajaranmu"></h1>
+    <div class="grid2">
+      <div class="card rcard rev" style="--i:2"><span class="rnum" style="color:var(--teal)">3</span><div class="rt1" data-en="Things I learned today" data-id="Hal yang saya pelajari hari ini"></div><textarea rows="4" data-pen="e.g. The Zero Product Principle, factoring out x, ± roots…" data-pid="mis. Prinsip Hasil Kali Nol, memfaktorkan x, akar ±…"></textarea></div>
+      <div class="card rcard rev" style="--i:3"><span class="rnum" style="color:var(--gold)">2</span><div class="rt1" data-en="Questions I still have" data-id="Pertanyaan yang masih saya punya"></div><textarea rows="4" data-pen="e.g. What if a quadratic cannot be factorised?" data-pid="mis. Bagaimana jika kuadratnya tidak bisa difaktorkan?"></textarea></div>
+      <div class="card rcard rev" style="--i:4"><span class="rnum" style="color:var(--coral)">1</span><div class="rt1" data-en="Thing I want to practise more" data-id="Hal yang ingin saya latih lagi"></div><textarea rows="4" data-pen="e.g. Splitting the middle term…" data-pid="mis. Memecah suku tengah…"></textarea></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 27 · TERIMA KASIH ============ -->
+<section class="slide" id="s-thanks">
+  <div class="wrap thanks">
+    <div class="kick rev" style="--i:0"><span data-en="Lesson complete" data-id="Pelajaran selesai"></span></div>
+    <h1 class="t rev" style="--i:1" data-en="Thank you for <span class='hl'>today</span>!" data-id="Terima kasih untuk <span class='hl'>hari ini</span>!"></h1>
+    <p class="lead rev" style="--i:2"><span data-en="Great work, " data-id="Kerja hebat, "></span><b class="uname" style="color:var(--ink)">—</b><span data-en=" — see you next lesson!" data-id=" — sampai jumpa di pelajaran berikutnya!"></span></p>
+    <div class="zbanner rev" style="--i:3; max-width:560px" data-en="Zero Product Principle — your new superpower." data-id="Prinsip Hasil Kali Nol — superpower barumu."></div>
+    <div class="rev" style="--i:4">
+      <button id="btnRestart" class="btn ghost"><span data-en="Restart lesson" data-id="Ulangi pelajaran"></span></button>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ================= NAV BAWAH ================= -->
+<footer class="nav">
+  <div class="nav-l">
+    <span class="cnt" id="cnt">1 / 27</span>
+    <div class="pbar"><i id="pbar"></i></div>
+  </div>
+  <div class="nav-r">
+    <button id="btnPrev" class="navb" aria-label="Previous">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+    </button>
+    <button id="btnNext" class="navb" aria-label="Next">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </button>
+  </div>
+</footer>
+
+<script>
+/* =========================================================
+   MESIN SLIDE, TERJEMAHAN, PENILAIAN — semuanya lokal
+   ========================================================= */
+const $  = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+
+let lang = 'en';           // bahasa aktif
+let current = 0;           // indeks slide
+let userName = '';
+const hooks = [];          // fungsi yang dijalankan ulang saat ganti bahasa
+const slides = $$('#deck .slide');
+const total = slides.length;
+let exitState = { done:false, score:0, list:[] };
+
+/* ---------- util bilingual ---------- */
+function setBil(el, en, id){
+  el.setAttribute('data-en', en);
+  el.setAttribute('data-id', id);
+  el.innerHTML = (lang === 'id') ? id : en;
+}
+function applyLang(){
+  document.documentElement.lang = (lang === 'id') ? 'id' : 'en';
+  $$('[data-en]').forEach(el => { el.innerHTML = el.getAttribute('data-id') && lang === 'id' ? el.getAttribute('data-id') : el.getAttribute('data-en'); });
+  $$('[data-pen]').forEach(el => { el.placeholder = (lang === 'id' && el.dataset.pid) ? el.dataset.pid : el.dataset.pen; });
+  $$('#langseg button').forEach(b => b.classList.toggle('on', b.dataset.l === lang));
+  hooks.forEach(f => f());
+}
+
+/* ---------- parser jawaban numerik ---------- */
+function parseNums(raw){
+  if(raw == null) return [];
+  let s = String(raw).toLowerCase().trim();
+  if(!s) return [];
+  const pm = /±|\+\/-|\+\/−/.test(s);
+  s = s.replace(/±|\+\/-|\+\/−/g,'').replace(/−/g,'-').replace(/[a-z]/g,'');
+  const toks = s.split(/[^0-9.\/\-]+/).filter(t => t && /\d/.test(t));
+  const out = [];
+  for(const t of toks){
+    const m = t.match(/^(-?\.?\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?)$/);
+    if(m){ const d = parseFloat(m[2]); if(d) out.push(parseFloat(m[1]) / d); }
+    else { const n = parseFloat(t); if(!isNaN(n)) out.push(n); }
+  }
+  if(pm) out.push(...out.map(v => -v));
+  return out;
+}
+function grade(raw, exp){
+  let got = parseNums(raw).map(v => Math.round(v * 1e6) / 1e6);
+  got = [...new Set(got)].sort((a,b) => a - b);
+  const e = [...new Set(exp)].map(v => Math.round(v * 1e6) / 1e6).sort((a,b) => a - b);
+  if(got.length !== e.length) return false;
+  return got.every((v,i) => Math.abs(v - e[i]) < 1e-6);
+}
+
+/* ---------- registri kunci jawaban ---------- */
+const R = (exp, en, id) => ({ exp, show:{ en, id:(id === undefined ? en : id) } });
+const REG = {
+  wu1:R([5],'x = 5'), wu2:R([7],'x = 7'), wu3:R([8],'x = 8'), wu4:R([4],'x = 4'),
+  wu5:R([18],'x = 18'), wu6:R([6],'x = 6'), wu7:R([3],'x = 3'), wu8:R([3],'x = 3'),
+  wu9:R([15],'x = 15'), wu10:R([7],'x = 7'),
+  pn1a:R([0,2],'x = 0 or x = 2','x = 0 atau x = 2'),
+  pn1b:R([0,-1],'x = 0 or x = −1','x = 0 atau x = −1'),
+  pn1c:R([0,-6],'x = 0 or x = −6','x = 0 atau x = −6'),
+  pn1d:R([0,7.5],'x = 0 or x = 15/2','x = 0 atau x = 15/2'),
+  pn2a:R([-5,7],'x = −5 or x = 7','x = −5 atau x = 7'),
+  pn2b:R([-2/3,1.25],'y = −2/3 or y = 5/4','y = −2/3 atau y = 5/4'),
+  pn2c:R([-4],'w = −4 (repeated)','w = −4 (berulang)'),
+  pn2d:R([4/3,2],'z = 4/3 or z = 2','z = 4/3 atau z = 2'),
+  pn2e:R([2.5],'h = 5/2 (repeated)','h = 5/2 (berulang)'),
+  pn2f:R([-2,-8],'k = −2 or k = −8','k = −2 atau k = −8'),
+  pn2i1:R([4/3,2],'x = 4/3 or x = 2','x = 4/3 atau x = 2'),
+  pn2i2:R([1/3,1],'y = 1/3 or y = 1','y = 1/3 atau y = 1'),
+  pn3i1:R([6],'p = 6'),
+  pn3i2:R([-4],'x = −4'),
+  pn3a:R([2/3,-2/3],'x = ±2/3'),
+  pn3b:R([1/2,-1/2],'y = ±1/2'),
+  pn3c:R([1/6,-1/6],'m = ±1/6'),
+  pn3d:R([4,-4],'n = ±4'),
+  pn3x:{ type:'radio', correct:'B',
+    show:{ en:'16x² = −49 → x² = −49/16 < 0, impossible for real numbers.',
+           id:'16x² = −49 → x² = −49/16 < 0, mustahil untuk bilangan real.' } },
+  pn4a:R([-5,-1],'x = −5 or x = −1','x = −5 atau x = −1'),
+  pn4b:R([1/3,2/3],'y = 1/3 or y = 2/3','y = 1/3 atau y = 2/3'),
+  pn4c:R([-1,4/3],'t = −1 or t = 4/3','t = −1 atau t = 4/3'),
+  pn4d:R([-0.75,-0.2],'v = −3/4 or v = −1/5','v = −3/4 atau v = −1/5'),
+  eq1:R([3,-8],'x = 3 or x = −8','x = 3 atau x = −8'),
+  eq2:R([0,-3],'x = 0 or x = −3','x = 0 atau x = −3'),
+  eq3:R([3,-3],'x = ±3'),
+  eq4:R([-0.5,4/3],'x = −1/2 or x = 4/3','x = −1/2 atau x = 4/3'),
+  eq5:R([-3,-6],'x = −3 or x = −6','x = −3 atau x = −6'),
+  eq6:R([0,4],'x = 0 or x = 4','x = 0 atau x = 4'),
+  eq7:{ type:'radio', correct:'D', show:{ en:'No real solutions (x² = −25 < 0)', id:'Tidak ada solusi real (x² = −25 < 0)' } },
+  eq8:R([-1.5,-3],'x = −3/2 or x = −3','x = −3/2 atau x = −3'),
+  eq9:R([8,-8],'m = ±8'),
+  eq10:R([-2],'x = −2 (repeated)','x = −2 (berulang)')
+};
+
+/* ---------- chip umpan balik ---------- */
+function fbNode(ok, en, id){
+  const d = document.createElement('div');
+  d.className = 'fb ' + (ok ? 'ok' : 'no');
+  d.setAttribute('data-en', en);
+  d.setAttribute('data-id', id);
+  d.innerHTML = (lang === 'id') ? id : en;
+  return d;
+}
+
+/* ---------- pengecekan satu kartu soal ---------- */
+function checkItem(box){
+  const id = box.dataset.qid, reg = REG[id];
+  const fb = box.querySelector('.pq-fb');
+  if(!fb || !reg) return;
+  fb.innerHTML = '';
+  if(reg.type === 'radio'){
+    const sel = box.querySelector('input[type=radio]:checked');
+    const ok = !!sel && sel.value === reg.correct;
+    box.dataset.ok = ok ? '1' : '';
+    fb.appendChild(fbNode(ok,
+      ok ? 'Correct! ' + reg.show.en : 'Not yet — check the solution below.',
+      ok ? 'Benar! ' + reg.show.id : 'Belum tepat — lihat pembahasan di bawah.'));
+    if(!ok){ const d = box.querySelector('details'); if(d) d.open = true; }
+    return;
+  }
+  const inp = box.querySelector('input.ans');
+  const ok = grade(inp.value, reg.exp);
+  box.dataset.ok = ok ? '1' : '';
+  inp.classList.toggle('okb', ok);
+  inp.classList.toggle('badb', !ok);
+  fb.appendChild(fbNode(ok,
+    ok ? 'Correct! ' + reg.show.en : 'Not yet — check the solution below.',
+    ok ? 'Benar! ' + reg.show.id : 'Belum tepat — lihat pembahasan di bawah.'));
+  if(!ok){ const d = box.querySelector('details'); if(d) d.open = true; }
+  const sw = box.querySelector('.solw');
+  if(sw) sw.classList.add('show');
+}
+
+/* tombol Cek per kartu */
+ $$('.pq .chk').forEach(b => b.addEventListener('click', () => {
+  const box = b.closest('.pq');
+  checkItem(box);
+  if(box.closest('#wuList')) updateWarmScore();
+}));
+/* tombol Cek semua per slide */
+ $$('.chkAll').forEach(b => b.addEventListener('click', () => {
+  $$(b.dataset.list + ' .pq').forEach(checkItem);
+  if(b.dataset.list === '#wuList') updateWarmScore();
+}));
+
+/* ---------- skor warm-up ---------- */
+function updateWarmScore(){
+  const el = $('#wuScore');
+  const n = $$('#wuList .pq').filter(b => b.dataset.ok === '1').length;
+  setBil(el, 'Score: ' + n + ' / 10', 'Skor: ' + n + ' / 10');
+  el.style.background = n === 10 ? 'var(--ok-t)' : 'var(--card)';
+  el.style.color = n === 10 ? 'var(--ok)' : 'var(--soft)';
+}
+hooks.push(updateWarmScore);
+
+/* ---------- penjelajah hasil kali nol ---------- */
+const za = $('#za'), zb = $('#zb'), zprod = $('#zprod'), zmsg = $('#zmsg');
+function zppUpdate(){
+  const a = +za.value || 0, b = +zb.value || 0, p = a * b;
+  zprod.textContent = a + ' × ' + b + ' = ' + p;
+  if(p === 0){
+    setBil(zmsg, 'Zero! At least one factor is 0 — the Zero Product Principle in action.',
+                 'Nol! Minimal satu faktornya 0 — Prinsip Hasil Kali Nol sedang bekerja.');
+    zmsg.className = 'fb ok';
+  } else {
+    setBil(zmsg, 'Not zero yet. Change a or b to make the product 0.',
+                 'Belum nol. Ubah a atau b agar hasil kalinya 0.');
+    zmsg.className = 'fb soft';
+  }
+}
+za.addEventListener('input', zppUpdate);
+zb.addEventListener('input', zppUpdate);
+hooks.push(zppUpdate);
+
+/* ---------- stepper contoh soal ---------- */
+ $$('.ex-card').forEach(card => {
+  const steps = [...card.querySelectorAll('.step')];
+  const btnN = card.querySelector('[data-act=next]');
+  const btnA = card.querySelector('[data-act=all]');
+  const btnR = card.querySelector('[data-act=reset]');
+  const prog = card.querySelector('.ex-prog i');
+  const lab  = card.querySelector('.ex-count');
+  function upd(){
+    const n = steps.filter(s => s.classList.contains('show')).length;
+    prog.style.width = (n / steps.length * 100) + '%';
+    setBil(lab, 'Step ' + n + ' of ' + steps.length, 'Langkah ' + n + ' dari ' + steps.length);
+    btnN.disabled = (n === steps.length);
+    btnA.disabled = (n === steps.length);
+  }
+  btnN.addEventListener('click', () => {
+    const nx = steps.find(s => !s.classList.contains('show'));
+    if(nx) nx.classList.add('show');
+    upd();
+  });
+  btnA.addEventListener('click', () => { steps.forEach(s => s.classList.add('show')); upd(); });
+  btnR.addEventListener('click', () => { steps.forEach(s => s.classList.remove('show')); upd(); });
+  card._upd = upd;
+  upd();
+});
+hooks.push(() => $$('.ex-card').forEach(c => c._upd && c._upd()));
+
+/* ---------- nama siswa ---------- */
+const nameInput = $('#nameInput');
+function updateNameUI(){
+  const shown = userName.trim() || (lang === 'id' ? 'Tamu' : 'Guest');
+  $('#chipName').textContent = shown;
+  $$('.uname').forEach(u => u.textContent = userName.trim() || '—');
+}
+nameInput.addEventListener('input', () => { userName = nameInput.value; updateNameUI(); });
+nameInput.addEventListener('keydown', e => { if(e.key === 'Enter') $('#btnStart').click(); });
+ $('#btnStart').addEventListener('click', () => {
+  if(!userName.trim()){
+    $('#nameWarn').classList.add('show');
+    nameInput.classList.add('shake');
+    setTimeout(() => nameInput.classList.remove('shake'), 450);
+    return;
+  }
+  $('#nameWarn').classList.remove('show');
+  go(1);
+});
+
+/* ---------- navigasi slide ---------- */
+function go(n){
+  current = Math.max(0, Math.min(total - 1, n));
+  slides.forEach((s,i) => s.classList.toggle('on', i === current));
+  $('#cnt').textContent = (current + 1) + ' / ' + total;
+  $('#pbar').style.width = ((current + 1) / total * 100) + '%';
+  $('#btnPrev').disabled = current === 0;
+  $('#btnNext').disabled = current === total - 1;
+  const id = slides[current].id;
+  if(id === 's-results') renderResults();
+  if(id === 's-thanks') burst(34);
+}
+ $('#btnNext').addEventListener('click', () => go(current + 1));
+ $('#btnPrev').addEventListener('click', () => go(current - 1));
+document.addEventListener('keydown', e => {
+  const t = document.activeElement.tagName;
+  if(t === 'INPUT' || t === 'TEXTAREA') return;
+  if(e.key === 'ArrowRight') go(current + 1);
+  if(e.key === 'ArrowLeft')  go(current - 1);
+});
+ $('#langseg').addEventListener('click', e => {
+  const b = e.target.closest('button');
+  if(!b) return;
+  lang = b.dataset.l;
+  applyLang();
+});
+ $('#btnRestart').addEventListener('click', () => location.reload());
+
+/* ---------- exit ticket: kirim ---------- */
+const btnSubmit = $('#btnSubmit'), submitSpan = btnSubmit.querySelector('span');
+btnSubmit.addEventListener('click', () => {
+  const boxes = $$('#eqList .pq');
+  const missing = boxes.some(b => {
+    if(REG[b.dataset.qid].type === 'radio') return !b.querySelector('input:checked');
+    const i = b.querySelector('input.ans');
+    return !i || !i.value.trim();
+  });
+  const warn = $('#exitWarn');
+  if(missing){ warn.classList.add('show'); return; }
+  warn.classList.remove('show');
+
+  exitState.list = []; let score = 0;
+  boxes.forEach(b => {
+    checkItem(b);
+    const ok = b.dataset.ok === '1';
+    if(ok) score++;
+    let user = { en:'—', id:'—' };
+    if(REG[b.dataset.qid].type === 'radio'){
+      const sel = b.querySelector('input:checked');
+      if(sel){
+        const txt = sel.closest('.opt').querySelector('span');
+        user = { en: txt.getAttribute('data-en'), id: txt.getAttribute('data-id') };
+      }
+    } else {
+      const raw = b.querySelector('input.ans').value.trim();
+      user = { en: raw || '—', id: raw || '—' };
+    }
+    exitState.list.push({ id: b.dataset.qid, ok, user });
+  });
+  exitState.done = true;
+  exitState.score = score;
+  btnSubmit.disabled = true;
+  setBil(submitSpan, 'Submitted ✓', 'Terkirim ✓');
+  renderResults();
+  go(slides.findIndex(s => s.id === 's-results'));
+});
+
+/* ---------- hasil ---------- */
+const RING_C = 364.4;
+function tierMsg(s){
+  if(s === 10) return ['Perfect score! You are a quadratic champion.','Nilai sempurna! Kamu juara persamaan kuadrat.'];
+  if(s >= 8)  return ['Excellent work — you really understand this.','Kerja luar biasa — kamu benar-benar paham.'];
+  if(s >= 6)  return ['Good job! Review the ones you missed.','Kerja bagus! Pelajari lagi bagian yang terlewat.'];
+  if(s >= 4)  return ['A solid start — revisit the worked examples above.','Awal yang baik — pelajari kembali contoh-contoh di atas.'];
+  return ['Keep going! Go through the slides once more.','Terus semangat! Pelajari slide ini sekali lagi.'];
+}
+function renderResults(){
+  const empty = $('#resEmpty'), list = $('#rvList');
+  if(!exitState.done){
+    empty.style.display = 'block';
+    list.innerHTML = '';
+    $('#ringP').style.strokeDashoffset = RING_C;
+    $('#ringNum').textContent = '0%';
+    setBil($('#ringScore'), '0 / 10 correct', '0 / 10 benar');
+    setBil($('#resMsg'), 'Your results will appear here after you submit.', 'Hasilmu akan muncul di sini setelah kamu mengirim jawaban.');
+    return;
+  }
+  empty.style.display = 'none';
+  const s = exitState.score;
+  setBil($('#ringScore'), s + ' / 10 correct', s + ' / 10 benar');
+  const [mEn, mId] = tierMsg(s);
+  setBil($('#resMsg'), mEn, mId);
+  requestAnimationFrame(() => {
+    $('#ringP').style.strokeDashoffset = RING_C * (1 - s / 10);
+  });
+  // animasi angka persen
+  const numEl = $('#ringNum');
+  const t0 = performance.now();
+  (function tick(t){
+    const k = Math.min(1, (t - t0) / 1000);
+    numEl.textContent = Math.round(s * 10 * k) + '%';
+    if(k < 1) requestAnimationFrame(tick);
+  })(t0);
+  // daftar review
+  list.innerHTML = '';
+  exitState.list.forEach(r => {
+    const reg = REG[r.id];
+    const row = document.createElement('div');
+    row.className = 'rv' + (r.ok ? '' : ' bad');
+    const esc = t => String(t).replace(/"/g,'&quot;');
+    row.innerHTML =
+      '<span class="rvk ' + (r.ok ? 'ok' : 'no') + '">' + (r.ok ? '✓' : '✕') + '</span>' +
+      '<div><div class="rva"><span data-en="Your answer:" data-id="Jawabanmu:"></span> <b>' +
+        (lang === 'id' ? r.user.id : r.user.en) +
+      '</b> &nbsp;·&nbsp; <span data-en="Correct:" data-id="Benar:"></span> <b class="mx" data-en="' + esc(reg.show.en) + '" data-id="' + esc(reg.show.id) + '">' +
+        (lang === 'id' ? reg.show.id : reg.show.en) + '</b></div></div>';
+    list.appendChild(row);
+  });
+  if(s >= 7) burst(40);
+}
+hooks.push(() => { if(exitState.done) renderResults(); });
+
+/* ---------- coba lagi ---------- */
+ $('#btnRetry').addEventListener('click', () => {
+  exitState = { done:false, score:0, list:[] };
+  $$('#eqList .pq').forEach(b => {
+    const i = b.querySelector('input.ans');
+    if(i){ i.value = ''; i.classList.remove('okb','badb'); }
+    b.dataset.ok = '';
+    const fb = b.querySelector('.pq-fb'); if(fb) fb.innerHTML = '';
+    const d = b.querySelector('details'); if(d) d.open = false;
+    b.querySelectorAll('input[type=radio]').forEach(r => r.checked = false);
+  });
+  $('#exitWarn').classList.remove('show');
+  btnSubmit.disabled = false;
+  setBil(submitSpan, 'Submit answers', 'Kirim jawaban');
+  go(slides.findIndex(s => s.id === 's-exit'));
+});
+
+/* ---------- konfeti simbol matematika ---------- */
+const CF_SYMS = ['×','²','√','0','+','÷','±','✓','='];
+const CF_COLS = ['#0E7A6A','#E4572E','#F0B429','#1C3A33'];
+function burst(n = 30){
+  const layer = $('#cfLayer');
+  for(let i = 0; i < n; i++){
+    const s = document.createElement('span');
+    s.className = 'cf';
+    s.textContent = CF_SYMS[Math.floor(Math.random() * CF_SYMS.length)];
+    s.style.left = Math.random() * 100 + 'vw';
+    s.style.color = CF_COLS[Math.floor(Math.random() * CF_COLS.length)];
+    s.style.fontSize = (14 + Math.random() * 22) + 'px';
+    s.style.animationDuration = (2.4 + Math.random() * 2) + 's';
+    s.style.animationDelay = (Math.random() * .5) + 's';
+    layer.appendChild(s);
+    setTimeout(() => s.remove(), 5200);
+  }
+}
+
+/* ---------- init ---------- */
+applyLang();
+updateNameUI();
+go(0);
+</script>
+</body>
+</html>
